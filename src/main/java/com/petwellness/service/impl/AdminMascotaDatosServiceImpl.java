@@ -71,7 +71,17 @@ public class AdminMascotaDatosServiceImpl implements MascotaDatosService {
     }
 
     @Override
+    @Transactional
     public void delete(Integer id) {
+        // Buscar la mascota por ID
+        RegistroMascota existingMascota = findById(id);
+
+        // Validar si la mascota existe
+        if (existingMascota == null) {
+            throw new IllegalArgumentException("La mascota con ID " + id + " no existe.");
+        }
+
+        // Eliminar la mascota
         mascotaDatosRepository.deleteById(id);
     }
 }
