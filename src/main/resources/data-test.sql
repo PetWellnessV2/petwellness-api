@@ -47,10 +47,10 @@ VALUES
     (2, 2, 2, 50.25, '2023-09-02 11:00:00', 'PAGADO');
 
 -- Insertar datos de prueba en la tabla consulta
-INSERT INTO consulta (id_consulta, tipo_consulta, horarios_disponibles_id_horario, registro_mascota_id_mascota, razon_consulta)
+INSERT INTO consulta (id_consulta, tipo_consulta, horarios_disponibles_id_horario, registro_mascota_id_mascota, razon_consulta, created_at, updated_at)
 VALUES
-    (1, 'SEGUIMIENTO', 1, 1, 'Consulta general para Firulais'),
-    (2, 'URGENCIA', 2, 2, 'Vacunación anual para Mishifu');
+    (1, 'SEGUIMIENTO', 1, 1, 'Consulta general para Firulais','2023-09-01 12:00:00', '2023-09-01 12:00:00'),
+    (2, 'URGENCIA', 2, 2, 'Vacunación anual para Mishifu','2024-04-11 12:00:00', '2024-04-11 12:00:00');
 
 -- Insertar datos de prueba en la tabla examenes_laboratorio
 INSERT INTO examenes_laboratorio (id_examen_lab, nombre, descripcion, fecha, registro_mascota_id_mascota)
