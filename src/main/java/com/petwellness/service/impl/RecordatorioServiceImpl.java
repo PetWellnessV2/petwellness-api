@@ -2,10 +2,8 @@ package com.petwellness.service.impl;
 
 import com.petwellness.dto.RecordatorioDTO;
 import com.petwellness.model.entity.Recordatorio;
-// import com.petwellness.model.entity.RegistroMascota;
 import com.petwellness.model.entity.Usuario;
 import com.petwellness.repository.RecordatorioRepository;
-// import com.petwellness.repository.RegistroMascotaRepository;
 import com.petwellness.repository.UsuarioRepository;
 import com.petwellness.service.RecordatorioService;
 import com.petwellness.util.NotificacionUtil;
@@ -49,6 +47,20 @@ public class RecordatorioServiceImpl implements RecordatorioService {
         notificacionUtil.programarNotificacion(savedRecordatorio);
 
         return convertToDTO(savedRecordatorio);
+    }
+
+    @Override
+    @Transactional
+    public void eliminarRecordatorio(Long id) {
+        Recordatorio recordatorio = recordatorioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Recordatorio no encontrado"));
+
+        if (recordatorio.getFechaHora().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("No se puede eliminar un recordatorio pasado");
+        }
+
+        recordatorioRepository.delete(recordatorio);
+        notificacionUtil.notificarEliminacionRecordatorio(recordatorio);
     }
 
     private void validarCamposObligatorios(RecordatorioDTO recordatorioDTO) {

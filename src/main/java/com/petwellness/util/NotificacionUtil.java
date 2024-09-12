@@ -16,4 +16,9 @@ public class NotificacionUtil {
             System.out.println("No se puede programar notificación para una fecha pasada: " + recordatorio.getTitulo());
         }
     }
+
+    public void notificarEliminacionRecordatorio(Recordatorio recordatorio) {
+        System.out.println("Notificación: El recordatorio '" + recordatorio.getTitulo() + 
+                           "' ha sido eliminado. Estaba programado para: " + recordatorio.getFechaHora());
+    }
 }
