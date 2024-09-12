@@ -26,4 +26,16 @@ public class RecordatorioController {
             return new ResponseEntity<>("Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarRecordatorio(@PathVariable Long id) {
+        try {
+            recordatorioService.eliminarRecordatorio(id);
+            return new ResponseEntity<>("Recordatorio eliminado exitosamente", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
