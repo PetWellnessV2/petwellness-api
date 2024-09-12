@@ -15,7 +15,7 @@ public class Veterinario {
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "usuario_user_id", referencedColumnName = "user_idz", foreignKey = @ForeignKey(name = "FK_veterinario_usuario"))
+    @JoinColumn(name = "usuario_user_id", referencedColumnName = "user_id", foreignKey = @ForeignKey(name = "FK_veterinario_usuario"))
     private Usuario usuario;
 
     @Enumerated(EnumType.STRING)
