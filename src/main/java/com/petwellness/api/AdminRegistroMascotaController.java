@@ -2,7 +2,9 @@ package com.petwellness.api;
 
 import com.petwellness.dto.RegistroMascotaDTO;
 import com.petwellness.model.entity.RegistroMascota;
+import com.petwellness.model.entity.Usuario;
 import com.petwellness.service.MascotaDatosService;
+import com.petwellness.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -17,6 +20,7 @@ import java.util.stream.Collectors;
 public class AdminRegistroMascotaController {
 
     private final MascotaDatosService mascotaDatosService;
+    private final UsuarioService usuarioService;
 
     @GetMapping
     public ResponseEntity<List<RegistroMascotaDTO>> getAllRegistroMascotas() {
@@ -41,7 +45,6 @@ public class AdminRegistroMascotaController {
         }
     }
 
-
     private RegistroMascotaDTO convertToDTO(RegistroMascota registroMascota) {
         RegistroMascotaDTO dto = new RegistroMascotaDTO();
         dto.setIdMascota(registroMascota.getIdMascota());
@@ -59,6 +62,46 @@ public class AdminRegistroMascotaController {
         dto.setTitularPoliza(registroMascota.getTitularPoliza());
         dto.setInfoAdicional(registroMascota.getInfoAdicional());
         return dto;
+    }
+
+    private RegistroMascota convertToEntity(RegistroMascotaDTO dto) {
+        RegistroMascota registroMascota = new RegistroMascota();
+        registroMascota.setNombre(dto.getNombre());
+        registroMascota.setEspecie(dto.getEspecie());
+        registroMascota.setGenero(dto.getGenero());
+        registroMascota.setRaza(dto.getRaza());
+        registroMascota.setEdad(dto.getEdad());
+        registroMascota.setFoto(dto.getFoto());
+        registroMascota.setFechaNacimiento(dto.getFechaNacimiento());
+        registroMascota.setDescripcion(dto.getDescripcion());
+        registroMascota.setDireccion(dto.getDireccion());
+        registroMascota.setMiembroID(dto.getMiembroID());
+        registroMascota.setTitularPoliza(dto.getTitularPoliza());
+        registroMascota.setInfoAdicional(dto.getInfoAdicional());
+        registroMascota.setUsuario(usuarioService.getUsuarioById(dto.getUsuarioId()).get());
+        return registroMascota;
+    }
+
+    @PostMapping
+    public ResponseEntity<RegistroMascotaDTO> createRegistroMascota(
+            @RequestBody RegistroMascotaDTO registroMascotaDTO) {
+        try {
+            RegistroMascota registroMascota = convertToEntity(registroMascotaDTO);
+
+            // Buscar el usuario por ID y asociarlo a la mascota
+            Optional<Usuario> usuarioOptional = usuarioService.getUsuarioById(registroMascotaDTO.getUsuarioId());
+            if (usuarioOptional.isPresent()) {
+                registroMascota.setUsuario(usuarioOptional.get());
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Usuario no encontrado
+            }
+
+            RegistroMascota nuevaMascota = mascotaDatosService.create(registroMascota);
+            RegistroMascotaDTO nuevaMascotaDTO = convertToDTO(nuevaMascota);
+            return new ResponseEntity<>(nuevaMascotaDTO, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Error al crear la mascota
+        }
     }
 
     @DeleteMapping("/{id}")
