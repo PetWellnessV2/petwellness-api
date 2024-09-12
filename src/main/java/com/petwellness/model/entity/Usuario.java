@@ -30,7 +30,6 @@ public class Usuario {
     private String telefono;
 
     @Column(name = "contrasena", nullable = false, length = 50)
-    @JsonIgnore
     private String contrasena;
 
     @Enumerated(EnumType.STRING)
