@@ -109,7 +109,6 @@ public class AdminRegistroMascotaController {
             mascotaDatosService.delete(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Mascota eliminada correctamente
         } catch (DataIntegrityViolationException e) {
-            // Maneja el error de integridad referencial
             return new ResponseEntity<>("La mascota tiene procesos pendientes y no puede ser eliminada.", HttpStatus.CONFLICT);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Mascota no encontrada
