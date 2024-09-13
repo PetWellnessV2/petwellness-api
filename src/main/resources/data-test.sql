@@ -57,7 +57,7 @@ ON CONFLICT (id_compra) DO NOTHING;
 INSERT INTO consulta (id_consulta, tipo_consulta, horarios_disponibles_id_horario, registro_mascota_id_mascota, razon_consulta, created_at, updated_at)
 VALUES
     (1, 'SEGUIMIENTO', 1, 1, 'Consulta general para Firulais','2023-09-01 12:00:00', '2023-09-01 12:00:00'),
-    (2, 'URGENCIA', 2, 2, 'Vacunación anual para Mishifu','2024-04-11 12:00:00', '2024-04-11 12:00:00');
+    (2, 'URGENCIA', 2, 2, 'Vacunación anual para Mishifu','2024-04-11 12:00:00', '2024-04-11 12:00:00')
 ON CONFLICT (id_consulta) DO NOTHING;
 
 -- Insertar datos de prueba en la tabla examenes_laboratorio
