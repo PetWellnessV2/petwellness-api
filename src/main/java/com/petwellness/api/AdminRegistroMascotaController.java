@@ -1,9 +1,12 @@
 package com.petwellness.api;
 
 import com.petwellness.dto.RegistroMascotaDTO;
+import com.petwellness.model.entity.Archivos;
 import com.petwellness.model.entity.RegistroMascota;
+import com.petwellness.service.ArchivoService;
 import com.petwellness.service.MascotaDatosService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +20,7 @@ import java.util.stream.Collectors;
 public class AdminRegistroMascotaController {
 
     private final MascotaDatosService mascotaDatosService;
+    private final ArchivoService archivoService;
 
     @GetMapping
     public ResponseEntity<List<RegistroMascotaDTO>> getAllRegistroMascotas() {
@@ -40,7 +44,6 @@ public class AdminRegistroMascotaController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Error: Mascota no existe
         }
     }
-
 
     private RegistroMascotaDTO convertToDTO(RegistroMascota registroMascota) {
         RegistroMascotaDTO dto = new RegistroMascotaDTO();
@@ -66,13 +69,11 @@ public class AdminRegistroMascotaController {
             @PathVariable Integer id,
             @RequestBody RegistroMascotaDTO registroMascotaDTO) {
         try {
-            // Buscar la mascota en la base de datos
             RegistroMascota existingMascota = mascotaDatosService.findById(id);
             if (existingMascota == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Mascota no encontrada
             }
 
-            // Actualizar los datos de la mascota
             existingMascota.setNombre(registroMascotaDTO.getNombre());
             existingMascota.setEspecie(registroMascotaDTO.getEspecie());
             existingMascota.setGenero(registroMascotaDTO.getGenero());
@@ -86,7 +87,6 @@ public class AdminRegistroMascotaController {
             existingMascota.setTitularPoliza(registroMascotaDTO.getTitularPoliza());
             existingMascota.setInfoAdicional(registroMascotaDTO.getInfoAdicional());
 
-            // Guardar los cambios
             RegistroMascota updatedMascota = mascotaDatosService.update(id, existingMascota);
             RegistroMascotaDTO updatedDTO = convertToDTO(updatedMascota);
 
@@ -96,12 +96,21 @@ public class AdminRegistroMascotaController {
         }
     }
 
-
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRegistroMascota(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteRegistroMascota(@PathVariable Integer id) {
         try {
+            // Primero, elimina los archivos asociados a la mascota
+            List<Archivos> archivos = archivoService.getAllByMascotaId(id);
+            for (Archivos archivo : archivos) {
+                archivoService.delete(archivo.getIdArchivos()); // Elimina cada archivo
+            }
+
+            // Luego, elimina el registro de la mascota
             mascotaDatosService.delete(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Mascota eliminada correctamente
+        } catch (DataIntegrityViolationException e) {
+            // Maneja el error de integridad referencial
+            return new ResponseEntity<>("La mascota tiene procesos pendientes y no puede ser eliminada.", HttpStatus.CONFLICT);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Mascota no encontrada
         }
