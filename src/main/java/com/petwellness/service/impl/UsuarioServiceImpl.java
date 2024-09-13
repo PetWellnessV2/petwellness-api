@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -38,6 +39,12 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public List<Usuario> getAllUsuarios() {
         return usuarioRepository.findAll();
+    }
+
+    @Transactional
+    @Override
+    public Optional<Usuario> getUsuarioById(Integer id) {
+        return usuarioRepository.findById(id);
     }
 
 
