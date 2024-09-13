@@ -61,6 +61,42 @@ public class AdminRegistroMascotaController {
         return dto;
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<RegistroMascotaDTO> updateRegistroMascota(
+            @PathVariable Integer id,
+            @RequestBody RegistroMascotaDTO registroMascotaDTO) {
+        try {
+            // Buscar la mascota en la base de datos
+            RegistroMascota existingMascota = mascotaDatosService.findById(id);
+            if (existingMascota == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Mascota no encontrada
+            }
+
+            // Actualizar los datos de la mascota
+            existingMascota.setNombre(registroMascotaDTO.getNombre());
+            existingMascota.setEspecie(registroMascotaDTO.getEspecie());
+            existingMascota.setGenero(registroMascotaDTO.getGenero());
+            existingMascota.setRaza(registroMascotaDTO.getRaza());
+            existingMascota.setEdad(registroMascotaDTO.getEdad());
+            existingMascota.setFoto(registroMascotaDTO.getFoto());
+            existingMascota.setFechaNacimiento(registroMascotaDTO.getFechaNacimiento());
+            existingMascota.setDescripcion(registroMascotaDTO.getDescripcion());
+            existingMascota.setDireccion(registroMascotaDTO.getDireccion());
+            existingMascota.setMiembroID(registroMascotaDTO.getMiembroID());
+            existingMascota.setTitularPoliza(registroMascotaDTO.getTitularPoliza());
+            existingMascota.setInfoAdicional(registroMascotaDTO.getInfoAdicional());
+
+            // Guardar los cambios
+            RegistroMascota updatedMascota = mascotaDatosService.update(id, existingMascota);
+            RegistroMascotaDTO updatedDTO = convertToDTO(updatedMascota);
+
+            return new ResponseEntity<>(updatedDTO, HttpStatus.OK); // Mascota actualizada correctamente
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Error: datos inválidos
+        }
+    }
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRegistroMascota(@PathVariable Integer id) {
         try {
