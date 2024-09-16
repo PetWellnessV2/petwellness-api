@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AdminArchivoServiceImpl implements ArchivoService {
+public class ArchivoServiceImpl implements ArchivoService {
 
     private final ArchivoRepository archivoRepository;
 

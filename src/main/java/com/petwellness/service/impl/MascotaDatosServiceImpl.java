@@ -13,7 +13,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class AdminMascotaDatosServiceImpl implements MascotaDatosService {
+public class MascotaDatosServiceImpl implements MascotaDatosService {
 
     private final MascotaDatosRepository mascotaDatosRepository;
     private final ArchivoService archivoService;

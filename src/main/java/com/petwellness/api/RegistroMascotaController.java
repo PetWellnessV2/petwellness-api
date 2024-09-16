@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/admin/registromascotas")
-public class AdminRegistroMascotaController {
+public class RegistroMascotaController {
 
     private final MascotaDatosService mascotaDatosService;
 
