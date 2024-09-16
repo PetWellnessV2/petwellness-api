@@ -4,6 +4,8 @@ import com.petwellness.model.enums.TipoConsulta;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Table(name = "consulta")
@@ -27,5 +29,11 @@ public class Consulta {
 
     @Column(name = "razon_consulta", length = 250, nullable = false)
     private String razonConsulta;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
 
 }
