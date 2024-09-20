@@ -5,3 +5,4 @@ public enum EstadoConsulta {
     PENDIENTE,
     COMPLETADO
 }
+
