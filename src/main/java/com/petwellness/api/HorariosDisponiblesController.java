@@ -18,7 +18,7 @@ public class HorariosDisponiblesController {
     @PostMapping
     public ResponseEntity<HorariosDisponibles> agregarHorario(@RequestBody HorariosDisponibles horario) {
         HorariosDisponibles nuevoHorario = horariosDisponiblesService.agregarHorario(horario);
-        return new ResponseEntity<>(nuevoHorario, HttpStatus.CREATED);
+        return new ResponseEntity<HorariosDisponibles>(nuevoHorario, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
