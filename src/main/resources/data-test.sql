@@ -16,7 +16,8 @@ ON CONFLICT (usuario_user_id) DO NOTHING;
 INSERT INTO horarios_disponibles (id_horario, vet_user_id, hora, fecha)
 VALUES
     (1, 1, 10, '2023-09-03'),
-    (2, 2, 15, '2023-09-04')
+    (2, 2, 15, '2023-09-04'),
+    (3, 2, 17, '2023-09-05')
 ON CONFLICT (id_horario) DO NOTHING;
 
 -- Insert sample data into albergue table
@@ -54,10 +55,11 @@ VALUES
 ON CONFLICT (id_compra) DO NOTHING;
 
 -- Insertar datos de prueba en la tabla consulta
-INSERT INTO consulta (id_consulta, tipo_consulta, horarios_disponibles_id_horario, registro_mascota_id_mascota, razon_consulta, created_at, updated_at)
+INSERT INTO consulta (id_consulta, tipo_consulta, estado_consulta, horarios_disponibles_id_horario, registro_mascota_id_mascota, razon_consulta, created_at, updated_at)
 VALUES
-    (1, 'SEGUIMIENTO', 1, 1, 'Consulta general para Firulais','2023-09-01 12:00:00', '2023-09-01 12:00:00'),
-    (2, 'URGENCIA', 2, 2, 'Vacunación anual para Mishifu','2024-04-11 12:00:00', '2024-04-11 12:00:00');
+    (1, 'SEGUIMIENTO', 'PENDIENTE', 1, 1, 'Consulta general para Firulais','2023-09-01 12:00:00', '2023-09-01 12:00:00'),
+    (2, 'URGENCIA', 'PENDIENTE', 2, 2, 'Vacunación anual para Mishifu','2024-04-11 12:00:00', '2024-04-11 12:00:00'),
+    (3, 'SEGUIMIENTO', 'COMPLETADO', 3, 1, 'Revision mensual de Firulais','2024-04-10 12:00:00', '2024-04-10 12:00:00')
 ON CONFLICT (id_consulta) DO NOTHING;
 
 -- Insertar datos de prueba en la tabla examenes_laboratorio

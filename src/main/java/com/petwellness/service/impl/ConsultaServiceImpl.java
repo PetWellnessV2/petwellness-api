@@ -1,6 +1,7 @@
 package com.petwellness.service.impl;
 
 import com.petwellness.model.entity.Consulta;
+import com.petwellness.model.enums.EstadoConsulta;
 import com.petwellness.repository.ConsultaRepository;
 import com.petwellness.service.ConsultaService;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,13 @@ public class ConsultaServiceImpl implements ConsultaService {
     public Consulta findById(Integer id) {
         return consultaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Consulta no encontrada"));
+    }
+
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Consulta> findByEstadoConsulta(EstadoConsulta estadoConsulta) {
+        return consultaRepository.findByEstadoConsulta(estadoConsulta);
     }
 
     @Transactional

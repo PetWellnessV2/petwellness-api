@@ -1,6 +1,7 @@
 package com.petwellness.api;
 
 import com.petwellness.model.entity.Consulta;
+import com.petwellness.model.enums.EstadoConsulta;
 import com.petwellness.service.ConsultaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,6 +36,12 @@ public class ConsultaController {
     public ResponseEntity<Consulta> getConsultabyId(@PathVariable("id") Integer id) {
         Consulta consulta = consultaService.findById(id);
         return new ResponseEntity<Consulta>(consulta, HttpStatus.OK);
+    }
+
+    @GetMapping("estado/{estado}")
+    public ResponseEntity<List<Consulta>> getConsultasByEstado(@PathVariable("estado") EstadoConsulta estado) {
+        List<Consulta> consultas = consultaService.findByEstadoConsulta(estado);
+        return new ResponseEntity<>(consultas, HttpStatus.OK);
     }
 
     @PostMapping
