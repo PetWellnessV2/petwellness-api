@@ -1,6 +1,8 @@
 package com.petwellness.api;
 
+import com.petwellness.model.entity.Usuario;
 import com.petwellness.model.entity.Veterinario;
+import com.petwellness.service.UsuarioService;
 import com.petwellness.service.VeterinarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,32 +17,37 @@ import java.util.List;
 public class VeterinarioController {
 
     private final VeterinarioService veterinarioService;
+    private final UsuarioService usuarioService;
 
-    //Crear un nuevo veterinario
+    // Crear veterinario
     @PostMapping
     public ResponseEntity<Veterinario> crearVeterinario(@RequestBody Veterinario veterinario) {
+        if (veterinario.getUsuario() == null || veterinario.getUsuario().getUserId() == null) {
+            Usuario nuevoUsuario = usuarioService.registerUsuario(veterinario.getUsuario());
+            veterinario.setUsuario(nuevoUsuario);
+        }
         Veterinario nuevoVeterinario = veterinarioService.crearVeterinario(veterinario);
         return new ResponseEntity<>(nuevoVeterinario, HttpStatus.CREATED);
     }
 
-    //Editar un veterinario existente
-    @PutMapping("/{id}")
-    public ResponseEntity<Veterinario> actualizarVeterinario(@PathVariable Integer id, @RequestBody Veterinario veterinario) {
-        Veterinario veterinarioActualizado = veterinarioService.actualizarVeterinario(id, veterinario);
-        return new ResponseEntity<>(veterinarioActualizado, HttpStatus.OK);
+    // Obtener todos los veterinarios
+    @GetMapping
+    public ResponseEntity<List<Veterinario>> obtenerVeterinarios() {
+        List<Veterinario> veterinarios = veterinarioService.obtenerVeterinarios();
+        return new ResponseEntity<>(veterinarios, HttpStatus.OK);
     }
 
-    //Eliminar un veterinario
+    // Eliminar un veterinario
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarVeterinario(@PathVariable Integer id) {
         veterinarioService.eliminarVeterinario(id);
         return ResponseEntity.noContent().build();
     }
 
-    //Obtener todos los veterinarios
-    @GetMapping
-    public ResponseEntity<List<Veterinario>> obtenerVeterinarios() {
-        List<Veterinario> veterinarios = veterinarioService.obtenerVeterinarios();
-        return new ResponseEntity<>(veterinarios, HttpStatus.OK);
+    // Actualizar un veterinario
+    @PutMapping("/{id}")
+    public ResponseEntity<Veterinario> actualizarVeterinario(@PathVariable Integer id, @RequestBody Veterinario veterinarioActualizado) {
+        Veterinario veterinarioExistente = veterinarioService.actualizarVeterinario(id, veterinarioActualizado);
+        return new ResponseEntity<>(veterinarioExistente, HttpStatus.OK);
     }
 }

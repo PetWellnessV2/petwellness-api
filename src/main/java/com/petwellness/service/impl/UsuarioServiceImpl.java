@@ -23,6 +23,7 @@ public class UsuarioServiceImpl implements UsuarioService {
             throw new RuntimeException("El email ya está registrado");
         }
         usuario.setCreatedAt(LocalDateTime.now());
+        usuario.setUpdatedAt(LocalDateTime.now());
         return usuarioRepository.save(usuario);
     }
 

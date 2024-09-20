@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface VeterinarioService {
     Veterinario crearVeterinario(Veterinario veterinario);
-    Veterinario actualizarVeterinario(Integer id, Veterinario veterinario);
-    void eliminarVeterinario(Integer id);
     List<Veterinario> obtenerVeterinarios();
+    void eliminarVeterinario(Integer id);
+    Veterinario actualizarVeterinario(Integer id, Veterinario veterinarioActualizado);
 }
