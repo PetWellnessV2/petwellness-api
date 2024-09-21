@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Table(name = "recordatorio")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Recordatorio {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "recordatorio_id")
