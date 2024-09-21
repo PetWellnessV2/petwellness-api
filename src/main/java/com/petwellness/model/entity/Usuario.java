@@ -46,7 +46,5 @@ public class Usuario {
     @JsonIgnore
     private List<RegistroMascota> mascotas;
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<Recordatorio> recordatorio;
+
 }

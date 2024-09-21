@@ -1,46 +1,50 @@
 package com.petwellness.model.entity;
 
+import com.petwellness.model.enums.RecordatorioStatus;
+import com.petwellness.model.enums.TipoRecordatorio;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Table(name = "recordatorio")
-@IdClass(RecordatorioPK.class)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Recordatorio {
-    @Id
-    @Column(name = "id_recordatorio")
-    private Integer recordatorioId;
 
     @Id
-    @Column(name = "usuario_id")
-    private Integer usuarioId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "recordatorio_id")
+    private Integer recordatorioId;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", referencedColumnName = "user_id",
             foreignKey = @ForeignKey(name = "fk_recordatorio_usuario"))
+    @EqualsAndHashCode.Include
     private Usuario usuario;
 
     @ManyToOne
     @JoinColumn(name = "mascota_id", referencedColumnName = "id_mascota",
             foreignKey = @ForeignKey(name = "fk_recordatorio_mascota"))
+    @EqualsAndHashCode.Include
     private RegistroMascota mascota;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "tipo_recordatorio", nullable = false)
-    private String tipoRecordatorio;
+    private TipoRecordatorio tipoRecordatorio;
 
     @Column(name = "titulo", nullable = false)
     private String titulo;
 
-    @Column(name = "descripcion")
+    @Column(name = "descripcion", columnDefinition = "TEXT")
     private String descripcion;
 
     @Column(name = "fecha_hora", nullable = false)
     private LocalDateTime fechaHora;
 
-    @Column(name = "completado", nullable = false)
-    private Boolean completado;
-
-
+    @Enumerated(EnumType.STRING)
+    @Column(name = "recordatorio_status")
+    private RecordatorioStatus recordatorioStatus;
 }

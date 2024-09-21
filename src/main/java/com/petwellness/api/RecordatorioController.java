@@ -28,7 +28,7 @@ public class RecordatorioController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminarRecordatorio(@PathVariable Long id) {
+    public ResponseEntity<?> eliminarRecordatorio(@PathVariable Integer id) {
         try {
             recordatorioService.eliminarRecordatorio(id);
             return new ResponseEntity<>("Recordatorio eliminado exitosamente", HttpStatus.OK);
