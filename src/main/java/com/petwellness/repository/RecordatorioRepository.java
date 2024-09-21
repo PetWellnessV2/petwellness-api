@@ -1,5 +1,9 @@
 package com.petwellness.repository;
 
-public interface RecordatorioRepository {
-    void hello();
+import com.petwellness.model.entity.Recordatorio;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface RecordatorioRepository extends JpaRepository<Recordatorio, Integer> {
+
+
 }
