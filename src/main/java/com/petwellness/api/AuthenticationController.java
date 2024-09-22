@@ -30,3 +30,4 @@ public class AuthenticationController {
         return ResponseEntity.noContent().build();
     }
 }
+
