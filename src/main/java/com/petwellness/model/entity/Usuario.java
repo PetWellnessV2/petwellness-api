@@ -45,4 +45,6 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<RegistroMascota> mascotas;
+
+
 }
