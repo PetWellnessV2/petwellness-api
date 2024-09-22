@@ -65,5 +65,4 @@ public class NotificationController {
         notificationService.eliminarNotificacion(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);  // Retorna un estado 204
     }
-
 }
