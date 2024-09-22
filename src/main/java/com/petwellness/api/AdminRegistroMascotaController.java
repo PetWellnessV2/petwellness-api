@@ -4,6 +4,7 @@ import com.petwellness.dto.RegistroMascotaDTO;
 import com.petwellness.model.entity.RegistroMascota;
 import com.petwellness.model.entity.Usuario;
 import com.petwellness.service.MascotaDatosService;
+import com.petwellness.service.NotificationService;
 import com.petwellness.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class AdminRegistroMascotaController {
 
     private final MascotaDatosService mascotaDatosService;
     private final UsuarioService usuarioService;
+    private final NotificationService notificationService;
 
     @GetMapping
     public ResponseEntity<List<RegistroMascotaDTO>> getAllRegistroMascotas() {
@@ -92,6 +94,10 @@ public class AdminRegistroMascotaController {
             // Guardar los cambios
             RegistroMascota updatedMascota = mascotaDatosService.update(id, existingMascota);
             RegistroMascotaDTO updatedDTO = convertToDTO(updatedMascota);
+
+            // Notificar al usuario (dueño de la mascota)
+            notificationService.enviarNotificacion(existingMascota.getUsuario().getUserId(),
+                    "La información de tu mascota " + existingMascota.getNombre() + " ha sido actualizada.");
 
             return new ResponseEntity<>(updatedDTO, HttpStatus.OK); // Mascota actualizada correctamente
         } catch (IllegalArgumentException e) {
