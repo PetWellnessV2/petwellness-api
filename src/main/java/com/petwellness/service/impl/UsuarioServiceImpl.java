@@ -43,9 +43,22 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Transactional
     @Override
+    public Usuario updateUsuario(Integer id, Usuario usuario) {
+        Usuario existingUsuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("El usuario no existe"));
+
+        existingUsuario.setNombre(usuario.getNombre());
+        existingUsuario.setApellido(usuario.getApellido());
+        existingUsuario.setEmail(usuario.getEmail());
+        // Agrega más campos según sea necesario
+
+        return usuarioRepository.save(existingUsuario);
+    }
+
+    @Transactional
+    @Override
     public Optional<Usuario> getUsuarioById(Integer id) {
         return usuarioRepository.findById(id);
     }
-
 
 }

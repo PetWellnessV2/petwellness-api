@@ -9,5 +9,6 @@ public interface UsuarioService {
     Usuario registerUsuario(Usuario usuario);
     void deleteUsuario(Integer id);
     List<Usuario> getAllUsuarios();
+    Usuario updateUsuario(Integer id, Usuario usuario);
     Optional<Usuario> getUsuarioById(Integer id);
 }

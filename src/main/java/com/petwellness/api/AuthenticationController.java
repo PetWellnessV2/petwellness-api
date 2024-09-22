@@ -14,19 +14,26 @@ import java.util.List;
 @RequestMapping("/authentication")
 public class AuthenticationController {
     private final UsuarioService usuarioService;
-    @GetMapping("/usuarios")
+    @GetMapping
     public ResponseEntity<List<Usuario>> getAll() {
         List<Usuario> usuarios = usuarioService.getAllUsuarios();
         return ResponseEntity.ok(usuarios);
     }
-    @PostMapping("/usuarios/register")
+    @PostMapping
     public ResponseEntity<Usuario> register(@RequestBody Usuario usuario) {
         Usuario newUsuario = usuarioService.registerUsuario(usuario);
         return new ResponseEntity<>(newUsuario, HttpStatus.CREATED);
     }
-    @DeleteMapping("/usuarios/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUsuario(@PathVariable Integer id) {
         usuarioService.deleteUsuario(id);
         return ResponseEntity.noContent().build();
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<Usuario> updateUsuario(@PathVariable Integer id, @RequestBody Usuario usuario) {
+        Usuario updatedUsuario = usuarioService.updateUsuario(id, usuario);
+        return ResponseEntity.ok(updatedUsuario);
+    }
+
+
 }
