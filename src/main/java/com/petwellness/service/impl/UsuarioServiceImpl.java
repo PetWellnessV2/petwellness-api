@@ -19,12 +19,29 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Transactional
     @Override
     public Usuario registerUsuario(Usuario usuario) {
-        if(usuarioRepository.existsByEmail(usuario.getEmail())) {
-            throw new RuntimeException("El email ya está registrado");
+        // Verifica si el email ya está registrado cuando es un nuevo usuario
+        if(usuario.getUserId() == null) { // Nuevo usuario
+            if (usuarioRepository.existsByEmail(usuario.getEmail())) {
+                throw new RuntimeException("El email ya está registrado");
+            }
+        } else { // Actualización de un usuario existente
+            Optional<Usuario> existingUsuario = usuarioRepository.findById(usuario.getUserId());
+            if (existingUsuario.isPresent()) {
+                Usuario usuarioActual = existingUsuario.get();
+                // Solo verifica si el email ha sido cambiado
+                if (!usuarioActual.getEmail().equals(usuario.getEmail()) &&
+                        usuarioRepository.existsByEmail(usuario.getEmail())) {
+                    throw new RuntimeException("El email ya está registrado por otro usuario");
+                }
+            } else {
+                throw new RuntimeException("El usuario no existe");
+            }
         }
-        usuario.setCreatedAt(LocalDateTime.now());
+
+        usuario.setUpdatedAt(LocalDateTime.now());
         return usuarioRepository.save(usuario);
     }
+
 
     @Transactional
     @Override
