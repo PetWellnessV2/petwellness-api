@@ -93,7 +93,7 @@ public class AuthenticationController {
         usuario.setApellido(dto.getApellido());
         usuario.setEmail(dto.getEmail());
         usuario.setTelefono(dto.getTelefono());
-        usuario.setContrasena(dto.getContrasena());  // Asigna la contraseña
+        usuario.setContrasena(dto.getContrasena());
         usuario.setTipoUsuario(dto.getTipoUsuario());
         usuario.setCreatedAt(dto.getCreatedAt());
         usuario.setUpdatedAt(dto.getUpdatedAt());
