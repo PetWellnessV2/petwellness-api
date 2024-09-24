@@ -49,16 +49,16 @@ public class ArchivoServiceImpl implements ArchivoService {
         return archivo;
     }
 
-    @Override
     @Transactional
+    @Override
     public ArchivoDTO createArchivo(ArchivoDTO archivoDTO) {
         Archivos archivo = mapToEntity(archivoDTO);
         archivoRepository.save(archivo);
         return mapToDTO(archivo);
     }
 
-    @Override
     @Transactional
+    @Override
     public ArchivoDTO updateArchivo(Integer id, ArchivoDTO archivoDTO) {
         Optional<Archivos> optionalArchivo = archivoRepository.findById(id);
         if (optionalArchivo.isEmpty()) {
@@ -80,22 +80,22 @@ public class ArchivoServiceImpl implements ArchivoService {
         return mapToDTO(archivo);
     }
 
-    @Override
     @Transactional
+    @Override
     public void deleteArchivo(Integer id) {
         archivoRepository.deleteById(id);
     }
 
+    @Transactional
     @Override
-    @Transactional(readOnly = true)
     public ArchivoDTO getArchivoById(Integer id) {
         Archivos archivo = archivoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Archivo no encontrado"));
         return mapToDTO(archivo);
     }
 
+    @Transactional
     @Override
-    @Transactional(readOnly = true)
     public List<ArchivoDTO> getAllArchivos() {
         return archivoRepository.findAll().stream()
                 .map(this::mapToDTO)
