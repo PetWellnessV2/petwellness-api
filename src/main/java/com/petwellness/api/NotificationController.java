@@ -31,6 +31,13 @@ public class NotificationController {
         return new ResponseEntity<>(notificationDTO, HttpStatus.OK);
     }
 
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<List<NotificationDTO>> getNotificacionesByUsuarioId(@PathVariable Integer usuarioId) {
+        List<NotificationDTO> notifications = notificationService.getNotificacionesByUsuarioId(usuarioId);
+        return new ResponseEntity<>(notifications, HttpStatus.OK);
+    }
+
+
     @PostMapping
     public ResponseEntity<NotificationRegistroDTO> createNotificacion(@Valid @RequestBody NotificationRegistroDTO notificationRegistroDTO) {
         NotificationRegistroDTO newNotificacion = notificationService.createNotificacion(notificationRegistroDTO);
@@ -39,11 +46,17 @@ public class NotificationController {
 
     // Marcar una notificación como leída
     @PutMapping("/{id}")
-    public ResponseEntity<NotificationRegistroDTO> marcarNotificacionComoLeida(
+    public ResponseEntity<NotificationRegistroDTO> updateNotificacion(
             @PathVariable Integer id,
             @Valid @RequestBody NotificationRegistroDTO notificationRegistroDTO) {
         NotificationRegistroDTO updateNotificacion = notificationService.updateNotificacion(id, notificationRegistroDTO);
         return new ResponseEntity<>(updateNotificacion, HttpStatus.OK);
+    }
+
+    @PutMapping("/leido/{id}")
+    public ResponseEntity<NotificationRegistroDTO> markNotificationAsRead(@PathVariable Integer id) {
+        NotificationRegistroDTO notificationDTO = notificationService.markAsRead(id);
+        return new ResponseEntity<>(notificationDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

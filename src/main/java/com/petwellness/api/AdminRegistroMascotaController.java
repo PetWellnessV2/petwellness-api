@@ -1,5 +1,6 @@
 package com.petwellness.api;
 
+import com.petwellness.dto.NotificationRegistroDTO;
 import com.petwellness.dto.RegistroMascotaDTO;
 import com.petwellness.model.entity.RegistroMascota;
 import com.petwellness.model.entity.Usuario;
@@ -94,6 +95,13 @@ public class AdminRegistroMascotaController {
             // Guardar los cambios
             RegistroMascota updatedMascota = mascotaDatosService.update(id, existingMascota);
             RegistroMascotaDTO updatedDTO = convertToDTO(updatedMascota);
+
+            // Crear una notificación cada vez que se actualiza una mascota
+            NotificationRegistroDTO notificationDTO = new NotificationRegistroDTO();
+            notificationDTO.setUsuarioId(existingMascota.getUsuario().getUserId());
+            notificationDTO.setMensaje("La mascota " + existingMascota.getNombre() + " ha sido actualizada.");
+            notificationDTO.setLeida(false);  // Por defecto, la notificación no ha sido leída
+            notificationService.createNotificacion(notificationDTO);
 
 
             return new ResponseEntity<>(updatedDTO, HttpStatus.OK); // Mascota actualizada correctamente
