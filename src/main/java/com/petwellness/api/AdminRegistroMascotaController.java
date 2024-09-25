@@ -4,6 +4,7 @@ import com.petwellness.dto.RegistroMascotaDTO;
 import com.petwellness.model.entity.RegistroMascota;
 import com.petwellness.model.entity.Usuario;
 import com.petwellness.service.MascotaDatosService;
+import com.petwellness.service.NotificationService;
 import com.petwellness.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class AdminRegistroMascotaController {
 
     private final MascotaDatosService mascotaDatosService;
     private final UsuarioService usuarioService;
+    private final NotificationService notificationService;
 
     @GetMapping
     public ResponseEntity<List<RegistroMascotaDTO>> getAllRegistroMascotas() {
@@ -93,6 +95,10 @@ public class AdminRegistroMascotaController {
             RegistroMascota updatedMascota = mascotaDatosService.update(id, existingMascota);
             RegistroMascotaDTO updatedDTO = convertToDTO(updatedMascota);
 
+            // Notificar al usuario (dueño de la mascota)
+            notificationService.enviarNotificacion(existingMascota.getUsuario().getUserId(),
+                    "La información de tu mascota " + existingMascota.getNombre() + " ha sido actualizada.");
+
             return new ResponseEntity<>(updatedDTO, HttpStatus.OK); // Mascota actualizada correctamente
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Error: datos inválidos
@@ -113,31 +119,11 @@ public class AdminRegistroMascotaController {
         registroMascota.setMiembroID(dto.getMiembroID());
         registroMascota.setTitularPoliza(dto.getTitularPoliza());
         registroMascota.setInfoAdicional(dto.getInfoAdicional());
-        registroMascota.setUsuario(usuarioService.getUsuarioById(dto.getUsuarioId()).get());
+
         return registroMascota;
     }
 
-    @PostMapping
-    public ResponseEntity<RegistroMascotaDTO> createRegistroMascota(
-            @RequestBody RegistroMascotaDTO registroMascotaDTO) {
-        try {
-            RegistroMascota registroMascota = convertToEntity(registroMascotaDTO);
 
-            // Buscar el usuario por ID y asociarlo a la mascota
-            Optional<Usuario> usuarioOptional = usuarioService.getUsuarioById(registroMascotaDTO.getUsuarioId());
-            if (usuarioOptional.isPresent()) {
-                registroMascota.setUsuario(usuarioOptional.get());
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Usuario no encontrado
-            }
-
-            RegistroMascota nuevaMascota = mascotaDatosService.create(registroMascota);
-            RegistroMascotaDTO nuevaMascotaDTO = convertToDTO(nuevaMascota);
-            return new ResponseEntity<>(nuevaMascotaDTO, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Error al crear la mascota
-        }
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRegistroMascota(@PathVariable Integer id) {
