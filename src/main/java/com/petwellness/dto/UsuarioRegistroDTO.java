@@ -8,7 +8,7 @@ import com.petwellness.model.enums.TipoUser;
 import java.time.LocalDateTime;
 
 @Data
-public class UsuarioDTO {
+public class UsuarioRegistroDTO {
     private Integer userId;
     @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
@@ -20,5 +20,8 @@ public class UsuarioDTO {
     @NotBlank(message = "El número telefónico es obligatorio")
     @Size(min = 9, max = 9, message = "El teléfono debe tener 9 dígitos")
     private String telefono;
+    @NotBlank(message = "La contraseña es obligatorio")
+    @Size(min = 8, max = 12, message = "La contraseña debe tener entre 8 y 12 caracteres")
+    private String contrasena;
     private TipoUser tipoUsuario;
 }

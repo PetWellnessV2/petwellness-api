@@ -119,31 +119,11 @@ public class AdminRegistroMascotaController {
         registroMascota.setMiembroID(dto.getMiembroID());
         registroMascota.setTitularPoliza(dto.getTitularPoliza());
         registroMascota.setInfoAdicional(dto.getInfoAdicional());
-        registroMascota.setUsuario(usuarioService.getUsuarioById(dto.getUsuarioId()).get());
+
         return registroMascota;
     }
 
-    @PostMapping
-    public ResponseEntity<RegistroMascotaDTO> createRegistroMascota(
-            @RequestBody RegistroMascotaDTO registroMascotaDTO) {
-        try {
-            RegistroMascota registroMascota = convertToEntity(registroMascotaDTO);
 
-            // Buscar el usuario por ID y asociarlo a la mascota
-            Optional<Usuario> usuarioOptional = usuarioService.getUsuarioById(registroMascotaDTO.getUsuarioId());
-            if (usuarioOptional.isPresent()) {
-                registroMascota.setUsuario(usuarioOptional.get());
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Usuario no encontrado
-            }
-
-            RegistroMascota nuevaMascota = mascotaDatosService.create(registroMascota);
-            RegistroMascotaDTO nuevaMascotaDTO = convertToDTO(nuevaMascota);
-            return new ResponseEntity<>(nuevaMascotaDTO, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Error al crear la mascota
-        }
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRegistroMascota(@PathVariable Integer id) {
