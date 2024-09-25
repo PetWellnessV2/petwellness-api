@@ -1,95 +1,116 @@
 package com.petwellness.service.impl;
 
-import com.petwellness.dto.RecordatorioDTO;
 import com.petwellness.model.entity.Recordatorio;
+import com.petwellness.model.entity.Consulta;
 import com.petwellness.model.entity.Usuario;
 import com.petwellness.repository.RecordatorioRepository;
 import com.petwellness.repository.UsuarioRepository;
 import com.petwellness.service.RecordatorioService;
-import com.petwellness.util.NotificacionUtil;
-import jakarta.validation.Valid;
+import com.petwellness.service.ConsultaService;
+import com.petwellness.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
+import jakarta.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
-import java.time.LocalDateTime;
-
-@Service
-@Validated
 @RequiredArgsConstructor
+@Service
 public class RecordatorioServiceImpl implements RecordatorioService {
 
     private final RecordatorioRepository recordatorioRepository;
-    private final UsuarioRepository usuarioRepository;
-    // private final RegistroMascotaRepository registroMascotaRepository;
-    private final NotificacionUtil notificacionUtil;
+    private final ConsultaService consultaService;
+    private final UsuarioService usuarioService;
 
     @Override
-    @Transactional
-    public RecordatorioDTO crearRecordatorio(@Valid RecordatorioDTO recordatorioDTO) {
-        validarCamposObligatorios(recordatorioDTO);
-
-        Usuario usuario = usuarioRepository.findById(recordatorioDTO.getUsuarioId().intValue())
-                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
-
-        // RegistroMascota mascota = registroMascotaRepository.findById(recordatorioDTO.getMascotaId())
-        //     .orElseThrow(() -> new IllegalArgumentException("Mascota no encontrada"));
-
-        Recordatorio recordatorio = new Recordatorio();
-        recordatorio.setUsuario(usuario);
-        // recordatorio.setMascota(mascota);
-        recordatorio.setTitulo(recordatorioDTO.getTitulo());
-        recordatorio.setDescripcion(recordatorioDTO.getDescripcion());
-        recordatorio.setFechaHora(recordatorioDTO.getFechaHora());
-
-        Recordatorio savedRecordatorio = recordatorioRepository.save(recordatorio);
-        notificacionUtil.programarNotificacion(savedRecordatorio);
-
-        return convertToDTO(savedRecordatorio);
+    public List<Recordatorio> getAll() {
+        return recordatorioRepository.findAll();
     }
 
     @Override
+    public Recordatorio findById(Integer id) {
+        return recordatorioRepository.findById(id).orElse(null);
+    }
+
     @Transactional
-    public void eliminarRecordatorio(Long id) {
-        Recordatorio recordatorio = recordatorioRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Recordatorio no encontrado"));
-
-        if (recordatorio.getFechaHora().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("No se puede eliminar un recordatorio pasado");
-        }
-
-        recordatorioRepository.delete(recordatorio);
-        notificacionUtil.notificarEliminacionRecordatorio(recordatorio);
+    @Override
+    public Recordatorio create(Recordatorio recordatorio) {
+        return recordatorioRepository.save(recordatorio);
     }
 
-    private void validarCamposObligatorios(RecordatorioDTO recordatorioDTO) {
-        if (recordatorioDTO.getUsuarioId() == null) {
-            throw new IllegalArgumentException("El ID de usuario es obligatorio");
+    @Transactional
+    @Override
+    public Recordatorio update(Integer id, Recordatorio recordatorio) {
+        Recordatorio existing = findById(id);
+        if (existing == null) {
+            throw new IllegalArgumentException("Recordatorio no encontrado con ID: " + id);
         }
-        // if (recordatorioDTO.getMascotaId() == null) {
-        //     throw new IllegalArgumentException("El ID de mascota es obligatorio");
-        // }
-        if (recordatorioDTO.getTitulo() == null || recordatorioDTO.getTitulo().trim().isEmpty()) {
-            throw new IllegalArgumentException("El título es obligatorio");
-        }
-        if (recordatorioDTO.getFechaHora() == null) {
-            throw new IllegalArgumentException("La fecha y hora son obligatorias");
-        }
-        if (recordatorioDTO.getFechaHora().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("La fecha y hora deben ser futuras");
+
+        existing.setIdRecordatorio(recordatorio.getIdRecordatorio());
+        existing.setTipoRecordatorio(recordatorio.getTipoRecordatorio());
+        existing.setFecha(recordatorio.getFecha());
+        existing.setHora(recordatorio.getHora());
+        existing.setDescripcion(recordatorio.getDescripcion());
+        existing.setCompletado(recordatorio.getCompletado());
+        existing.setMascota(recordatorio.getMascota());
+        existing.setUsuario(recordatorio.getUsuario());
+        existing.setFechaHora(recordatorio.getFechaHora());
+        existing.setTitulo(recordatorio.getTitulo());
+
+        return recordatorioRepository.save(existing);
+    }
+
+    @Transactional
+    @Override
+    public void delete(Integer id) {
+        recordatorioRepository.deleteById(id);
+    }
+
+    @Transactional
+    @Override
+    public void generarRecordatoriosAutomaticos() {
+        List<String> tiposConsulta = Arrays.asList("VACUNACION", "CHEQUEO");
+        List<Consulta> consultas = consultaService.getUpcomingConsultasByTipo(tiposConsulta);
+        for (Consulta consulta : consultas) {
+            if (consulta.getFechaHora() == null || consulta.getRegistroMascota() == null || consulta.getTipoConsulta() == null) {
+                continue;
+            }
+
+            String nombreMascota = consulta.getRegistroMascota().getNombre();
+            if (nombreMascota == null) {
+                nombreMascota = "Mascota sin nombre";
+            }
+
+            Usuario usuario = consulta.getRegistroMascota().getUsuario();
+            if (usuario == null) {
+                continue;
+            }
+
+            String tipoConsultaNombre = consulta.getTipoConsulta().name();
+
+            Recordatorio recordatorio = new Recordatorio();
+            recordatorio.setIdRecordatorio(consulta.getIdConsulta());
+            recordatorio.setTipoRecordatorio(tipoConsultaNombre);
+            recordatorio.setFecha(consulta.getFechaHora().toLocalDate());
+            recordatorio.setHora(consulta.getFechaHora().toLocalTime());
+            recordatorio.setDescripcion("Recordatorio de " + tipoConsultaNombre +
+                    " para la mascota: " + nombreMascota);
+            recordatorio.setCompletado(false);
+            recordatorio.setMascota(consulta.getRegistroMascota());
+            recordatorio.setUsuario(usuario);
+            recordatorio.setFechaHora(consulta.getFechaHora());
+            recordatorio.setTitulo("Recordatorio de " + tipoConsultaNombre);
+
+            try {
+                recordatorioRepository.save(recordatorio);
+            } catch (Exception e) {
+                // Registra el error
+                e.printStackTrace();
+                // Opcional: manejar la excepción
+            }
         }
     }
 
-    private RecordatorioDTO convertToDTO(Recordatorio recordatorio) {
-        RecordatorioDTO dto = new RecordatorioDTO();
-        dto.setId(recordatorio.getId());
-        dto.setUsuarioId(Long.valueOf(recordatorio.getUsuario().getUserId()));
-        // dto.setMascotaId(recordatorio.getMascota().getIdMascota());
-        dto.setTitulo(recordatorio.getTitulo());
-        dto.setDescripcion(recordatorio.getDescripcion());
-        dto.setFechaHora(recordatorio.getFechaHora());
-        dto.setCompletado(recordatorio.isCompletado());
-        return dto;
-    }
+
 }

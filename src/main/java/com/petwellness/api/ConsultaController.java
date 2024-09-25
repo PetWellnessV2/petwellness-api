@@ -1,5 +1,6 @@
 package com.petwellness.api;
 
+import com.petwellness.dto.ConsultaDTO;
 import com.petwellness.model.entity.Consulta;
 import com.petwellness.service.ConsultaService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -55,10 +57,5 @@ public class ConsultaController {
         consultaService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
-
-
-
-
 
 }

@@ -3,11 +3,13 @@ package com.petwellness.dto;
 import com.petwellness.model.enums.Especie;
 import com.petwellness.model.enums.Genero;
 import com.petwellness.model.enums.Raza;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDate;
 
 @Data
+@AllArgsConstructor
 public class RegistroMascotaDTO {
 
     private Integer idMascota;
@@ -24,4 +26,8 @@ public class RegistroMascotaDTO {
     private String miembroID;
     private String titularPoliza;
     private String infoAdicional;
+
+    public RegistroMascotaDTO() {
+
+    }
 }

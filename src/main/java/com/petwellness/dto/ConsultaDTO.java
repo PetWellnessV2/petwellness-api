@@ -9,4 +9,5 @@ public class ConsultaDTO {
     private Integer horarioDisponibleId;
     private String razonConsulta;
     private Integer idMascota;
+
 }

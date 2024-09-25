@@ -1,10 +1,10 @@
 package com.petwellness.model.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Data
 @Entity
@@ -13,29 +13,36 @@ public class Recordatorio {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id_recordatorio")
+    private Integer idRecordatorio;
 
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    @NotNull(message = "El usuario es obligatorio")
-    private Usuario usuario;
+    @Column(name = "tipo_recordatorio")
+    private String tipoRecordatorio;
 
-    @ManyToOne
-    @JoinColumn(name = "mascota_id", nullable = false)
-    @NotNull(message = "La mascota es obligatoria")
-    private RegistroMascota mascota;
+    @Column(name = "fecha")
+    private LocalDate fecha;
 
-    @Column(nullable = false)
-    @NotBlank(message = "El título es obligatorio")
-    private String titulo;
+    @Column(name = "hora")
+    private LocalTime hora;
 
-    @Column
+    @Column(name = "descripcion")
     private String descripcion;
 
-    @Column(nullable = false)
-    @NotNull(message = "La fecha y hora son obligatorias")
+    @Column(name = "completado")
+    private Boolean completado;
+
+    @ManyToOne
+    @JoinColumn(name = "mascota_id")
+    private RegistroMascota mascota;
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
+    @Column(name = "fecha_hora")
     private LocalDateTime fechaHora;
 
-    @Column(nullable = false)
-    private boolean completado = false;
+    @Column(name = "titulo")
+    private String titulo;
+
 }

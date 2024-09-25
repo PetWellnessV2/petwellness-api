@@ -10,4 +10,5 @@ public interface UsuarioService {
     void deleteUsuario(Integer id);
     List<Usuario> getAllUsuarios();
     Optional<Usuario> getUsuarioById(Integer id);
+    Usuario findById(Integer usuarioId);
 }

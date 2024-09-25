@@ -9,6 +9,7 @@ import java.util.List;
 public interface ConsultaService {
     List<Consulta> getAll();
     List<Consulta> getAllByMascotaId(Integer idMascota);
+    List<Consulta> getUpcomingConsultasByTipo(List<String> tiposConsulta);
     Page<Consulta> paginate(Pageable pageable);
     Consulta findById(Integer id);
     Consulta create(Consulta consulta);

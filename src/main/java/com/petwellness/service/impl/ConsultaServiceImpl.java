@@ -25,10 +25,14 @@ public class ConsultaServiceImpl implements ConsultaService {
 
     @Override
     public List<Consulta> getAllByMascotaId(Integer idMascota) {
-        return consultaRepository.findByMascotaIdConsulta(idMascota);
+        return consultaRepository.findByRegistroMascotaIdMascota(idMascota);
     }
 
-
+    @Override
+    public List<Consulta> getUpcomingConsultasByTipo(List<String> tiposConsulta) {
+        return consultaRepository.findByTipoConsultaInAndFechaHoraAfter(
+                tiposConsulta, LocalDateTime.now());
+    }
 
     @Override
     public Page<Consulta> paginate(Pageable pageable) {
