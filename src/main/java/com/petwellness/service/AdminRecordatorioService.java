@@ -5,6 +5,7 @@ import com.petwellness.model.enums.RecordatorioStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import java.util.List;
+import com.petwellness.dto.RecordatorioDTO;
 
 public interface AdminRecordatorioService {
     List<Recordatorio> getAll();
@@ -15,9 +16,20 @@ public interface AdminRecordatorioService {
 
 
 
-
     Page<Recordatorio> paginateByUsuarioId(Integer usuarioId, Pageable pageable);
     Page<Recordatorio> paginate(Pageable pageable);
+
+    RecordatorioDTO createRecordatorio(RecordatorioDTO recordatorioDTO);
+    RecordatorioDTO updateRecordatorio(Integer id, RecordatorioDTO recordatorioDTO);
+    void deleteRecordatorio(Integer id);
+    RecordatorioDTO getRecordatorioById(Integer id);
+    List<RecordatorioDTO> getAllRecordatorios();
+
+
+
+
+
+
     Recordatorio findById(Integer userId);
     Recordatorio create(Recordatorio recordatorio);
     Recordatorio update(Integer userId, Recordatorio recordatorio);
