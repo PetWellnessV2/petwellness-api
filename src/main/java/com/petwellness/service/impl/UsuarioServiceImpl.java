@@ -1,5 +1,11 @@
 package com.petwellness.service.impl;
 
+import com.petwellness.dto.UsuarioDTO;
+import com.petwellness.dto.UsuarioRegistroDTO;
+import com.petwellness.exception.BadRequestException;
+import com.petwellness.exception.ResourceNotFoundException;
+import com.petwellness.mapper.UsuarioMapper;
+import com.petwellness.mapper.UsuarioRegistroMapper;
 import com.petwellness.model.entity.Usuario;
 import com.petwellness.repository.UsuarioRepository;
 import com.petwellness.service.UsuarioService;
@@ -9,73 +15,71 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+
 
 @RequiredArgsConstructor
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
     private final UsuarioRepository usuarioRepository;
+    private final UsuarioMapper usuarioMapper;
+    private final UsuarioRegistroMapper usuarioRegistroMapper;
 
     @Transactional
     @Override
-    public Usuario registerUsuario(Usuario usuario) {
-        // Verifica si el email ya está registrado cuando es un nuevo usuario
-        if(usuario.getUserId() == null) { // Nuevo usuario
-            if (usuarioRepository.existsByEmail(usuario.getEmail())) {
-                throw new RuntimeException("El email ya está registrado");
-            }
-        } else { // Actualización de un usuario existente
-            Optional<Usuario> existingUsuario = usuarioRepository.findById(usuario.getUserId());
-            if (existingUsuario.isPresent()) {
-                Usuario usuarioActual = existingUsuario.get();
-                // Solo verifica si el email ha sido cambiado
-                if (!usuarioActual.getEmail().equals(usuario.getEmail()) &&
-                        usuarioRepository.existsByEmail(usuario.getEmail())) {
-                    throw new RuntimeException("El email ya está registrado por otro usuario");
-                }
-            } else {
-                throw new RuntimeException("El usuario no existe");
-            }
-        }
-
+    public UsuarioRegistroDTO registerUsuario(UsuarioRegistroDTO usuarioRegistroDTO) {
+        usuarioRepository.findByNombreAndApellido(usuarioRegistroDTO.getNombre(), usuarioRegistroDTO.getApellido())
+                .ifPresent(existingUsuario ->{
+                    throw new BadRequestException("Ya existe un usuario con el mismo nombre y apellido");
+                });
+        Usuario usuario = usuarioRegistroMapper.toEntity(usuarioRegistroDTO);
+        usuario.setCreatedAt(LocalDateTime.now());
         usuario.setUpdatedAt(LocalDateTime.now());
-        return usuarioRepository.save(usuario);
+        usuario = usuarioRepository.save(usuario);
+        return usuarioRegistroMapper.toDTO(usuario);
     }
 
+    @Transactional
+    @Override
+    public UsuarioRegistroDTO updateUsuario(Integer id, UsuarioRegistroDTO usuarioRegistroDTO) {
+        Usuario usuarioFromDB = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("El usuario con ID "+id+" no existe"));
+        usuarioRepository.findByNombreAndApellido(usuarioRegistroDTO.getNombre(), usuarioRegistroDTO.getApellido())
+                .filter(existingUsuario -> !existingUsuario.getUserId().equals(id))
+                .ifPresent(existingUsuario -> {
+                    throw new BadRequestException("Ya existe un usuario con el mismo id");
+                });
+        usuarioFromDB.setNombre(usuarioRegistroDTO.getNombre());
+        usuarioFromDB.setApellido(usuarioRegistroDTO.getApellido());
+        usuarioFromDB.setEmail(usuarioRegistroDTO.getEmail());
+        usuarioFromDB.setTelefono(usuarioRegistroDTO.getTelefono());
+        usuarioFromDB.setContrasena(usuarioRegistroDTO.getContrasena());
+        usuarioFromDB.setTipoUsuario(usuarioRegistroDTO.getTipoUsuario());
+        usuarioFromDB.setUpdatedAt(LocalDateTime.now());
+
+        usuarioFromDB = usuarioRepository.save(usuarioFromDB);
+        return usuarioRegistroMapper.toDTO(usuarioFromDB);
+    }
 
     @Transactional
     @Override
     public void deleteUsuario(Integer id) {
-        if(!usuarioRepository.existsById(id)) {
-            throw new RuntimeException("El usuario no existe");
-        }
-        usuarioRepository.deleteById(id);
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("El usuario con ID "+id+" no existe"));
+        usuarioRepository.delete(usuario);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
-    public List<Usuario> getAllUsuarios() {
-        return usuarioRepository.findAll();
+    public List<UsuarioDTO> getAllUsuarios() {
+        List<Usuario> usuarios = usuarioRepository.findAll();
+        return usuarios.stream().map(usuarioMapper::toDTO).toList();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
-    public Usuario updateUsuario(Integer id, Usuario usuario) {
-        Usuario existingUsuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("El usuario no existe"));
-
-        existingUsuario.setNombre(usuario.getNombre());
-        existingUsuario.setApellido(usuario.getApellido());
-        existingUsuario.setEmail(usuario.getEmail());
-        // Agrega más campos según sea necesario
-
-        return usuarioRepository.save(existingUsuario);
+    public UsuarioDTO getUsuarioById(Integer id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("El usuario con ID "+id+" no existe"));
+        return usuarioMapper.toDTO(usuario);
     }
-
-    @Transactional
-    @Override
-    public Optional<Usuario> getUsuarioById(Integer id) {
-        return usuarioRepository.findById(id);
-    }
-
 }
