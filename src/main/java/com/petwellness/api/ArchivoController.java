@@ -1,7 +1,9 @@
 package com.petwellness.api;
 
 import com.petwellness.dto.ArchivoDTO;
+import com.petwellness.dto.ArchivoRegistroDTO;
 import com.petwellness.service.ArchivoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,23 +20,25 @@ public class ArchivoController {
 
     // Crear un nuevo archivo
     @PostMapping
-    public ResponseEntity<ArchivoDTO> createArchivo(@RequestBody ArchivoDTO archivoDTO) {
-        ArchivoDTO nuevoArchivo = archivoService.createArchivo(archivoDTO);
-        return new ResponseEntity<>(nuevoArchivo, HttpStatus.CREATED);
+    public ResponseEntity<ArchivoRegistroDTO> createArchivo(@Valid @RequestBody ArchivoRegistroDTO archivoRegistroDTO) {
+        ArchivoRegistroDTO newArchivo = archivoService.createArchivo(archivoRegistroDTO);
+        return new ResponseEntity<>(newArchivo, HttpStatus.CREATED);
     }
 
     // Actualizar un archivo existente
     @PutMapping("/{id}")
-    public ResponseEntity<ArchivoDTO> updateArchivo(@PathVariable Integer id, @RequestBody ArchivoDTO archivoDTO) {
-        ArchivoDTO archivoActualizado = archivoService.updateArchivo(id, archivoDTO);
-        return new ResponseEntity<>(archivoActualizado, HttpStatus.OK);
+    public ResponseEntity<ArchivoRegistroDTO> updateArchivo(
+            @PathVariable Integer id,
+            @Valid @RequestBody ArchivoRegistroDTO archivoRegistroDTO) {
+        ArchivoRegistroDTO updateArchivo = archivoService.updateArchivo(id, archivoRegistroDTO);
+        return new ResponseEntity<>(updateArchivo, HttpStatus.OK);
     }
 
     // Eliminar un archivo
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteArchivo(@PathVariable Integer id) {
         archivoService.deleteArchivo(id);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     // Obtener un archivo por ID
