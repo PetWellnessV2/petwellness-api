@@ -5,6 +5,7 @@ import com.petwellness.dto.ArchivoRegistroDTO;
 import com.petwellness.exception.BadRequestException;
 import com.petwellness.exception.ResourceNotFoundException;
 import com.petwellness.mapper.ArchivoRegistroMapper;
+import com.petwellness.mapper.RegistroMascotaMapper;
 import com.petwellness.model.entity.Archivos;
 import com.petwellness.model.entity.RegistroMascota;
 import com.petwellness.repository.ArchivoRepository;
@@ -24,11 +25,12 @@ public class ArchivoServiceImpl implements ArchivoService {
     private final ArchivoRepository archivoRepository;
     private final MascotaDatosRepository mascotaDatosRepository;
     private final ArchivoRegistroMapper archivoRegistroMapper;
+    private final RegistroMascotaMapper registroMascotaMapper;
+    private final AdminMascotaDatosServiceImpl adminMascotaDatosServiceImpl;
 
     @Transactional
     @Override
     public ArchivoRegistroDTO createArchivo(ArchivoRegistroDTO archivoRegistroDTO) {
-        System.out.println("ID Mascota: " + archivoRegistroDTO.getIdRegistroMascota());
         archivoRepository.findByNombreArchivo(archivoRegistroDTO.getNombreArchivo())
                 .ifPresent(existingArchivo ->{
                     throw new BadRequestException("Ya existe un archivo con el misma título");
@@ -54,11 +56,9 @@ public class ArchivoServiceImpl implements ArchivoService {
                     throw new BadRequestException("Ya existe un archivo con el misma título");
                 });
 
-        // Reasignar la mascota asociada si es necesario
-        RegistroMascota registroMascota = registroMascotaMapper.toEntity(mascotaDatosService.findById(archivoDTO.getIdMascota()));
-        if (registroMascota == null) {
-            throw new RuntimeException("La mascota con ID " + archivoDTO.getIdMascota() + " no existe.");
-        }
+        Integer idMascota = archivoRegistroDTO.getIdRegistroMascota();
+        RegistroMascota registroMascota = mascotaDatosRepository.findById(idMascota)
+                .orElseThrow(() -> new ResourceNotFoundException("La mascota con ID "+idMascota+" no existe"));
 
         archivosFromDB.setNombreArchivo(archivoRegistroDTO.getNombreArchivo());
         archivosFromDB.setDescripcionArchivo(archivoRegistroDTO.getDescripcion());
