@@ -5,8 +5,8 @@ import com.petwellness.model.enums.RecordatorioStatus;
 import com.petwellness.repository.RecordatorioRepository;
 import com.petwellness.service.AdminRecordatorioService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +23,12 @@ public class AdminRecordatorioServiceImpl implements AdminRecordatorioService {
     @Transactional(readOnly = true)
     public List<Recordatorio> findByUsuarioId(Integer userId) {
         return recordatorioRepository.findByUsuario_UserId(userId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Recordatorio> paginateByUsuarioId(Integer userId, Pageable pageable) {
+        return recordatorioRepository.findByUsuario_UserId(userId, pageable);
     }
 
     @Override

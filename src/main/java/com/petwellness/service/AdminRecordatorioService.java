@@ -2,9 +2,8 @@ package com.petwellness.service;
 
 import com.petwellness.model.entity.Recordatorio;
 import com.petwellness.model.enums.RecordatorioStatus;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
+import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface AdminRecordatorioService {
@@ -17,6 +16,7 @@ public interface AdminRecordatorioService {
 
 
 
+    Page<Recordatorio> paginateByUsuarioId(Integer usuarioId, Pageable pageable);
     Page<Recordatorio> paginate(Pageable pageable);
     Recordatorio findById(Integer userId);
     Recordatorio create(Recordatorio recordatorio);

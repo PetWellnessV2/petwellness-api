@@ -6,6 +6,7 @@ import com.petwellness.service.AdminRecordatorioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +25,12 @@ public class AdminRecordatorioController {
         return ResponseEntity.ok(adminRecordatorioService.getAll());
     }
 
-    @GetMapping("/page")
-    public ResponseEntity<Page<Recordatorio>> paginateCategories(
-            @PageableDefault(size = 5, sort = "name") Pageable pageable) {
-        Page<Recordatorio> recordatorios = adminRecordatorioService.paginate(pageable);
-        return new ResponseEntity<Page<Recordatorio>>(recordatorios, HttpStatus.OK);
+    @GetMapping("/usuario/{usuarioId}/page")
+    public ResponseEntity<Page<Recordatorio>> paginateRecordatoriosByUsuario(
+            @PathVariable("usuarioId") Integer usuarioId,
+            @PageableDefault(size = 5, sort = "fechaHora", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Recordatorio> recordatorios = adminRecordatorioService.paginateByUsuarioId(usuarioId, pageable);
+        return new ResponseEntity<>(recordatorios, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
