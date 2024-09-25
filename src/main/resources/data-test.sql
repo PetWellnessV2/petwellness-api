@@ -89,10 +89,15 @@ VALUES
 ON CONFLICT (id_notas) DO NOTHING;
 
 -- Insertar datos de prueba en la tabla recordatorios
-INSERT INTO recordatorio (
-    recordatorio_id, usuario_id, mascota_id, tipo_recordatorio, titulo, descripcion, fecha_hora, recordatorio_status
-)
+INSERT INTO recordatorios (id, id_recordatorio, tipo_recordatorio, fecha, hora, descripcion, completado, mascota_id, usuario_id, fecha_hora, titulo)
+VALUES 
+    (1, 1, 'VACUNACION', '2023-09-05', '2023-09-05 09:00:00', 'Vacunación anual para Firulais', false, 1, 1, '2023-09-05 09:00:00', 'Vacunación Anual'),
+    (2, 2, 'DESPARASITACION', '2023-09-10', '2023-09-10 10:00:00', 'Desparasitación de Mishifu', false, 2, 1, '2023-09-10 10:00:00', 'Desparasitación')
+ON CONFLICT (id_recordatorio) DO NOTHING;
+
+-- Insertar datos de prueba en la tabla notificacion
+INSERT INTO notificaciones (id_notificacion, usuario_user_id, mensaje, leida, fecha_creacion)
 VALUES
-    (1, 1, 1, 'VACUNACION', 'Vacunación Anual', 'Vacunación anual para Firulais', '2023-09-05 09:00:00', 'CREADO'),
-    (2, 1, 2, 'DESPARASITACION', 'Desparasitación', 'Desparasitación de Mishifu', '2023-09-10 10:00:00', 'CREADO')
-ON CONFLICT (recordatorio_id) DO NOTHING;
+    (1, 1, 'Tu mascota ha sido registrada exitosamente', false, '2023-09-01 10:00:00'),
+    (2, 2, 'La información de tu mascota ha sido actualizada', false, '2023-09-01 10:00:00')
+ON CONFLICT (id_notificacion) DO NOTHING;
