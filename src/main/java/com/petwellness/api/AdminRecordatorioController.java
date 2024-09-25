@@ -1,6 +1,7 @@
 package com.petwellness.api;
 
 import com.petwellness.model.entity.Recordatorio;
+import com.petwellness.model.enums.RecordatorioStatus;
 import com.petwellness.service.AdminRecordatorioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,6 +36,33 @@ public class AdminRecordatorioController {
         Recordatorio recordatorio = adminRecordatorioService.findById(id);
         return new ResponseEntity<Recordatorio>(recordatorio, HttpStatus.OK);
     }
+
+
+
+
+
+
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<List<Recordatorio>> getRecordatoriosByUsuario(@PathVariable("usuarioId") Integer usuarioId) {
+        List<Recordatorio> recordatorios = adminRecordatorioService.findByUsuarioId(usuarioId);
+        return new ResponseEntity<>(recordatorios, HttpStatus.OK);
+    }
+
+    @GetMapping("/usuario/{usuarioId}/enviados")
+    public ResponseEntity<List<Recordatorio>> getSentRecordatorios(@PathVariable("usuarioId") Integer usuarioId) {
+        List<Recordatorio> recordatorios = adminRecordatorioService.findByUsuarioIdAndStatus(usuarioId, RecordatorioStatus.ENVIADO);
+        return new ResponseEntity<>(recordatorios, HttpStatus.OK);
+    }
+
+    @GetMapping("/usuario/{usuarioId}/no-enviados")
+    public ResponseEntity<List<Recordatorio>> getUnsentRecordatorios(@PathVariable("usuarioId") Integer usuarioId) {
+        List<Recordatorio> recordatorios = adminRecordatorioService.findByUsuarioIdAndStatus(usuarioId, RecordatorioStatus.CREADO);
+        return new ResponseEntity<>(recordatorios, HttpStatus.OK);
+    }
+
+
+
+
 
 
     @PostMapping

@@ -1,6 +1,7 @@
 package com.petwellness.service.impl;
 
 import com.petwellness.model.entity.Recordatorio;
+import com.petwellness.model.enums.RecordatorioStatus;
 import com.petwellness.repository.RecordatorioRepository;
 import com.petwellness.service.AdminRecordatorioService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,21 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class AdminRecordatorioServiceImpl implements AdminRecordatorioService {
+
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Recordatorio> findByUsuarioId(Integer userId) {
+        return recordatorioRepository.findByUsuario_UserId(userId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Recordatorio> findByUsuarioIdAndStatus(Integer userId, RecordatorioStatus status) {
+        return recordatorioRepository.findByUsuario_UserIdAndRecordatorioStatus(userId, status);
+    }
+
 
     private final RecordatorioRepository recordatorioRepository;
 
@@ -32,8 +48,8 @@ public class AdminRecordatorioServiceImpl implements AdminRecordatorioService {
 
     @Transactional(readOnly = true)
     @Override
-    public Recordatorio findById(Integer Id) {
-        return recordatorioRepository.findById(Id).
+    public Recordatorio findById(Integer userId) {
+        return recordatorioRepository.findById(userId).
                 orElseThrow(()-> new RuntimeException("Recordatorio no encontrado"));
     }
 
@@ -46,8 +62,8 @@ public class AdminRecordatorioServiceImpl implements AdminRecordatorioService {
 
     @Transactional
     @Override
-    public Recordatorio update(Integer id, Recordatorio updatedRecordatorio) {
-        Recordatorio recordatorioFromDb = findById(id);
+    public Recordatorio update(Integer userId, Recordatorio updatedRecordatorio) {
+        Recordatorio recordatorioFromDb = findById(userId);
         recordatorioFromDb.setTitulo(updatedRecordatorio.getTitulo());
         recordatorioFromDb.setDescripcion(updatedRecordatorio.getDescripcion());
         recordatorioFromDb.setFechaHora(updatedRecordatorio.getFechaHora());
@@ -56,8 +72,8 @@ public class AdminRecordatorioServiceImpl implements AdminRecordatorioService {
 
     @Transactional
     @Override
-    public void delete(Integer id) {
-        Recordatorio recordatorio = findById(id);
+    public void delete(Integer userId) {
+        Recordatorio recordatorio = findById(userId);
         recordatorioRepository.delete(recordatorio);
     }
 }
