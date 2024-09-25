@@ -1,10 +1,15 @@
 package com.petwellness.repository;
 
 import com.petwellness.model.entity.RegistroMascota;
+import com.petwellness.model.enums.Especie;
+import com.petwellness.model.enums.Genero;
+
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
+import java.util.Optional;
 
 public interface MascotaDatosRepository extends JpaRepository<RegistroMascota, Integer> {
-    Page<RegistroMascota> findAll(Pageable pageable); // Paginación con Pageable
+    Optional<RegistroMascota> findByNombreAndEspecieAndGeneroAndUsuario_UserId(
+    String nombre, Especie especie, Genero genero, Integer usuarioId);
+
 }

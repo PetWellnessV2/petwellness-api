@@ -1,6 +1,7 @@
 package com.petwellness.service.impl;
 
 import com.petwellness.dto.ArchivoDTO;
+import com.petwellness.mapper.RegistroMascotaMapper;
 import com.petwellness.model.entity.Archivos;
 import com.petwellness.model.entity.RegistroMascota;
 import com.petwellness.repository.ArchivoRepository;
@@ -20,6 +21,7 @@ public class ArchivoServiceImpl implements ArchivoService {
 
     private final ArchivoRepository archivoRepository;
     private final MascotaDatosService mascotaDatosService;
+    private final RegistroMascotaMapper registroMascotaMapper;
 
     // Mapper de Entidad a DTO
     private ArchivoDTO mapToDTO(Archivos archivo) {
@@ -40,7 +42,7 @@ public class ArchivoServiceImpl implements ArchivoService {
         archivo.setFecha(archivoDTO.getFechaHora());
 
         // Buscar y asignar la entidad RegistroMascota
-        RegistroMascota registroMascota = mascotaDatosService.findById(archivoDTO.getIdMascota());
+        RegistroMascota registroMascota = registroMascotaMapper.toEntity(mascotaDatosService.findById(archivoDTO.getIdMascota()));
         if (registroMascota == null) {
             throw new RuntimeException("La mascota con ID " + archivoDTO.getIdMascota() + " no existe.");
         }
@@ -70,7 +72,7 @@ public class ArchivoServiceImpl implements ArchivoService {
         archivo.setFecha(archivoDTO.getFechaHora());
 
         // Reasignar la mascota asociada si es necesario
-        RegistroMascota registroMascota = mascotaDatosService.findById(archivoDTO.getIdMascota());
+        RegistroMascota registroMascota = registroMascotaMapper.toEntity(mascotaDatosService.findById(archivoDTO.getIdMascota()));
         if (registroMascota == null) {
             throw new RuntimeException("La mascota con ID " + archivoDTO.getIdMascota() + " no existe.");
         }
