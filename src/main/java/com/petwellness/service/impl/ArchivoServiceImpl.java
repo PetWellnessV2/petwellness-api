@@ -14,6 +14,7 @@ public class ArchivoServiceImpl implements ArchivoService {
 
     private final ArchivoRepository archivoRepository;
 
+
     @Override
     public List<Archivos> getAllByMascotaId(Integer idMascota) {
         return archivoRepository.findByRegistroMascotaIdMascota(idMascota);

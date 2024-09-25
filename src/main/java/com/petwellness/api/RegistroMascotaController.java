@@ -1,8 +1,12 @@
 package com.petwellness.api;
 
 import com.petwellness.dto.RegistroMascotaDTO;
+import com.petwellness.model.entity.Archivos;
+import com.petwellness.model.entity.Consulta;
 import com.petwellness.model.entity.RegistroMascota;
 import com.petwellness.service.MascotaDatosService;
+import com.petwellness.service.impl.ArchivoServiceImpl;
+import com.petwellness.service.impl.ConsultaServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +21,8 @@ import java.util.stream.Collectors;
 public class RegistroMascotaController {
 
     private final MascotaDatosService mascotaDatosService;
+    private final ConsultaServiceImpl consultaServiceImpl;
+    private final ArchivoServiceImpl archivoServiceImpl;
 
     @GetMapping
     public ResponseEntity<List<RegistroMascotaDTO>> getAllRegistroMascotas() {
@@ -100,10 +106,59 @@ public class RegistroMascotaController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRegistroMascota(@PathVariable Integer id) {
         try {
+            // Eliminar consultas asociadas a la mascota
+            List<Consulta> consultas = consultaServiceImpl.getAllByMascotaId(id);
+            for (Consulta consulta : consultas) {
+                consultaServiceImpl.delete(consulta.getIdConsulta());
+            }
+
+            // Eliminar la mascota
             mascotaDatosService.delete(id);
+
             return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Mascota eliminada correctamente
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Mascota no encontrada
         }
     }
+
+
+
+    @PostMapping
+    public ResponseEntity<RegistroMascotaDTO> createRegistroMascota(@RequestBody RegistroMascotaDTO registroMascotaDTO) {
+        try {
+            RegistroMascota registroMascota = convertToEntity(registroMascotaDTO);
+            RegistroMascota savedMascota = mascotaDatosService.create(registroMascota);
+            RegistroMascotaDTO savedDTO = convertToDTO(savedMascota);
+            return new ResponseEntity<>(savedDTO, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private RegistroMascota convertToEntity(RegistroMascotaDTO dto) {
+        RegistroMascota registroMascota = new RegistroMascota();
+        registroMascota.setEspecie(dto.getEspecie());
+        registroMascota.setGenero(dto.getGenero());
+        registroMascota.setRaza(dto.getRaza());
+        registroMascota.setNombre(dto.getNombre());
+        registroMascota.setEdad(dto.getEdad());
+        registroMascota.setFoto(dto.getFoto());
+        registroMascota.setFechaNacimiento(dto.getFechaNacimiento());
+        registroMascota.setDescripcion(dto.getDescripcion());
+        registroMascota.setDireccion(dto.getDireccion());
+        registroMascota.setMiembroID(dto.getMiembroID());
+        registroMascota.setTitularPoliza(dto.getTitularPoliza());
+        registroMascota.setInfoAdicional(dto.getInfoAdicional());
+
+        if (dto.getUsuarioId() != null) {
+            RegistroMascota existingMascota = mascotaDatosService.findById(dto.getUsuarioId());
+            if (existingMascota == null) {
+                throw new IllegalArgumentException("Usuario no encontrado con ID: " + dto.getUsuarioId());
+            }
+            registroMascota.setUsuario(existingMascota.getUsuario());
+        }
+
+        return registroMascota;
+    }
+
 }

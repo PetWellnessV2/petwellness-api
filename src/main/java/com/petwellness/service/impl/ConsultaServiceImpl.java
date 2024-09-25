@@ -24,6 +24,13 @@ public class ConsultaServiceImpl implements ConsultaService {
     }
 
     @Override
+    public List<Consulta> getAllByMascotaId(Integer idMascota) {
+        return consultaRepository.findByMascotaIdConsulta(idMascota);
+    }
+
+
+
+    @Override
     public Page<Consulta> paginate(Pageable pageable) {
         return consultaRepository.findAll(pageable);
     }
