@@ -1,6 +1,9 @@
 package com.petwellness.service;
 
 import com.petwellness.dto.RegistroMascotaDTO;
+import com.petwellness.model.enums.Especie;
+import com.petwellness.model.enums.Genero;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,4 +16,8 @@ public interface MascotaDatosService {
     RegistroMascotaDTO create(RegistroMascotaDTO registroMascotaDTO);
     RegistroMascotaDTO update(Integer id, RegistroMascotaDTO registroMascota);
     void delete(Integer id);
+
+    // Filtro de mascotas por nombre, especie y genero
+    List<RegistroMascotaDTO> findWithFilters(String nombre, Especie especie, Genero genero);
+
 }

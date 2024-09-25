@@ -5,6 +5,8 @@ import com.petwellness.exception.BadRequestException;
 import com.petwellness.exception.ResourceNotFoundException;
 import com.petwellness.mapper.RegistroMascotaMapper;
 import com.petwellness.model.entity.RegistroMascota;
+import com.petwellness.model.enums.Especie;
+import com.petwellness.model.enums.Genero;
 import com.petwellness.repository.MascotaDatosRepository;
 import com.petwellness.service.MascotaDatosService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class AdminMascotaDatosServiceImpl implements MascotaDatosService {
@@ -102,5 +105,13 @@ public class AdminMascotaDatosServiceImpl implements MascotaDatosService {
         RegistroMascota registroMascota = mascotaDatosRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("La mascota con ID " + id + " no existe."));
         mascotaDatosRepository.delete(registroMascota);
+    }
+
+    @Override
+    public List<RegistroMascotaDTO> findWithFilters(String nombre, Especie especie, Genero genero) {
+        List<RegistroMascota> mascotas = mascotaDatosRepository.findAllWithFilters(nombre, especie, genero);
+        return mascotas.stream()
+                .map(registroMascotaMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }

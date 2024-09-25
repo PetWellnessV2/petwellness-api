@@ -1,6 +1,8 @@
 package com.petwellness.api;
 
 import com.petwellness.dto.RegistroMascotaDTO;
+import com.petwellness.model.enums.Especie;
+import com.petwellness.model.enums.Genero;
 import com.petwellness.service.MascotaDatosService;
 
 import jakarta.validation.Valid;
@@ -60,5 +62,16 @@ public class AdminRegistroMascotaController {
     public ResponseEntity<Void> deleteRegistroMascota(@PathVariable Integer id) {
         mascotaDatosService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+
+    // Filtro de mascotas por nombre, especie y genero
+    @GetMapping("/filter")
+    public ResponseEntity<List<RegistroMascotaDTO>> findWithFilters(@RequestParam(required = false) String nombre,
+                                                                   @RequestParam(required = false) Especie especie,
+                                                                   @RequestParam(required = false) Genero genero) {
+
+        List<RegistroMascotaDTO> mascotas = mascotaDatosService.findWithFilters(nombre, especie, genero);
+        return new ResponseEntity<>(mascotas, HttpStatus.OK);
     }
 }
