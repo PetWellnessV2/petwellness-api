@@ -35,7 +35,6 @@ public class RecomendacionController {
         dto.setCosto(producto.getCosto());
         dto.setTipoProducto(producto.getTipoProducto());
         dto.setStock(producto.getStock());
-        // Agrega otros campos si es necesario
         return dto;
     }
 }
