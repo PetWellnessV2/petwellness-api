@@ -34,7 +34,6 @@ public class AdminRecordatorioController {
         return new ResponseEntity<>(recordatorios, HttpStatus.OK);
     }
 
-
     @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<List<Recordatorio>> getRecordatoriosByUsuario(@PathVariable("usuarioId") Integer usuarioId) {
         List<Recordatorio> recordatorios = adminRecordatorioService.findByUsuarioId(usuarioId);
@@ -65,15 +64,15 @@ public class AdminRecordatorioController {
         return new ResponseEntity<>(recordatorioActualizado, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRecordatorio(@PathVariable Integer id) {
-        adminRecordatorioService.deleteRecordatorio(id);
+    @DeleteMapping("/usuario/{usuarioId}")
+    public ResponseEntity<Void> deleteRecordatoriosByUsuario(@PathVariable Integer usuarioId) {
+        adminRecordatorioService.deleteRecordatoriosByUsuarioId(usuarioId);
         return ResponseEntity.noContent().build();
     }
 
-
-
-
-
+    @GetMapping("/{id}")
+    public ResponseEntity<RecordatorioDTO> getRecordatorioById(@PathVariable Integer id) {
+        RecordatorioDTO recordatorio = adminRecordatorioService.getRecordatorioById(id);
+        return ResponseEntity.ok(recordatorio);
+    }
 }
-
