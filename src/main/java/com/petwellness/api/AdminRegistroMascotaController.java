@@ -95,9 +95,6 @@ public class AdminRegistroMascotaController {
             RegistroMascota updatedMascota = mascotaDatosService.update(id, existingMascota);
             RegistroMascotaDTO updatedDTO = convertToDTO(updatedMascota);
 
-            // Notificar al usuario (dueño de la mascota)
-            notificationService.enviarNotificacion(existingMascota.getUsuario().getUserId(),
-                    "La información de tu mascota " + existingMascota.getNombre() + " ha sido actualizada.");
 
             return new ResponseEntity<>(updatedDTO, HttpStatus.OK); // Mascota actualizada correctamente
         } catch (IllegalArgumentException e) {
