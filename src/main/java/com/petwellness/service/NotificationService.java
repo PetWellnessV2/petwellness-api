@@ -11,4 +11,6 @@ public interface NotificationService {
     NotificationRegistroDTO updateNotificacion(Integer id, NotificationRegistroDTO notificacionRegistroDTO);
     NotificationRegistroDTO createNotificacion(NotificationRegistroDTO notificacionRegistroDTO);
     void deleteNotificacion(Integer id);
+    NotificationRegistroDTO markAsRead(Integer id);
+    List<NotificationDTO> getNotificacionesByUsuarioId(Integer usuarioId);
 }
