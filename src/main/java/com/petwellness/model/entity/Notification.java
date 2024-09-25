@@ -22,8 +22,8 @@ public class Notification {
     private String mensaje;
 
     @Column(name = "leida")
-    private boolean leida;  // Estado: si la notificación ha sido leída o no
+    private boolean leida;
 
     @Column(name = "fecha_creacion")
-    private LocalDateTime fechaCreacion;  // Fecha y hora en que se creó la notificación
+    private LocalDateTime fechaCreacion;
 }

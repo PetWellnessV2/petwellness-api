@@ -1,5 +1,6 @@
 package com.petwellness.api;
 
+import com.petwellness.dto.NotificationRegistroDTO;
 import com.petwellness.dto.RegistroMascotaDTO;
 import com.petwellness.model.enums.Especie;
 import com.petwellness.model.enums.Genero;
@@ -54,7 +55,6 @@ public class AdminRegistroMascotaController {
     public ResponseEntity<RegistroMascotaDTO> updateRegistroMascota(@PathVariable Integer id, @Valid @RequestBody RegistroMascotaDTO registroMascotaDTO) {
         RegistroMascotaDTO updatedMascota = mascotaDatosService.update(id, registroMascotaDTO);
         return new ResponseEntity<>(updatedMascota, HttpStatus.OK);
-            
     }
 
 

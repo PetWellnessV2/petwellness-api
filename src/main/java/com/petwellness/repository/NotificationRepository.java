@@ -1,11 +1,14 @@
 package com.petwellness.repository;
 
+import com.petwellness.model.entity.Medicamentos;
 import com.petwellness.model.entity.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface NotificationRepository extends JpaRepository<Notification, Integer> {
-    List<Notification> findByUsuario_UserId(Integer usuarioId);  // Obtener las notificaciones de un usuario
+    Optional<Notification> findByMensaje(String mensaje);
+    List<Notification> findByUsuarioUserId(Integer usuarioId);
 }
