@@ -5,20 +5,18 @@ import com.petwellness.dto.ArchivoRegistroDTO;
 import com.petwellness.exception.BadRequestException;
 import com.petwellness.exception.ResourceNotFoundException;
 import com.petwellness.mapper.ArchivoRegistroMapper;
+import com.petwellness.mapper.RegistroMascotaMapper;
 import com.petwellness.model.entity.Archivos;
 import com.petwellness.model.entity.RegistroMascota;
 import com.petwellness.repository.ArchivoRepository;
 import com.petwellness.repository.MascotaDatosRepository;
 import com.petwellness.service.ArchivoService;
-import com.petwellness.service.MascotaDatosService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,11 +25,12 @@ public class ArchivoServiceImpl implements ArchivoService {
     private final ArchivoRepository archivoRepository;
     private final MascotaDatosRepository mascotaDatosRepository;
     private final ArchivoRegistroMapper archivoRegistroMapper;
+    private final RegistroMascotaMapper registroMascotaMapper;
+    private final AdminMascotaDatosServiceImpl adminMascotaDatosServiceImpl;
 
     @Transactional
     @Override
     public ArchivoRegistroDTO createArchivo(ArchivoRegistroDTO archivoRegistroDTO) {
-        System.out.println("ID Mascota: " + archivoRegistroDTO.getIdRegistroMascota());
         archivoRepository.findByNombreArchivo(archivoRegistroDTO.getNombreArchivo())
                 .ifPresent(existingArchivo ->{
                     throw new BadRequestException("Ya existe un archivo con el misma título");
