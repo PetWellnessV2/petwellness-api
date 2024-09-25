@@ -1,7 +1,9 @@
 package com.petwellness.api;
 
 import com.petwellness.dto.MedicamentosDTO;
+import com.petwellness.dto.MedicamentosRegistroDTO;
 import com.petwellness.service.MedicamentosService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,17 +31,17 @@ public class MedicamentosController {
     }
 
     @PostMapping
-    public ResponseEntity<MedicamentosDTO> createMedicamento(@RequestBody MedicamentosDTO medicamentoDTO) {
-        MedicamentosDTO nuevoMedicamento = medicamentosService.createMedicamento(medicamentoDTO);
-        return new ResponseEntity<>(nuevoMedicamento, HttpStatus.CREATED);
+    public ResponseEntity<MedicamentosRegistroDTO> createMedicamento(@Valid @RequestBody MedicamentosRegistroDTO medicamentosRegistroDTO) {
+        MedicamentosRegistroDTO newMedicamento = medicamentosService.createMedicamento(medicamentosRegistroDTO);
+        return new ResponseEntity<>(newMedicamento, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MedicamentosDTO> updateMedicamento(
+    public ResponseEntity<MedicamentosRegistroDTO> updateMedicamento(
             @PathVariable Integer id,
-            @RequestBody MedicamentosDTO medicamentoDTO) {
-        MedicamentosDTO medicamentoActualizado = medicamentosService.updateMedicamento(id, medicamentoDTO);
-        return new ResponseEntity<>(medicamentoActualizado, HttpStatus.OK);
+            @Valid @RequestBody MedicamentosRegistroDTO medicamentosRegistroDTO) {
+        MedicamentosRegistroDTO updateMedicamento = medicamentosService.updateMedicamento(id, medicamentosRegistroDTO);
+        return new ResponseEntity<>(updateMedicamento, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
