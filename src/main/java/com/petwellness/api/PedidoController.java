@@ -26,19 +26,32 @@ public class PedidoController {
         return new ResponseEntity<>(pedidoService.crearPedido(pedidoDTO), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<PedidoDTO> actualizarPedido(@PathVariable Integer id, @RequestBody PedidoDTO pedidoDTO) {
-        return ResponseEntity.ok(pedidoService.actualizarPedido(id, pedidoDTO));
+    @PostMapping("/{pedidoId}/productos/{productoId}")
+    public ResponseEntity<PedidoDTO> agregarProductoAPedido(
+            @PathVariable Integer pedidoId,
+            @PathVariable Integer productoId,
+            @RequestParam Integer cantidad) {
+        return ResponseEntity.ok(pedidoService.agregarProductoAPedido(pedidoId, productoId, cantidad));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarPedido(@PathVariable Integer id) {
-        pedidoService.eliminarPedido(id);
+    @PutMapping("/{pedidoId}")
+    public ResponseEntity<PedidoDTO> actualizarPedido(
+            @PathVariable Integer pedidoId,
+            @RequestBody PedidoDTO pedidoDTO) {
+        return ResponseEntity.ok(pedidoService.actualizarPedido(pedidoId, pedidoDTO));
+    }
+
+    @DeleteMapping("/{pedidoId}/productos/{productoId}")
+    public ResponseEntity<Void> eliminarProductoDePedido(
+            @PathVariable Integer pedidoId,
+            @PathVariable Integer productoId) {
+        pedidoService.eliminarProductoDePedido(pedidoId, productoId);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<PedidoDTO> obtenerPedidoPorId(@PathVariable Integer id) {
-        return ResponseEntity.ok(pedidoService.obtenerPedidoPorId(id));
+    @DeleteMapping("/{pedidoId}")
+    public ResponseEntity<Void> eliminarPedido(@PathVariable Integer pedidoId) {
+        pedidoService.eliminarPedido(pedidoId);
+        return ResponseEntity.noContent().build();
     }
 }

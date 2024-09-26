@@ -4,7 +4,7 @@ import com.petwellness.model.enums.EstadoPedido;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Data
 public class PedidoDTO {
@@ -12,5 +12,5 @@ public class PedidoDTO {
     private Integer usuarioId;
     private LocalDateTime fechaPedido;
     private EstadoPedido estado;
-    private Set<DetallePedidoDTO> detalles;
+    private List<DetallePedidoDTO> detalles;
 }

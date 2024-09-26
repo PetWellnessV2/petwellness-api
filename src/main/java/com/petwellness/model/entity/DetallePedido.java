@@ -1,6 +1,5 @@
 package com.petwellness.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,14 +14,12 @@ public class DetallePedido {
     @Column(name = "id_detalle")
     private Integer idDetalle;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_pedido", nullable = false)
-    @JsonBackReference
     private Pedido pedido;
 
-    @ManyToOne
-    @JoinColumn(name = "id_producto", nullable = false)
-    private Producto producto;
+    @Column(name = "id_producto", nullable = false)
+    private Integer idProducto;
 
     @Column(nullable = false)
     private Integer cantidad;
