@@ -9,4 +9,5 @@ public interface HorariosDisponiblesService {
     void eliminarHorario(Integer id);
     List<HorariosDisponibles> obtenerHorarios();
     List<HorariosDisponibles> obtenerHorariosPorVeterinarioId(Integer veterinarioId);
+
 }
