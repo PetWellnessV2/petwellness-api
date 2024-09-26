@@ -3,6 +3,8 @@ package com.petwellness.model.entity;
 import com.petwellness.model.enums.TipoProducto;
 import jakarta.persistence.*;
 import lombok.Data;
+import java.math.BigDecimal;
+
 
 @Data
 @Entity
@@ -23,7 +25,7 @@ public class Producto {
     private String descripcion;
 
     @Column(name = "costo", nullable = false)
-    private Double costo;
+    private BigDecimal costo;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_producto", nullable = false)
