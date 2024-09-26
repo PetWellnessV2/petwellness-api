@@ -4,15 +4,17 @@ import com.petwellness.dto.ColeccionDTO;
 import com.petwellness.model.entity.Coleccion;
 import com.petwellness.model.entity.ProductoColeccion;
 import com.petwellness.model.entity.Producto;
+import com.petwellness.model.entity.Usuario;
 import com.petwellness.repository.ColeccionRepository;
 import com.petwellness.repository.ProductoColeccionRepository;
 import com.petwellness.repository.ProductoRepository;
+import com.petwellness.repository.UsuarioRepository;
 import com.petwellness.service.ColeccionService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,21 +25,29 @@ public class ColeccionServiceImpl implements ColeccionService {
     private final ColeccionRepository coleccionRepository;
     private final ProductoColeccionRepository productoColeccionRepository;
     private final ProductoRepository productoRepository;
-    private final ModelMapper modelMapper;
+    private final UsuarioRepository usuarioRepository;
 
     @Override
     public List<ColeccionDTO> obtenerColeccionesDeUsuario(Integer userId) {
-        return coleccionRepository.findByUsuarioUserId(userId).stream()
-                .map(this::mapearADTO)
+        List<Coleccion> colecciones = coleccionRepository.findByUsuarioUserId(userId);
+        return colecciones.stream()
+                .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
     public ColeccionDTO crearColeccion(ColeccionDTO coleccionDTO) {
-        Coleccion coleccion = mapearAEntidad(coleccionDTO);
+        Usuario usuario = usuarioRepository.findById(coleccionDTO.getUsuarioId())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        
+        Coleccion coleccion = new Coleccion();
+        coleccion.setNombre(coleccionDTO.getNombre());
+        coleccion.setUsuario(usuario);
+        coleccion.setProductosColeccion(new HashSet<>());
+        
         coleccion = coleccionRepository.save(coleccion);
-        return mapearADTO(coleccion);
+        return mapToDTO(coleccion);
     }
 
     @Override
@@ -47,7 +57,7 @@ public class ColeccionServiceImpl implements ColeccionService {
                 .orElseThrow(() -> new RuntimeException("Colección no encontrada"));
         coleccion.setNombre(coleccionDTO.getNombre());
         coleccion = coleccionRepository.save(coleccion);
-        return mapearADTO(coleccion);
+        return mapToDTO(coleccion);
     }
 
     @Override
@@ -69,12 +79,16 @@ public class ColeccionServiceImpl implements ColeccionService {
         Producto producto = productoRepository.findById(productoId)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-        ProductoColeccion productoColeccion = new ProductoColeccion();
-        productoColeccion.setColeccion(coleccion);
-        productoColeccion.setProducto(producto);
-        productoColeccionRepository.save(productoColeccion);
+        boolean productoExiste = productoColeccionRepository.existsByColeccionIdAndProductoIdProducto(coleccionId, productoId);
 
-        return mapearADTO(coleccion);
+        if (!productoExiste) {
+            ProductoColeccion productoColeccion = new ProductoColeccion();
+            productoColeccion.setColeccion(coleccion);
+            productoColeccion.setProducto(producto);
+            productoColeccionRepository.save(productoColeccion);
+        }
+
+        return mapToDTO(coleccion);
     }
 
     @Override
@@ -82,16 +96,16 @@ public class ColeccionServiceImpl implements ColeccionService {
     public void eliminarProductoDeColeccion(Integer coleccionId, Integer productoId) {
         productoColeccionRepository.deleteByColeccionIdAndProductoIdProducto(coleccionId, productoId);
     }
-
-    private ColeccionDTO mapearADTO(Coleccion coleccion) {
-        ColeccionDTO dto = modelMapper.map(coleccion, ColeccionDTO.class);
-        dto.setProductosIds(coleccion.getProductosColeccion().stream()
-                .map(pc -> pc.getProducto().getIdProducto())
-                .collect(Collectors.toSet()));
+    
+    private ColeccionDTO mapToDTO(Coleccion coleccion) {
+        ColeccionDTO dto = new ColeccionDTO();
+        dto.setId(coleccion.getId());
+        dto.setNombre(coleccion.getNombre());
+        dto.setUsuarioId(coleccion.getUsuario().getUserId());
+        
+        List<Integer> productosIds = productoColeccionRepository.findProductIdsByColeccionId(coleccion.getId());
+        dto.setProductosIds(new HashSet<>(productosIds));
+        
         return dto;
-    }
-
-    private Coleccion mapearAEntidad(ColeccionDTO dto) {
-        return modelMapper.map(dto, Coleccion.class);
     }
 }

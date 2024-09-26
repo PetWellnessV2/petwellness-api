@@ -4,6 +4,10 @@ import com.petwellness.model.enums.TipoProducto;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.math.BigDecimal;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 
 @Data
@@ -33,5 +37,10 @@ public class Producto {
 
     @Column(name = "stock", nullable = false)
     private Integer stock;
+
+    @OneToMany(mappedBy = "producto")
+    @JsonIgnore
+    private Set<ProductoColeccion> productosColeccion;
+
 
 }
