@@ -3,13 +3,18 @@ package com.petwellness.api;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.petwellness.dto.RegistroMascotaDTO;
+
 import com.petwellness.model.entity.Consulta;
 import com.petwellness.model.entity.ExamenFisico;
 import com.petwellness.model.entity.ExamenesLaboratorio;
+import com.petwellness.repository.ConsultaRepository;
+import com.petwellness.repository.HorariosDisponiblesRepository;
 import com.petwellness.service.UserVeterinarioService;
 
 import java.util.List;
@@ -40,7 +45,8 @@ public class UserVeterinarioController {
     @GetMapping("/{usuarioUserId}/mascotas/{mascotaId}/examenes-fisicos")
     public ResponseEntity<List<ExamenFisico>> getExamenesFisicos(
             @PathVariable Integer mascotaId, @PathVariable Integer usuarioUserId) {
-        List<ExamenFisico> examenesFisicos = veterinarioService.findExamenesFisicosByMascotaAndUsuarioUserId(mascotaId, usuarioUserId);
+        List<ExamenFisico> examenesFisicos = veterinarioService.findExamenesFisicosByMascotaAndUsuarioUserId(mascotaId,
+                usuarioUserId);
         return ResponseEntity.ok(examenesFisicos);
     }
 
@@ -48,7 +54,20 @@ public class UserVeterinarioController {
     @GetMapping("/{usuarioUserId}/mascotas/{mascotaId}/examenes-laboratorio")
     public ResponseEntity<List<ExamenesLaboratorio>> getExamenesLaboratorio(
             @PathVariable Integer mascotaId, @PathVariable Integer usuarioUserId) {
-        List<ExamenesLaboratorio> examenesLaboratorio = veterinarioService.findExamenesLaboratorioByMascotaAndUsuarioUserId(mascotaId, usuarioUserId);
+        List<ExamenesLaboratorio> examenesLaboratorio = veterinarioService
+                .findExamenesLaboratorioByMascotaAndUsuarioUserId(mascotaId, usuarioUserId);
         return ResponseEntity.ok(examenesLaboratorio);
+    }
+
+    // Posponer consulta
+    @PutMapping("/consultas/{consultaId}")
+    public ResponseEntity<Consulta> posponerConsulta(
+            @PathVariable Integer consultaId,
+            @RequestParam Integer nuevaHora,
+            @RequestParam String nuevaFecha,
+            @RequestParam Integer veterinarioUserId) {
+            
+        Consulta consulta = veterinarioService.posponerConsulta(consultaId, nuevaHora, nuevaFecha, veterinarioUserId);
+        return ResponseEntity.ok(consulta);
     }
 }
