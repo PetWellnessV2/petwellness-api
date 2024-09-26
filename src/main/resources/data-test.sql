@@ -116,6 +116,23 @@ VALUES
     (2, 1, 2, 'DESPARASITACION', 'Desparasitación', 'Desparasitación de Mishifu', '2023-09-10 10:00:00', 'CREADO')
 ON CONFLICT (recordatorio_id) DO NOTHING;
 
+-- Insertar datos de prueba en la tabla pedidos
+INSERT INTO pedidos (id_pedido, usuario_id, fecha_pedido, estado)
+VALUES
+    (1, 1, '2023-09-01 10:00:00', 'PENDIENTE'),
+    (2, 2, '2023-09-02 11:00:00', 'EN_PROCESO'),
+    (3, 1, '2023-09-03 12:00:00', 'ENVIADO')
+ON CONFLICT (id_pedido) DO NOTHING;
+
+-- Insertar datos de prueba en la tabla detalle_pedidos
+INSERT INTO detalle_pedidos (id_detalle, id_pedido, id_producto, cantidad, precio_total)
+VALUES
+    (1, 1, 1, 2, 41.00),
+    (2, 1, 2, 1, 10.25),
+    (3, 2, 3, 3, 76.50),
+    (4, 3, 1, 1, 20.50),
+    (5, 3, 2, 2, 20.50)
+ON CONFLICT (id_detalle) DO NOTHING;
 
 -- Insertar datos de prueba en la tabla notificacion
 INSERT INTO notificaciones (id_notificacion, usuario_user_id, mensaje, leida, fecha_creacion)
