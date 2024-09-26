@@ -47,7 +47,7 @@ public class ConsultaController {
     @PostMapping
     public ResponseEntity<Consulta> createConsulta(@RequestBody Consulta consulta) {
         Consulta newConsulta = consultaService.create(consulta);
-        return new ResponseEntity<Consulta>(newConsulta, HttpStatus.CREATED);
+        return new ResponseEntity<>(newConsulta, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
