@@ -2,6 +2,8 @@ package com.petwellness.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 @Data
 @Entity
@@ -13,6 +15,7 @@ public class ProductoColeccion {
 
     @ManyToOne
     @JoinColumn(name = "coleccion_id", nullable = false)
+    @JsonBackReference
     private Coleccion coleccion;
 
     @ManyToOne

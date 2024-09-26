@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.util.HashSet;
 import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Data
 @Entity
@@ -22,5 +24,6 @@ public class Coleccion {
     private Usuario usuario;
 
     @OneToMany(mappedBy = "coleccion", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<ProductoColeccion> productosColeccion = new HashSet<>();
 }
