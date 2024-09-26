@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -30,9 +31,18 @@ public class PedidoController {
     public ResponseEntity<PedidoDTO> agregarProductoAPedido(
             @PathVariable Integer pedidoId,
             @PathVariable Integer productoId,
-            @RequestParam Integer cantidad) {
+            @RequestBody Map<String, Integer> requestBody) {
+        Integer cantidad = requestBody.get("cantidad");
         return ResponseEntity.ok(pedidoService.agregarProductoAPedido(pedidoId, productoId, cantidad));
     }
+    @PostMapping("/usuario/{usuarioId}/productos/{productoId}")
+public ResponseEntity<PedidoDTO> agregarProductoAPedidoDeUsuario(
+        @PathVariable Integer usuarioId,
+        @PathVariable Integer productoId,
+        @RequestBody Map<String, Integer> requestBody) {
+    Integer cantidad = requestBody.get("cantidad");
+    return ResponseEntity.ok(pedidoService.agregarProductoAPedidoDeUsuario(usuarioId, productoId, cantidad));
+}
 
     @PutMapping("/{pedidoId}")
     public ResponseEntity<PedidoDTO> actualizarPedido(
