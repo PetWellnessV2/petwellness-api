@@ -39,12 +39,31 @@ VALUES
     (2, 'Checkup Mishifu', 'Chequeo anual de salud', '2023-08-20', 2)
 ON CONFLICT (id_archivos) DO NOTHING;
 
+
+-- Insertar datos de prueba en la tabla colecciones
+INSERT INTO colecciones (id, nombre, usuario_id)
+VALUES 
+(1, 'Favoritos de Juan', 1),
+(2, 'Lista de deseos de Juan', 1),
+(3, 'Favoritos de Maria', 2)
+ON CONFLICT (id) DO NOTHING;
+
 -- Insertar datos de prueba en la tabla producto
 INSERT INTO producto (id_producto, nombre_producto, imagen, descripcion, costo, tipo_producto, stock)
 VALUES
     (1, 'Collar para perro', 'collar.png', 'Collar resistente para perros grandes', 20.50, 'ACCESORIO', 100),
-    (2, 'Arena para gatos', 'arena.png', 'Arena absorbente para gatos', 10.25, 'MEDICAMENTO', 200)
+    (2, 'Arena para gatos', 'arena.png', 'Arena absorbente para gatos', 10.25, 'MEDICAMENTO', 200),
+    (3, 'Comida para gatos', 'cat_food.jpg', 'Alimento premium para gatos', 25.50, 'ALIMENTO', 200)
+
 ON CONFLICT (id_producto) DO NOTHING;
+
+-- Insertar datos de prueba de relaciones producto-colección
+INSERT INTO productos_coleccion (id, coleccion_id, producto_id)
+VALUES 
+(1, 1, 1),
+(2, 1, 2),
+(3, 2, 3)
+ON CONFLICT (id) DO NOTHING;
 
 -- Insertar datos de prueba en la tabla carrito_compra
 INSERT INTO carrito_compra (id_compra, usuario_user_id, producto_id_producto, precio_total, created_at, payment_status)
