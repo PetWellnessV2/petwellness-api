@@ -1,13 +1,13 @@
 package com.petwellness.service;
 
-import java.util.List;
-
 import com.petwellness.model.entity.HorariosDisponibles;
 
+import java.util.List;
+
 public interface HorariosDisponiblesService {
-    List<HorariosDisponibles> findAll();
-    HorariosDisponibles findById(Integer id);
-    HorariosDisponibles update(Integer id, HorariosDisponibles horariosDisponibles);
-    HorariosDisponibles create(HorariosDisponibles horariosDisponibles);
-    void deleteById(Integer id);
+    HorariosDisponibles agregarHorario(HorariosDisponibles horario);
+    void eliminarHorario(Integer id);
+    List<HorariosDisponibles> obtenerHorarios();
+    List<HorariosDisponibles> obtenerHorariosPorVeterinarioId(Integer veterinarioId);
+
 }

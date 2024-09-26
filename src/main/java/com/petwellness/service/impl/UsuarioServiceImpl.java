@@ -36,6 +36,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuario.setUpdatedAt(LocalDateTime.now());
         usuario = usuarioRepository.save(usuario);
         return usuarioRegistroMapper.toDTO(usuario);
+
     }
 
     @Transactional

@@ -2,21 +2,23 @@
 INSERT INTO usuarios (user_id, nombre, apellido, email, telefono, contrasena, tipo_usuario, created_at, updated_at)
 VALUES
     (1, 'Juan', 'Pérez', 'juan.perez@example.com', '123456789', 'password123', 'DUEÑO', '2023-09-01 12:00:00', '2023-09-01 12:00:00'),
-    (2, 'Ana', 'García', 'ana.garcia@example.com', '987654321', 'password456', 'VETERINARIO', '2023-09-02 13:00:00', '2023-09-02 13:00:00')
+    (2, 'Ana', 'García', 'ana.garcia@example.com', '987654321', 'password456', 'VETERINARIO', '2023-09-02 13:00:00', '2023-09-02 13:00:00'),
+    (3, 'Jose', 'Jimenez', 'jose4@gmail.com', '985652985', 'contra123', 'VETERINARIO', '2023-10-08 13:00:00', '2023-10-08 13:00:00')
 ON CONFLICT (user_id) DO NOTHING;
 
 -- Insertar datos de prueba en la tabla veterinario
 INSERT INTO veterinario (usuario_user_id, institucion_educativa, especialidad)
 VALUES
-    (1, 'UNIVERSIDAD_NACIONAL_MAYOR_DE_SAN_MARCOS', 'CIRUGIA'),
-    (2, 'CORNELL_UNIVERSITY', 'ODONTOLOGIA')
+    (2, 'UNIVERSIDAD_NACIONAL_MAYOR_DE_SAN_MARCOS', 'CIRUGIA'),
+    (3, 'CORNELL_UNIVERSITY', 'ODONTOLOGIA')
 ON CONFLICT (usuario_user_id) DO NOTHING;
 
 -- Insertar datos de prueba en la tabla albergue
 INSERT INTO horarios_disponibles (id_horario, vet_user_id, hora, fecha)
 VALUES
-    (1, 1, 10, '2023-09-03'),
-    (2, 2, 15, '2023-09-04')
+    (1, 2, 10, '2023-09-03'),
+    (2, 3, 15, '2023-09-04'),
+    (3, 2, 17, '2023-09-05')
 ON CONFLICT (id_horario) DO NOTHING;
 
 -- Insert sample data into albergue table
@@ -73,10 +75,11 @@ VALUES
 ON CONFLICT (id_compra) DO NOTHING;
 
 -- Insertar datos de prueba en la tabla consulta
-INSERT INTO consulta (id_consulta, tipo_consulta, horarios_disponibles_id_horario, registro_mascota_id_mascota, razon_consulta, created_at, updated_at)
+INSERT INTO consulta (id_consulta, tipo_consulta, estado_consulta, horarios_disponibles_id_horario, registro_mascota_id_mascota, razon_consulta, created_at, updated_at)
 VALUES
-    (1, 'SEGUIMIENTO', 1, 1, 'Consulta general para Firulais','2023-09-01 12:00:00', '2023-09-01 12:00:00'),
-    (2, 'URGENCIA', 2, 2, 'Vacunación anual para Mishifu','2024-04-11 12:00:00', '2024-04-11 12:00:00')
+    (1, 'SEGUIMIENTO', 'PENDIENTE', 1, 1, 'Consulta general para Firulais','2023-09-01 12:00:00', '2023-09-01 12:00:00'),
+    (2, 'URGENCIA', 'PENDIENTE', 2, 2, 'Vacunación anual para Mishifu','2024-04-11 12:00:00', '2024-04-11 12:00:00'),
+    (3, 'SEGUIMIENTO', 'COMPLETADO', 3, 1, 'Revision mensual de Firulais','2024-04-10 12:00:00', '2024-04-10 12:00:00')
 ON CONFLICT (id_consulta) DO NOTHING;
 
 -- Insertar datos de prueba en la tabla examenes_laboratorio
