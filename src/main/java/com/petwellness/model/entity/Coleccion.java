@@ -2,6 +2,8 @@ package com.petwellness.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -20,6 +22,5 @@ public class Coleccion {
     private Usuario usuario;
 
     @OneToMany(mappedBy = "coleccion", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ProductoColeccion> productosColeccion;
+    private Set<ProductoColeccion> productosColeccion = new HashSet<>();
 }
-
