@@ -3,6 +3,7 @@ package com.petwellness.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import com.petwellness.model.entity.Consulta;
 import com.petwellness.model.entity.ExamenFisico;
@@ -11,7 +12,7 @@ import com.petwellness.model.entity.RegistroMascota;
 import com.petwellness.model.entity.Veterinario;
 import java.util.List;
 
-
+@Repository
 public interface UserVeterinarioRepository extends JpaRepository<Veterinario, Integer> {
 
             

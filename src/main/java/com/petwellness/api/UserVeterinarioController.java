@@ -13,8 +13,6 @@ import com.petwellness.dto.RegistroMascotaDTO;
 import com.petwellness.model.entity.Consulta;
 import com.petwellness.model.entity.ExamenFisico;
 import com.petwellness.model.entity.ExamenesLaboratorio;
-import com.petwellness.repository.ConsultaRepository;
-import com.petwellness.repository.HorariosDisponiblesRepository;
 import com.petwellness.service.UserVeterinarioService;
 
 import java.util.List;
