@@ -14,7 +14,7 @@ public class ArchivoRegistroMapper {
     public ArchivoRegistroDTO toDTO(Archivos archivos) {
         ArchivoRegistroDTO archivoRegistroDTO = modelMapper.map(archivos, ArchivoRegistroDTO.class);
         archivoRegistroDTO.setIdRegistroMascota(archivos.getRegistroMascota().getIdMascota());
-        return modelMapper.map(archivos, ArchivoRegistroDTO.class);
+        return archivoRegistroDTO;
     }
     public Archivos toEntity(ArchivoRegistroDTO archivoRegistroDTO) {
         return modelMapper.map(archivoRegistroDTO, Archivos.class);
