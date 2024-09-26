@@ -18,4 +18,5 @@ public class ArchivoRegistroDTO {
     private String descripcion;
     @NotNull(message = "El ID de la mascota es obligatorio")
     private Integer idRegistroMascota;
+    private String path;
 }
