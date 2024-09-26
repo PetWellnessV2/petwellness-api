@@ -5,6 +5,7 @@ import com.petwellness.dto.ArchivoRegistroDTO;
 import com.petwellness.exception.BadRequestException;
 import com.petwellness.exception.ResourceNotFoundException;
 import com.petwellness.mapper.ArchivoRegistroMapper;
+import com.petwellness.mapper.RegistroMascotaMapper;
 import com.petwellness.model.entity.Archivos;
 import com.petwellness.model.entity.RegistroMascota;
 import com.petwellness.repository.ArchivoRepository;
@@ -19,8 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +33,6 @@ public class ArchivoServiceImpl implements ArchivoService {
     @Transactional
     @Override
     public ArchivoRegistroDTO createArchivo(ArchivoRegistroDTO archivoRegistroDTO, String path) {
-        System.out.println("ID Mascota: " + archivoRegistroDTO.getIdRegistroMascota());
         archivoRepository.findByNombreArchivo(archivoRegistroDTO.getNombreArchivo())
                 .ifPresent(existingArchivo ->{
                     throw new BadRequestException("Ya existe un archivo con el mismo título");
