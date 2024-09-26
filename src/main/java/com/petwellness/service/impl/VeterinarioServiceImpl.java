@@ -1,5 +1,7 @@
 package com.petwellness.service.impl;
 
+import com.petwellness.dto.VeterinarioDTO;
+import com.petwellness.mapper.VeterinarioMapper;
 import com.petwellness.model.entity.Usuario;
 import com.petwellness.model.entity.Veterinario;
 import com.petwellness.repository.VeterinarioRepository;
@@ -7,6 +9,7 @@ import com.petwellness.service.UsuarioService;
 import com.petwellness.service.VeterinarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,18 +19,25 @@ import java.util.Optional;
 public class VeterinarioServiceImpl implements VeterinarioService {
 
     private final VeterinarioRepository veterinarioRepository;
+    private final VeterinarioMapper veterinarioMapper;
     private final UsuarioService usuarioService;
 
+    @Transactional
     @Override
-    public Veterinario crearVeterinario(Veterinario veterinario) {
-        return veterinarioRepository.save(veterinario);
+    public VeterinarioDTO crearVeterinario(VeterinarioDTO veterinarioDTO) {
+        veterinarioRepository.findByNombre(veterinarioDTO.get)
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public List<Veterinario> obtenerVeterinarios() {
-        return veterinarioRepository.findAll();
+    public List<VeterinarioDTO> obtenerVeterinarios() {
+        List<Veterinario> veterinarios =  veterinarioRepository.findAll();
+        return veterinarios.stream()
+                .map(veterinarioMapper::toDTO)
+                .toList();
     }
 
+    @Transactional
     @Override
     public void eliminarVeterinario(Integer id) {
         if (!veterinarioRepository.existsById(id)) {
@@ -36,6 +46,7 @@ public class VeterinarioServiceImpl implements VeterinarioService {
         veterinarioRepository.deleteById(id);
     }
 
+    @Transactional
     @Override
     public Veterinario actualizarVeterinario(Integer id, Veterinario veterinarioActualizado) {
         Veterinario veterinarioExistente = veterinarioRepository.findById(id)

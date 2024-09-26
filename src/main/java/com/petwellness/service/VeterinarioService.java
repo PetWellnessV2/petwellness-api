@@ -1,12 +1,12 @@
 package com.petwellness.service;
 
-import com.petwellness.model.entity.Veterinario;
+import com.petwellness.dto.VeterinarioDTO;
 
 import java.util.List;
 
 public interface VeterinarioService {
-    Veterinario crearVeterinario(Veterinario veterinario);
-    List<Veterinario> obtenerVeterinarios();
+    VeterinarioDTO crearVeterinario(VeterinarioDTO veterinarioDTO);
+    List<VeterinarioDTO> obtenerVeterinarios();
     void eliminarVeterinario(Integer id);
-    Veterinario actualizarVeterinario(Integer id, Veterinario veterinarioActualizado);
+    VeterinarioDTO actualizarVeterinario(Integer id, VeterinarioDTO veterinarioActualizadoDTO);
 }
