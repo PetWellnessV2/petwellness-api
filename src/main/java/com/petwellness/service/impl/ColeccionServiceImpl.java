@@ -76,10 +76,16 @@ public class ColeccionServiceImpl implements ColeccionService {
         Producto producto = productoRepository.findById(productoId)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-        ProductoColeccion productoColeccion = new ProductoColeccion();
-        productoColeccion.setColeccion(coleccion);
-        productoColeccion.setProducto(producto);
-        productoColeccionRepository.save(productoColeccion);
+        boolean productoExiste = coleccion.getProductosColeccion().stream()
+                .anyMatch(pc -> pc.getProducto().getIdProducto().equals(productoId));
+
+        if (!productoExiste) {
+            ProductoColeccion productoColeccion = new ProductoColeccion();
+            productoColeccion.setColeccion(coleccion);
+            productoColeccion.setProducto(producto);
+            coleccion.getProductosColeccion().add(productoColeccion);
+            coleccionRepository.save(coleccion);
+        }
 
         return mapToDTO(coleccion);
     }
