@@ -11,5 +11,6 @@ public interface UserVeterinarioService {
     List<Consulta> findConsultasByMascotaAndUsuarioUserId(Integer mascotaId, Integer usuarioUserId);
     List<ExamenFisico> findExamenesFisicosByMascotaAndUsuarioUserId(Integer mascotaId, Integer usuarioUserId);
     List<ExamenesLaboratorio> findExamenesLaboratorioByMascotaAndUsuarioUserId(Integer mascotaId, Integer usuarioUserId);
+    Consulta posponerConsulta(Integer consultaId, Integer nuevaHora, String nuevaFecha, Integer veterinarioUserId);
 }
 
