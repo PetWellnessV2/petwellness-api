@@ -1,5 +1,8 @@
 package com.petwellness.service.impl;
 
+import com.petwellness.dto.ConsultaDTO;
+import com.petwellness.exception.ResourceNotFoundException;
+import com.petwellness.mapper.ConsultaMapper;
 import com.petwellness.model.entity.Consulta;
 import com.petwellness.model.entity.HorariosDisponibles;
 import com.petwellness.model.entity.RegistroMascota;
@@ -23,97 +26,92 @@ public class ConsultaServiceImpl implements ConsultaService {
     private final ConsultaRepository consultaRepository;
     private final HorariosDisponiblesRepository horariosDisponiblesRepository;
     private final MascotaDatosRepository registroMascotaRepository;
+    private final ConsultaMapper consultaMapper;
 
     @Transactional(readOnly = true)
     @Override
-    public List<Consulta> getAll() {
-        return consultaRepository.findAll();
+    public List<ConsultaDTO> getAll() {
+        List<Consulta> consultas = consultaRepository.findAll();
+        return consultas.stream()
+                .map(consultaMapper::toDTO)
+                .toList();
     }
 
     @Override
-    public Page<Consulta> paginate(Pageable pageable) {
-        return consultaRepository.findAll(pageable);
+    public Page<ConsultaDTO> paginate(Pageable pageable) {
+        return consultaRepository.findAll(pageable)
+                .map(consultaMapper::toDTO);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Consulta findById(Integer id) {
-        return consultaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Consulta no encontrada"));
+    public ConsultaDTO findById(Integer id) {
+        Consulta consulta = consultaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Consulta no encontrada"));
+        return consultaMapper.toDTO(consulta);
     }
-
 
     @Transactional(readOnly = true)
     @Override
-    public List<Consulta> findByEstadoConsulta(EstadoConsulta estadoConsulta) {
-        return consultaRepository.findByEstadoConsulta(estadoConsulta);
+    public List<ConsultaDTO> findByEstadoConsulta(EstadoConsulta estadoConsulta) {
+        List<Consulta> consultas = consultaRepository.findByEstadoConsulta(estadoConsulta);
+        return consultas.stream()
+                .map(consultaMapper::toDTO)
+                .toList();
     }
 
     @Transactional
     @Override
-    public Consulta create(Consulta consulta) {
-        HorariosDisponibles horario = horariosDisponiblesRepository.findById(consulta.getHorariosDisponibles().getIdHorario())
-                .orElseThrow(() -> new RuntimeException("Horario no encontrado con id: " + consulta.getHorariosDisponibles().getIdHorario()));
+    public ConsultaDTO create(ConsultaDTO consultaDTO) {
+        HorariosDisponibles horario = horariosDisponiblesRepository.findById(consultaDTO.getIdHorario())
+                .orElseThrow(() -> new ResourceNotFoundException("Horario no encontrado con id: " + consultaDTO.getIdHorario()));
 
-        RegistroMascota mascota = registroMascotaRepository.findById(consulta.getRegistroMascota().getIdMascota())
-                .orElseThrow(() -> new RuntimeException("Mascota no encontrada con id: " + consulta.getRegistroMascota().getIdMascota()));
+        RegistroMascota mascota = registroMascotaRepository.findById(consultaDTO.getIdMascota())
+                .orElseThrow(() -> new ResourceNotFoundException("Mascota no encontrada con id: " + consultaDTO.getIdMascota()));
 
+        Consulta consulta = consultaMapper.toEntity(consultaDTO);
         consulta.setHorariosDisponibles(horario);
         consulta.setRegistroMascota(mascota);
-
-        if (consulta.getEstadoConsulta() == null) {
-            consulta.setEstadoConsulta(EstadoConsulta.PENDIENTE);
-        }
-
         consulta.setCreatedAt(LocalDateTime.now());
         consulta.setUpdatedAt(LocalDateTime.now());
 
-        return consultaRepository.save(consulta);
+        Consulta nuevaConsulta = consultaRepository.save(consulta);
+
+        return consultaMapper.toDTO(nuevaConsulta);
     }
 
     @Transactional
     @Override
-    public Consulta update(Integer id, Consulta updateConsulta) {
-        Consulta consultaFromDb = findById(id);
+    public ConsultaDTO update(Integer id, ConsultaDTO consultaDTO) {
+        Consulta consulta = consultaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Consulta no encontrada"));
 
-        if(consultaFromDb == null){
-            throw new IllegalArgumentException("La Consulta con ID " + id + " no existe");
+        if (consultaDTO.getIdHorario() != null) {
+            HorariosDisponibles horario = horariosDisponiblesRepository.findById(consultaDTO.getIdHorario())
+                    .orElseThrow(() -> new ResourceNotFoundException("Horario no encontrado con id: " + consultaDTO.getIdHorario()));
+            consulta.setHorariosDisponibles(horario);
         }
 
-        if (updateConsulta.getRazonConsulta() != null) {
-            consultaFromDb.setRazonConsulta(updateConsulta.getRazonConsulta());
+        if (consultaDTO.getIdMascota() != null) {
+            RegistroMascota mascota = registroMascotaRepository.findById(consultaDTO.getIdMascota())
+                    .orElseThrow(() -> new ResourceNotFoundException("Mascota no encontrada con id: " + consultaDTO.getIdMascota()));
+            consulta.setRegistroMascota(mascota);
         }
 
-        if (updateConsulta.getTipoConsulta() != null) {
-            consultaFromDb.setTipoConsulta(updateConsulta.getTipoConsulta());
-        }
+        consulta.setRazonConsulta(consultaDTO.getRazonConsulta());
+        consulta.setEstadoConsulta(consultaDTO.getEstadoConsulta());
+        consulta.setTipoConsulta(consultaDTO.getTipoConsulta());
+        consulta.setUpdatedAt(LocalDateTime.now());
 
-        if (updateConsulta.getEstadoConsulta() != null) {
-            consultaFromDb.setEstadoConsulta(updateConsulta.getEstadoConsulta());
-        }
-
-        if (updateConsulta.getHorariosDisponibles() != null) {
-            HorariosDisponibles horario = horariosDisponiblesRepository.findById(updateConsulta.getHorariosDisponibles().getIdHorario())
-                    .orElseThrow(() -> new RuntimeException("Horario no encontrado con id: " + updateConsulta.getHorariosDisponibles().getIdHorario()));
-            consultaFromDb.setHorariosDisponibles(horario);
-        }
-
-        if (updateConsulta.getRegistroMascota() != null) {
-            RegistroMascota mascota = registroMascotaRepository.findById(updateConsulta.getRegistroMascota().getIdMascota())
-                    .orElseThrow(() -> new RuntimeException("Mascota no encontrada con id: " + updateConsulta.getRegistroMascota().getIdMascota()));
-            consultaFromDb.setRegistroMascota(mascota);
-        }
-
-        consultaFromDb.setUpdatedAt(LocalDateTime.now());
-
-        return consultaRepository.save(consultaFromDb);
+        Consulta consultaActualizada = consultaRepository.save(consulta);
+        return consultaMapper.toDTO(consultaActualizada);
     }
 
     @Transactional
     @Override
     public void delete(Integer id) {
-        if(!consultaRepository.existsById(id)) {
-            throw new RuntimeException("La consulta no existe");
+        if (!consultaRepository.existsById(id)) {
+            throw new ResourceNotFoundException("La consulta no existe");
         }
         consultaRepository.deleteById(id);
     }

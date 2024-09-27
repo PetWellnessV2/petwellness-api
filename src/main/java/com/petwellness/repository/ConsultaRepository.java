@@ -9,5 +9,3 @@ import java.util.List;
 public interface ConsultaRepository extends JpaRepository<Consulta, Integer> {
     List<Consulta> findByEstadoConsulta(EstadoConsulta estadoConsulta);
 }
-
-
