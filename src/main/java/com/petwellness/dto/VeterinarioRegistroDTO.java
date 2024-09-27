@@ -10,7 +10,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class VeterinarioDTO{
+public class VeterinarioRegistroDTO {
     private Integer userId;
     @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
@@ -22,6 +22,10 @@ public class VeterinarioDTO{
     @NotBlank(message = "El número telefónico es obligatorio")
     @Size(min = 9, max = 9, message = "El teléfono debe tener 9 dígitos")
     private String telefono;
+    @NotBlank(message = "La contraseña es obligatorio")
+    @Size(min = 8, max = 12, message = "La contraseña debe tener entre 8 y 12 caracteres")
+    private String contrasena;
+
     private TipoUser tipoUsuario;
 
     @NotNull(message = "La institucion educativa es obligatoria")
