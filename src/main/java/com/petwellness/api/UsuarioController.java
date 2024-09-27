@@ -36,11 +36,11 @@ public class UsuarioController {
     }
 
     // Registrar un nuevo usuario
-    @PostMapping
-    public ResponseEntity<UsuarioRegistroDTO> register(@Valid @RequestBody UsuarioRegistroDTO usuarioRegistroDTO) {
-        UsuarioRegistroDTO newUsuario = usuarioService.registerUsuario(usuarioRegistroDTO);
-        return new ResponseEntity<>(newUsuario, HttpStatus.CREATED);
-    }
+    //@PostMapping
+    //public ResponseEntity<UsuarioRegistroDTO> register(@Valid @RequestBody UsuarioRegistroDTO usuarioRegistroDTO) {
+        //UsuarioRegistroDTO newUsuario = usuarioService.registerUsuario(usuarioRegistroDTO);
+        //return new ResponseEntity<>(newUsuario, HttpStatus.CREATED);
+    //}
 
     // Eliminar un usuario
     @DeleteMapping("/{id}")

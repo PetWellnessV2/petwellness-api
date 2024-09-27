@@ -1,6 +1,7 @@
 package com.petwellness.api;
 
-import com.petwellness.model.entity.Usuario;
+import com.petwellness.dto.UsuarioRegistroDTO;
+import com.petwellness.dto.VeterinarioDTO;
 import com.petwellness.model.entity.Veterinario;
 import com.petwellness.service.UsuarioService;
 import com.petwellness.service.VeterinarioService;
@@ -23,8 +24,7 @@ public class VeterinarioController {
     @PostMapping
     public ResponseEntity<Veterinario> crearVeterinario(@RequestBody Veterinario veterinario) {
         if (veterinario.getUsuario() == null || veterinario.getUsuario().getUserId() == null) {
-            Usuario nuevoUsuario = usuarioService.registerUsuario(veterinario.getUsuario());
-            veterinario.setUsuario(nuevoUsuario);
+            UsuarioRegistroDTO nuevoUsuario = usuarioService.registerUsuario(veterinario.getUsuario());
         }
         Veterinario nuevoVeterinario = veterinarioService.crearVeterinario(veterinario);
         return new ResponseEntity<>(nuevoVeterinario, HttpStatus.CREATED);
@@ -32,8 +32,8 @@ public class VeterinarioController {
 
     // Obtener todos los veterinarios
     @GetMapping
-    public ResponseEntity<List<Veterinario>> obtenerVeterinarios() {
-        List<Veterinario> veterinarios = veterinarioService.obtenerVeterinarios();
+    public ResponseEntity<List<VeterinarioDTO>> obtenerVeterinarios() {
+        List<VeterinarioDTO> veterinarios = veterinarioService.obtenerVeterinarios();
         return new ResponseEntity<>(veterinarios, HttpStatus.OK);
     }
 

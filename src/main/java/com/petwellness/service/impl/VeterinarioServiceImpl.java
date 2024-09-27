@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -24,8 +23,8 @@ public class VeterinarioServiceImpl implements VeterinarioService {
 
     @Transactional
     @Override
-    public VeterinarioDTO crearVeterinario(VeterinarioDTO veterinarioDTO) {
-        veterinarioRepository.findByNombre(veterinarioDTO.get)
+    public Veterinario crearVeterinario(Veterinario veterinarioDTO) {
+        return veterinarioDTO;
     }
 
     @Transactional(readOnly = true)
@@ -44,6 +43,11 @@ public class VeterinarioServiceImpl implements VeterinarioService {
             throw new RuntimeException("El veterinario no existe");
         }
         veterinarioRepository.deleteById(id);
+    }
+
+    @Override
+    public VeterinarioDTO actualizarVeterinario(Integer id, VeterinarioDTO veterinarioActualizadoDTO) {
+        return null;
     }
 
     @Transactional
