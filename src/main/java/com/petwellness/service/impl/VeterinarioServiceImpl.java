@@ -31,28 +31,27 @@ public class VeterinarioServiceImpl implements VeterinarioService {
     private final VeterinarioRegistroMapper veterinarioRegistroMapper;
 
     @Transactional
-    @Override
     public VeterinarioRegistroDTO crearVeterinario(VeterinarioRegistroDTO veterinarioRegistroDTO) {
-        usuarioRepository.findByNombreAndApellido(veterinarioRegistroDTO.getNombre(), veterinarioRegistroDTO.getApellido())
-                .ifPresent(existingUsuario ->{
-                    throw new RuntimeException("El usuario ya existe con el mismo nombre y apellido");
-                });
         Veterinario veterinario = veterinarioRegistroMapper.toEntity(veterinarioRegistroDTO);
         Usuario usuario = new Usuario();
-        usuario.setApellido(veterinarioRegistroDTO.getApellido());
+
         usuario.setNombre(veterinarioRegistroDTO.getNombre());
+        usuario.setApellido(veterinarioRegistroDTO.getApellido());
         usuario.setEmail(veterinarioRegistroDTO.getEmail());
         usuario.setTelefono(veterinarioRegistroDTO.getTelefono());
         usuario.setContrasena(veterinarioRegistroDTO.getContrasena());
         usuario.setTipoUsuario(veterinarioRegistroDTO.getTipoUsuario());
         usuario.setCreatedAt(LocalDateTime.now());
         usuario.setUpdatedAt(LocalDateTime.now());
+
         veterinario.setUsuario(usuario);
-        veterinario.setEspecialidad(veterinarioRegistroDTO.getEspecialidad());
-        veterinario.setInstitucionEducativa((veterinarioRegistroDTO.getInstitucionEducativa()));
         veterinario = veterinarioRepository.save(veterinario);
+
+        veterinario.getUsuario().getNombre();
+
         return veterinarioRegistroMapper.toDTO(veterinario);
     }
+
 
     @Transactional(readOnly = true)
     @Override
@@ -87,6 +86,8 @@ public class VeterinarioServiceImpl implements VeterinarioService {
         veterinarioRepository.deleteById(id);
     }
 
+
+
     @Transactional
     @Override
     public VeterinarioRegistroDTO actualizarVeterinario(Integer id, VeterinarioRegistroDTO veterinarioRegistroDTO) {
@@ -100,6 +101,7 @@ public class VeterinarioServiceImpl implements VeterinarioService {
                     throw new RuntimeException("El usuario ya existe con el mismo nombre y apellido");
                 });
 
+        //usuario.setUserId(veterinarioRegistroDTO.getUserId());
         usuario.setApellido(veterinarioRegistroDTO.getApellido());
         usuario.setNombre(veterinarioRegistroDTO.getNombre());
         usuario.setEmail(veterinarioRegistroDTO.getEmail());
