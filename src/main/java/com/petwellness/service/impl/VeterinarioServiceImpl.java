@@ -86,11 +86,6 @@ public class VeterinarioServiceImpl implements VeterinarioService {
         veterinarioRepository.deleteById(id);
     }
 
-    @Override
-    public VeterinarioDTO actualizarVeterinario(Integer id, VeterinarioDTO veterinarioActualizadoDTO) {
-        return null;
-    }
-
     @Transactional
     @Override
     public VeterinarioRegistroDTO actualizarVeterinario(Integer id, VeterinarioRegistroDTO veterinarioRegistroDTO) {
