@@ -9,5 +9,6 @@ public enum Especialidad {
     MEDICINA_FELINA,
     ODONTOLOGIA,
     REHABILITACION,
-    TRAUMATOLOGIA
+    TRAUMATOLOGIA,
+    ODONTILOGIA
 }

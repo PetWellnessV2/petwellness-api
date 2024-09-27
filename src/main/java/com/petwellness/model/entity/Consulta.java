@@ -17,7 +17,7 @@ public class Consulta {
     private Integer idConsulta;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_consulta", nullable = false)
+    @Column(name = "tipo_consulta")
     private TipoConsulta tipoConsulta;
 
     @Enumerated(EnumType.STRING)
@@ -25,14 +25,14 @@ public class Consulta {
     private EstadoConsulta estadoConsulta;
 
     @ManyToOne
-    @JoinColumn(name = "horarios_disponibles_id_horario", referencedColumnName = "id_horario", foreignKey = @ForeignKey(name = "FK_consulta_horarios_disponibles"), nullable = false)
+    @JoinColumn(name = "horarios_disponibles_id_horario", referencedColumnName = "id_horario", foreignKey = @ForeignKey(name = "FK_consulta_horarios_disponibles"))
     private HorariosDisponibles horariosDisponibles;
 
     @ManyToOne
-    @JoinColumn(name = "registro_mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_consulta_registro_mascota"), nullable = false)
+    @JoinColumn(name = "registro_mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_consulta_registro_mascota"))
     private RegistroMascota registroMascota;
 
-    @Column(name = "razon_consulta", length = 250, nullable = false)
+    @Column(name = "razon_consulta", length = 250)
     private String razonConsulta;
 
     @Column(name = "created_at", nullable = false)

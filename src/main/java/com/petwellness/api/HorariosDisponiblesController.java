@@ -1,12 +1,13 @@
 package com.petwellness.api;
 
-import com.petwellness.model.entity.HorariosDisponibles;
+import com.petwellness.dto.HorariosDisponiblesDTO;
 import com.petwellness.service.HorariosDisponiblesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -16,8 +17,8 @@ public class HorariosDisponiblesController {
     private final HorariosDisponiblesService horariosDisponiblesService;
 
     @PostMapping
-    public ResponseEntity<HorariosDisponibles> agregarHorario(@RequestBody HorariosDisponibles horario) {
-        HorariosDisponibles nuevoHorario = horariosDisponiblesService.agregarHorario(horario);
+    public ResponseEntity<HorariosDisponiblesDTO> agregarHorario(@Valid @RequestBody HorariosDisponiblesDTO horarioDTO) {
+        HorariosDisponiblesDTO nuevoHorario = horariosDisponiblesService.agregarHorario(horarioDTO);
         return new ResponseEntity<>(nuevoHorario, HttpStatus.CREATED);
     }
 
@@ -28,15 +29,14 @@ public class HorariosDisponiblesController {
     }
 
     @GetMapping
-    public ResponseEntity<List<HorariosDisponibles>> obtenerHorarios() {
-        List<HorariosDisponibles> horarios = horariosDisponiblesService.obtenerHorarios();
+    public ResponseEntity<List<HorariosDisponiblesDTO>> obtenerHorarios() {
+        List<HorariosDisponiblesDTO> horarios = horariosDisponiblesService.obtenerHorarios();
         return new ResponseEntity<>(horarios, HttpStatus.OK);
     }
 
     @GetMapping("/veterinario/{userId}")
-    public ResponseEntity<List<HorariosDisponibles>> obtenerHorariosPorVeterinario(@PathVariable Integer userId) {
-        List<HorariosDisponibles> horarios = horariosDisponiblesService.obtenerHorariosPorVeterinarioId(userId);
+    public ResponseEntity<List<HorariosDisponiblesDTO>> obtenerHorariosPorVeterinario(@PathVariable Integer userId) {
+        List<HorariosDisponiblesDTO> horarios = horariosDisponiblesService.obtenerHorariosPorVeterinarioId(userId);
         return new ResponseEntity<>(horarios, HttpStatus.OK);
     }
-
 }

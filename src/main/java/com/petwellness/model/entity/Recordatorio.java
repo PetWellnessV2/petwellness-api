@@ -1,41 +1,50 @@
 package com.petwellness.model.entity;
 
+import com.petwellness.model.enums.RecordatorioStatus;
+import com.petwellness.model.enums.TipoRecordatorio;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+
 import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "recordatorios")
+@Table(name = "recordatorio")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Recordatorio {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "recordatorio_id")
+    private Integer recordatorioId;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    @NotNull(message = "El usuario es obligatorio")
+    @JoinColumn(name = "usuario_id", referencedColumnName = "user_id",
+            foreignKey = @ForeignKey(name = "fk_recordatorio_usuario"))
+    @EqualsAndHashCode.Include
     private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "mascota_id", nullable = false)
-    @NotNull(message = "La mascota es obligatoria")
+    @JoinColumn(name = "mascota_id", referencedColumnName = "id_mascota",
+            foreignKey = @ForeignKey(name = "fk_recordatorio_mascota"))
+    @EqualsAndHashCode.Include
     private RegistroMascota mascota;
 
-    @Column(nullable = false)
-    @NotBlank(message = "El título es obligatorio")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_recordatorio", nullable = false)
+    private TipoRecordatorio tipoRecordatorio;
+
+    @Column(name = "titulo", nullable = false)
     private String titulo;
 
-    @Column
+    @Column(name = "descripcion", columnDefinition = "TEXT")
     private String descripcion;
 
-    @Column(nullable = false)
-    @NotNull(message = "La fecha y hora son obligatorias")
+    @Column(name = "fecha_hora", nullable = false)
     private LocalDateTime fechaHora;
 
-    @Column(nullable = false)
-    private boolean completado = false;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "recordatorio_status")
+    private RecordatorioStatus recordatorioStatus;
 }
