@@ -11,7 +11,6 @@ import com.petwellness.repository.UsuarioRepository;
 import com.petwellness.repository.VeterinarioRepository;
 import com.petwellness.service.UsuarioService;
 import com.petwellness.service.VeterinarioService;
-import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
