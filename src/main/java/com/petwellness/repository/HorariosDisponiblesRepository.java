@@ -7,6 +7,4 @@ import java.util.List;
 
 public interface HorariosDisponiblesRepository extends JpaRepository<HorariosDisponibles, Integer> {
     List<HorariosDisponibles> findByVeterinarioUsuarioUserId(Integer userId);
-
-
 }
