@@ -20,3 +20,4 @@ public class HorariosDisponiblesDTO {
     @Future(message = "La fecha debe ser en el futuro")
     private LocalDate fecha;
 }
+
