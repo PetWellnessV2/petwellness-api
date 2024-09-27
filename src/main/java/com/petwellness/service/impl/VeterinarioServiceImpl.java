@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -85,6 +84,11 @@ public class VeterinarioServiceImpl implements VeterinarioService {
             throw new RuntimeException("El veterinario no existe");
         }
         veterinarioRepository.deleteById(id);
+    }
+
+    @Override
+    public VeterinarioDTO actualizarVeterinario(Integer id, VeterinarioDTO veterinarioActualizadoDTO) {
+        return null;
     }
 
     @Transactional
