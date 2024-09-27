@@ -23,6 +23,9 @@ public class Archivos {
     @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
 
+    @Column(name = "path")
+    private String path;
+
     @ManyToOne
     @JoinColumn(name = "registro_mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_archivos_registro_mascota"), nullable = false)
     private RegistroMascota registroMascota;
