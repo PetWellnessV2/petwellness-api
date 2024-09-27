@@ -15,8 +15,19 @@ public class VeterinarioRegistroMapper {
     }
 
     public VeterinarioRegistroDTO toDTO(Veterinario veterinario) {
-        return modelMapper.map(veterinario, VeterinarioRegistroDTO.class);
+        VeterinarioRegistroDTO veterinarioRegistroDTO = modelMapper.map(veterinario, VeterinarioRegistroDTO.class);
+        if (veterinario.getUsuario() != null) {
+            veterinarioRegistroDTO.setUserId(veterinario.getUsuario().getUserId());
+            veterinarioRegistroDTO.setNombre(veterinario.getUsuario().getNombre());
+            veterinarioRegistroDTO.setApellido(veterinario.getUsuario().getApellido());
+            veterinarioRegistroDTO.setEmail(veterinario.getUsuario().getEmail());
+            veterinarioRegistroDTO.setTelefono(veterinario.getUsuario().getTelefono());
+            veterinarioRegistroDTO.setContrasena(veterinario.getUsuario().getContrasena());
+            veterinarioRegistroDTO.setTipoUsuario(veterinario.getUsuario().getTipoUsuario());
+        }
+        return veterinarioRegistroDTO;
     }
+
 
     public Veterinario toEntity(VeterinarioRegistroDTO veterinarioRegistroDTO) {
         return modelMapper.map(veterinarioRegistroDTO, Veterinario.class);
