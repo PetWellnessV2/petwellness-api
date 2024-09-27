@@ -45,8 +45,6 @@ public class VeterinarioServiceImpl implements VeterinarioService {
         veterinario.setUsuario(usuario);
         veterinario = veterinarioRepository.save(veterinario);
 
-        veterinario.getUsuario().getNombre();
-
         return veterinarioRegistroMapper.toDTO(veterinario);
     }
 
