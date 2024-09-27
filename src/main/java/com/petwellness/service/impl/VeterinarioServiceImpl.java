@@ -2,6 +2,7 @@ package com.petwellness.service.impl;
 
 import com.petwellness.dto.VeterinarioDTO;
 import com.petwellness.dto.VeterinarioRegistroDTO;
+import com.petwellness.exception.BadRequestException;
 import com.petwellness.exception.ResourceNotFoundException;
 import com.petwellness.mapper.VeterinarioMapper;
 import com.petwellness.mapper.VeterinarioRegistroMapper;
@@ -30,6 +31,14 @@ public class VeterinarioServiceImpl implements VeterinarioService {
 
     @Transactional
     public VeterinarioRegistroDTO crearVeterinario(VeterinarioRegistroDTO veterinarioRegistroDTO) {
+        Optional<Usuario> usuarioExistente = usuarioRepository.findByNombreAndApellido(
+                veterinarioRegistroDTO.getNombre(),
+                veterinarioRegistroDTO.getApellido()
+        );
+
+        if (usuarioExistente.isPresent()) {
+            throw new BadRequestException("Ya existe un usuario con el mismo nombre y apellido");
+        }
         Veterinario veterinario = veterinarioRegistroMapper.toEntity(veterinarioRegistroDTO);
         Usuario usuario = new Usuario();
 
@@ -79,6 +88,7 @@ public class VeterinarioServiceImpl implements VeterinarioService {
         if (!veterinarioRepository.existsById(id)) {
             throw new RuntimeException("El veterinario no existe");
         }
+
         veterinarioRepository.deleteById(id);
     }
 
@@ -87,30 +97,26 @@ public class VeterinarioServiceImpl implements VeterinarioService {
     @Transactional
     @Override
     public VeterinarioRegistroDTO actualizarVeterinario(Integer id, VeterinarioRegistroDTO veterinarioRegistroDTO) {
-        Usuario usuario = new Usuario();
         Veterinario veterinario = veterinarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("El veterinario con ID "+id+" no existe"));
 
-        usuarioRepository.findByNombreAndApellido(veterinarioRegistroDTO.getNombre(), veterinarioRegistroDTO.getApellido())
-                .filter(existingUsuario ->!existingUsuario.getUserId().equals(id))
-                .ifPresent(existingUsuario ->{
-                    throw new RuntimeException("El usuario ya existe con el mismo nombre y apellido");
-                });
+        Usuario usuario = veterinario.getUsuario();
 
-        //usuario.setUserId(veterinarioRegistroDTO.getUserId());
         usuario.setApellido(veterinarioRegistroDTO.getApellido());
         usuario.setNombre(veterinarioRegistroDTO.getNombre());
         usuario.setEmail(veterinarioRegistroDTO.getEmail());
         usuario.setTelefono(veterinarioRegistroDTO.getTelefono());
         usuario.setContrasena(veterinarioRegistroDTO.getContrasena());
         usuario.setTipoUsuario(veterinarioRegistroDTO.getTipoUsuario());
-        usuario.setCreatedAt(LocalDateTime.now());
         usuario.setUpdatedAt(LocalDateTime.now());
+
         veterinario.setUsuario(usuario);
         veterinario.setEspecialidad(veterinarioRegistroDTO.getEspecialidad());
-        veterinario.setInstitucionEducativa((veterinarioRegistroDTO.getInstitucionEducativa()));
+        veterinario.setInstitucionEducativa(veterinarioRegistroDTO.getInstitucionEducativa());
         veterinario = veterinarioRepository.save(veterinario);
+
         return veterinarioRegistroMapper.toDTO(veterinario);
+
     }
 }
 
