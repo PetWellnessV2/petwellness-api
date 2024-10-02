@@ -14,13 +14,13 @@ public class Medicamentos {
     @Column(name = "id_medicamento")
     private Integer idMedicamento;
 
-    @Column(name = "descripcion", length = 50, nullable = false)
+    @Column(name = "descripcion", length = 50)
     private String descripcion;
 
-    @Column(name = "fecha", nullable = false)
+    @Column(name = "fecha")
     private LocalDate fecha;
 
     @ManyToOne
-    @JoinColumn(name = "registro_mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_medicamentos_registro_mascota"), nullable = false)
+    @JoinColumn(name = "registro_mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_medicamentos_registro_mascota"))
     private RegistroMascota registroMascota;
 }

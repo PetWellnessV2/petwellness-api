@@ -17,10 +17,10 @@ public class Pedido {
     @Column(name = "id_pedido")
     private Integer idPedido;
 
-    @Column(name = "usuario_id", nullable = false)
+    @Column(name = "usuario_id")
     private Integer usuarioId;
 
-    @Column(name = "fecha_pedido", nullable = false)
+    @Column(name = "fecha_pedido")
     private LocalDateTime fechaPedido;
 
     @Enumerated(EnumType.STRING)

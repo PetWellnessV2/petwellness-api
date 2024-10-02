@@ -14,13 +14,13 @@ public class NotasConsulta {
     @Column(name = "id_notas")
     private Integer idNotas;
 
-    @Column(name = "fecha", nullable = false)
+    @Column(name = "fecha")
     private LocalDate fecha;
 
-    @Column(name = "descripcion_nota", length = 250, nullable = false)
+    @Column(name = "descripcion_nota", length = 250)
     private String descripcionNota;
 
     @ManyToOne
-    @JoinColumn(name = "registro_mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_notas_consulta_registro_mascota"), nullable = false)
+    @JoinColumn(name = "registro_mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_notas_consulta_registro_mascota"))
     private RegistroMascota registroMascota;
 }

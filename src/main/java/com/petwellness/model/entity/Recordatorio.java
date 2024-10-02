@@ -32,16 +32,16 @@ public class Recordatorio {
     private RegistroMascota mascota;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_recordatorio", nullable = false)
+    @Column(name = "tipo_recordatorio")
     private TipoRecordatorio tipoRecordatorio;
 
-    @Column(name = "titulo", nullable = false)
+    @Column(name = "titulo")
     private String titulo;
 
     @Column(name = "descripcion", columnDefinition = "TEXT")
     private String descripcion;
 
-    @Column(name = "fecha_hora", nullable = false)
+    @Column(name = "fecha_hora")
     private LocalDateTime fechaHora;
 
     @Enumerated(EnumType.STRING)

@@ -19,10 +19,10 @@ public class Veterinario {
     private Usuario usuario;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "institucion_educativa", nullable = false)
+    @Column(name = "institucion_educativa")
     private InstitucionEducativa institucionEducativa;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "especialidad", nullable = false)
+    @Column(name = "especialidad")
     private Especialidad especialidad;
 }

@@ -23,13 +23,13 @@ public class CarritoCompra {
     @JoinColumn(name = "producto_id_producto", referencedColumnName = "id_producto", foreignKey = @ForeignKey(name = "FK_carrito_producto"), nullable = false)
     private Producto producto;
 
-    @Column(name = "precio_total", nullable = false)
+    @Column(name = "precio_total")
     private Double precioTotal;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "payment_status", nullable = false)
+    @Column(name = "payment_status")
     private PaymentStatus paymentStatus;
 }

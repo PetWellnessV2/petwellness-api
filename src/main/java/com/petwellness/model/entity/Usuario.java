@@ -17,29 +17,29 @@ public class Usuario {
     @Column(name = "user_id")
     private Integer userId;
 
-    @Column(name = "nombre", nullable = false, length = 50)
+    @Column(name = "nombre", length = 50)
     private String nombre;
 
-    @Column(name = "apellido", nullable = false, length = 50)
+    @Column(name = "apellido", length = 50)
     private String apellido;
 
-    @Column(name = "email", nullable = false, length = 250)
+    @Column(name = "email", length = 250)
     private String email;
 
-    @Column(name = "telefono", nullable = false, length = 9)
+    @Column(name = "telefono", length = 9)
     private String telefono;
 
-    @Column(name = "contrasena", nullable = false, length = 50)
+    @Column(name = "contrasena", length = 50)
     private String contrasena;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_usuario", nullable = false)
+    @Column(name = "tipo_usuario")
     private TipoUser tipoUsuario;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)

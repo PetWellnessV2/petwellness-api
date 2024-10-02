@@ -19,14 +19,14 @@ public class Albergue {
     @JoinColumn(name = "usuario_user_id", referencedColumnName = "user_id", foreignKey = @ForeignKey(name = "FK_albergue_usuario"))
     private Usuario usuario;
 
-    @Column(name = "nombre_albergue", length = 50, nullable = false)
+    @Column(name = "nombre_albergue", length = 50)
     private String nombreAlbergue;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_albergue", nullable = false)
+    @Column(name = "tipo_albergue")
     private TipoAlbergue tipoAlbergue;
 
-    @Column(name = "ruc", length = 11, nullable = false)
+    @Column(name = "ruc", length = 11)
     private String ruc;
 
 }

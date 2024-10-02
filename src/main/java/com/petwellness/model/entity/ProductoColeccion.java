@@ -14,11 +14,11 @@ public class ProductoColeccion {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "coleccion_id", nullable = false)
+    @JoinColumn(name = "coleccion_id")
     @JsonBackReference
     private Coleccion coleccion;
 
     @ManyToOne
-    @JoinColumn(name = "producto_id", nullable = false)
+    @JoinColumn(name = "producto_id")
     private Producto producto;
 }

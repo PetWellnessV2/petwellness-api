@@ -26,7 +26,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Transactional
     @Override
-    public UsuarioRegistroDTO registerUsuario(Usuario usuarioRegistroDTO) {
+    public UsuarioRegistroDTO registerUsuario(UsuarioRegistroDTO usuarioRegistroDTO) {
         usuarioRepository.findByNombreAndApellido(usuarioRegistroDTO.getNombre(), usuarioRegistroDTO.getApellido())
                 .ifPresent(existingUsuario ->{
                     throw new BadRequestException("Ya existe un usuario con el mismo nombre y apellido");

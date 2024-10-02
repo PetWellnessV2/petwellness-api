@@ -15,15 +15,15 @@ public class DetallePedido {
     private Integer idDetalle;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_pedido", nullable = false)
+    @JoinColumn(name = "id_pedido")
     private Pedido pedido;
 
-    @Column(name = "id_producto", nullable = false)
+    @Column(name = "id_producto")
     private Integer idProducto;
 
     @Column(nullable = false)
     private Integer cantidad;
 
-    @Column(name = "precio_total", nullable = false)
+    @Column(name = "precio_total")
     private BigDecimal precioTotal;
 }

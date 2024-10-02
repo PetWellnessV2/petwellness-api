@@ -14,16 +14,16 @@ public class ExamenesLaboratorio {
     @Column(name = "id_examen_lab")
     private Integer idExamenLab;
 
-    @Column(name = "nombre", length = 250, nullable = false)
+    @Column(name = "nombre", length = 250)
     private String nombre;
 
-    @Column(name = "descripcion", length = 250, nullable = false)
+    @Column(name = "descripcion", length = 250)
     private String descripcion;
 
-    @Column(name = "fecha", nullable = false)
+    @Column(name = "fecha")
     private LocalDate fecha;
 
     @ManyToOne
-    @JoinColumn(name = "registro_mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_examenes_laboratorio_registro_mascota"), nullable = false)
+    @JoinColumn(name = "registro_mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_examenes_laboratorio_registro_mascota"))
     private RegistroMascota registroMascota;
 }

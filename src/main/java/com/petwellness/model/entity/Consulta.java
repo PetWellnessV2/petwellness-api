@@ -21,7 +21,7 @@ public class Consulta {
     private TipoConsulta tipoConsulta;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "estado_consulta", nullable = false)
+    @Column(name = "estado_consulta")
     private EstadoConsulta estadoConsulta;
 
     @ManyToOne
@@ -35,10 +35,10 @@ public class Consulta {
     @Column(name = "razon_consulta", length = 250)
     private String razonConsulta;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
 }

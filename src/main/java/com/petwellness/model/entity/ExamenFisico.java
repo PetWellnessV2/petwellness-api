@@ -13,21 +13,21 @@ public class ExamenFisico {
     private Integer idExamen;
 
     @ManyToOne
-    @JoinColumn(name = "registro_mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_examen_fisico_registro_mascota"), nullable = false)
+    @JoinColumn(name = "registro_mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_examen_fisico_registro_mascota"))
     private RegistroMascota registroMascota;
 
-    @Column(name = "presion_arterial", nullable = false)
+    @Column(name = "presion_arterial")
     private Integer presionArterial;
 
-    @Column(name = "pulso", nullable = false)
+    @Column(name = "pulso")
     private Integer pulso;
 
-    @Column(name = "temperatura", nullable = false)
+    @Column(name = "temperatura")
     private Float temperatura;
 
-    @Column(name = "peso", nullable = false)
+    @Column(name = "peso")
     private Float peso;
 
-    @Column(name = "altura", nullable = false)
+    @Column(name = "altura")
     private Float altura;
 }

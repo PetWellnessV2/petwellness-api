@@ -14,19 +14,19 @@ public class Archivos {
     @Column(name = "id_archivos")
     private Integer idArchivos;
 
-    @Column(name = "nombre_archivo", length = 50, nullable = false)
+    @Column(name = "nombre_archivo", length = 50)
     private String nombreArchivo;
 
-    @Column(name = "descripcion_archivo", length = 250, nullable = false)
+    @Column(name = "descripcion_archivo", length = 250)
     private String descripcionArchivo;
 
-    @Column(name = "fecha", nullable = false)
+    @Column(name = "fecha")
     private LocalDate fecha;
 
     @Column(name = "path")
     private String path;
 
     @ManyToOne
-    @JoinColumn(name = "registro_mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_archivos_registro_mascota"), nullable = false)
+    @JoinColumn(name = "registro_mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_archivos_registro_mascota"))
     private RegistroMascota registroMascota;
 }

@@ -7,7 +7,7 @@ import com.petwellness.model.entity.Usuario;
 import java.util.List;
 
 public interface UsuarioService {
-    UsuarioRegistroDTO registerUsuario(Usuario usuarioRegistroDTO);
+    UsuarioRegistroDTO registerUsuario(UsuarioRegistroDTO usuarioRegistroDTO);
     void deleteUsuario(Integer id);
     List<UsuarioDTO> getAllUsuarios();
     UsuarioDTO getUsuarioById(Integer id);

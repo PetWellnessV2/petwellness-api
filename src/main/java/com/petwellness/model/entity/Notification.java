@@ -15,7 +15,7 @@ public class Notification {
     private Integer idNotificacion;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_user_id", referencedColumnName = "user_id", foreignKey = @ForeignKey(name = "FK_notificacion_usuario"), nullable = false)
+    @JoinColumn(name = "usuario_user_id", referencedColumnName = "user_id", foreignKey = @ForeignKey(name = "FK_notificacion_usuario"))
     private Usuario usuario;
 
     @Column(name = "mensaje")
