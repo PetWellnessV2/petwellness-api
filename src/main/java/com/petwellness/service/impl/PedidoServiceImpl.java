@@ -188,4 +188,12 @@ public class PedidoServiceImpl implements PedidoService {
         dto.setPrecioTotal(detallePedido.getPrecioTotal());
         return dto;
     }
+
+    @Override
+    public List<PedidoDTO> obtenerPedidosDeUsuarioPorEstado(Integer usuarioId, EstadoPedido estado) {
+        List<Pedido> pedidos = pedidoRepository.findByUsuarioIdAndEstadoOrderByFechaPedidoDesc(usuarioId, estado);
+        return pedidos.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
 }

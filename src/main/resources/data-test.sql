@@ -113,13 +113,13 @@ INSERT INTO recordatorio (
 )
 VALUES
     (1, 1, 1, 'VACUNACION', 'Vacunación Anual', 'Vacunación anual para Firulais', '2023-09-05 09:00:00', 'CREADO'),
-    (2, 1, 2, 'DESPARASITACION', 'Desparasitación', 'Desparasitación de Mishifu', '2023-09-10 10:00:00', 'CREADO')
+    (2, 1, 2, 'DESPARASITACION', 'Desparasitación', 'Desparasitación de Mishifu', '2023-09-10 10:00:00', 'ENVIADO')
 ON CONFLICT (recordatorio_id) DO NOTHING;
 
 -- Insertar datos de prueba en la tabla pedidos
 INSERT INTO pedidos (id_pedido, usuario_id, fecha_pedido, estado)
 VALUES
-    (1, 1, '2023-09-01 10:00:00', 'PENDIENTE'),
+    (1, 1, '2023-09-01 10:00:00', ' '),
     (2, 2, '2023-09-02 11:00:00', 'EN_PROCESO'),
     (3, 1, '2023-09-03 12:00:00', 'ENVIADO')
 ON CONFLICT (id_pedido) DO NOTHING;

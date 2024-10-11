@@ -17,7 +17,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/admin/recordatorio")
+@RequestMapping("/recordatorio")
 public class AdminRecordatorioController {
     private final AdminRecordatorioService adminRecordatorioService;
 

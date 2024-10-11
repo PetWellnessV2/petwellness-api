@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
     List<Pedido> findByUsuarioId(Integer usuarioId);
     Optional<Pedido> findTopByUsuarioIdAndEstadoOrderByFechaPedidoDesc(Integer usuarioId, EstadoPedido estado);
+    List<Pedido> findByUsuarioIdAndEstadoOrderByFechaPedidoDesc(Integer usuarioId, EstadoPedido estado);
+
 }
