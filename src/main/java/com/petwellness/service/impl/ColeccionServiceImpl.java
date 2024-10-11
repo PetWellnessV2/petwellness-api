@@ -36,6 +36,14 @@ public class ColeccionServiceImpl implements ColeccionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<ColeccionDTO> obtenerTodasLasColecciones() {
+        return coleccionRepository.findAll().stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
     public ColeccionDTO crearColeccion(ColeccionDTO coleccionDTO) {
         Usuario usuario = usuarioRepository.findById(coleccionDTO.getUsuarioId())
