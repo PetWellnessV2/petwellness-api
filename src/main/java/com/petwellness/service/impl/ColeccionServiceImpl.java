@@ -65,9 +65,7 @@ public class ColeccionServiceImpl implements ColeccionService {
     public void eliminarColeccion(Integer id) {
         Coleccion coleccion = coleccionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Colección no encontrada"));
-        if (!coleccion.getProductosColeccion().isEmpty()) {
-            throw new RuntimeException("No se puede eliminar una colección con productos");
-        }
+        productoColeccionRepository.deleteByColeccionId(id);
         coleccionRepository.delete(coleccion);
     }
 

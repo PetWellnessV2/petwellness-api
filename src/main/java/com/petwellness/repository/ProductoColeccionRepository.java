@@ -15,4 +15,5 @@ public interface ProductoColeccionRepository extends JpaRepository<ProductoColec
     
     @Query("SELECT pc.producto.idProducto FROM ProductoColeccion pc WHERE pc.coleccion.id = :coleccionId")
     List<Integer> findProductIdsByColeccionId(Integer coleccionId);
+    void deleteByColeccionId(Integer coleccionId);
 }
