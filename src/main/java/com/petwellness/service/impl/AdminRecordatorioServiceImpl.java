@@ -3,13 +3,10 @@ package com.petwellness.service.impl;
 import com.petwellness.dto.RecordatorioDTO;
 import com.petwellness.exception.ResourceNotFoundException;
 import com.petwellness.model.entity.Recordatorio;
-import com.petwellness.model.entity.Usuario;
-import com.petwellness.model.entity.RegistroMascota;
 import com.petwellness.model.enums.RecordatorioStatus;
 import com.petwellness.repository.RecordatorioRepository;
-import com.petwellness.repository.UsuarioRepository;
-import com.petwellness.repository.MascotaDatosRepository;
 import com.petwellness.service.AdminRecordatorioService;
+import com.petwellness.mapper.RecordatorioMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,9 +22,7 @@ import java.util.stream.Collectors;
 public class AdminRecordatorioServiceImpl implements AdminRecordatorioService {
 
     private final RecordatorioRepository recordatorioRepository;
-    private final UsuarioRepository usuarioRepository;
-    private final MascotaDatosRepository mascotaDatosRepository;
-
+    private final RecordatorioMapper recordatorioMapper;
 
     @Override
     @Transactional(readOnly = true)
@@ -64,17 +59,17 @@ public class AdminRecordatorioServiceImpl implements AdminRecordatorioService {
     public RecordatorioDTO getRecordatorioById(Integer id) {
         Recordatorio recordatorio = recordatorioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Recordatorio no encontrado"));
-        return mapToDTO(recordatorio);
+        return recordatorioMapper.toDTO(recordatorio);
     }
 
     @Override
     @Transactional
     public RecordatorioDTO createRecordatorio(RecordatorioDTO recordatorioDTO) {
-        Recordatorio recordatorio = mapToEntity(recordatorioDTO);
+        Recordatorio recordatorio = recordatorioMapper.toEntity(recordatorioDTO);
         recordatorio.setFechaHora(LocalDateTime.now());
         recordatorio.setRecordatorioStatus(RecordatorioStatus.CREADO);
         recordatorio = recordatorioRepository.save(recordatorio);
-        return mapToDTO(recordatorio);
+        return recordatorioMapper.toDTO(recordatorio);
     }
 
     @Override
@@ -82,9 +77,9 @@ public class AdminRecordatorioServiceImpl implements AdminRecordatorioService {
     public RecordatorioDTO updateRecordatorio(Integer id, RecordatorioDTO recordatorioDTO) {
         Recordatorio recordatorio = recordatorioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Recordatorio no encontrado"));
-        updateEntityFromDTO(recordatorio, recordatorioDTO);
+        recordatorioMapper.updateEntityFromDTO(recordatorio, recordatorioDTO);
         recordatorio = recordatorioRepository.save(recordatorio);
-        return mapToDTO(recordatorio);
+        return recordatorioMapper.toDTO(recordatorio);
     }
 
     @Override
@@ -110,40 +105,5 @@ public class AdminRecordatorioServiceImpl implements AdminRecordatorioService {
             .orElseThrow(() -> new ResourceNotFoundException("Recordatorio no encontrado para el id " + recordatorioId));
         
         recordatorioRepository.delete(recordatorio);
-    }
-
-    private Recordatorio mapToEntity(RecordatorioDTO dto) {
-        Recordatorio recordatorio = new Recordatorio();
-        updateEntityFromDTO(recordatorio, dto);
-        return recordatorio;
-    }
-
-    private void updateEntityFromDTO(Recordatorio recordatorio, RecordatorioDTO dto) {
-        recordatorio.setTitulo(dto.getTitulo());
-        recordatorio.setDescripcion(dto.getDescripcion());
-        recordatorio.setTipoRecordatorio(dto.getTipoRecordatorio());
-        recordatorio.setFechaHora(dto.getFechaHora());
-        recordatorio.setRecordatorioStatus(dto.getRecordatorioStatus());
-
-        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        recordatorio.setUsuario(usuario);
-
-        RegistroMascota mascota = mascotaDatosRepository.findById(dto.getMascotaId())
-                .orElseThrow(() -> new RuntimeException("Mascota no encontrada"));
-        recordatorio.setMascota(mascota);
-    }
-
-    private RecordatorioDTO mapToDTO(Recordatorio recordatorio) {
-        RecordatorioDTO dto = new RecordatorioDTO();
-        dto.setRecordatorioId(recordatorio.getRecordatorioId());
-        dto.setUsuarioId(recordatorio.getUsuario().getUserId());
-        dto.setMascotaId(recordatorio.getMascota().getIdMascota());
-        dto.setTitulo(recordatorio.getTitulo());
-        dto.setDescripcion(recordatorio.getDescripcion());
-        dto.setTipoRecordatorio(recordatorio.getTipoRecordatorio());
-        dto.setFechaHora(recordatorio.getFechaHora());
-        dto.setRecordatorioStatus(recordatorio.getRecordatorioStatus());
-        return dto;
     }
 }
