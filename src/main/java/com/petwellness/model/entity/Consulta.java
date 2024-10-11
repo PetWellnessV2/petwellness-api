@@ -1,5 +1,6 @@
 package com.petwellness.model.entity;
 
+import com.petwellness.model.enums.EstadoConsulta;
 import com.petwellness.model.enums.TipoConsulta;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -18,6 +19,10 @@ public class Consulta {
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_consulta")
     private TipoConsulta tipoConsulta;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado_consulta", nullable = false)
+    private EstadoConsulta estadoConsulta;
 
     @ManyToOne
     @JoinColumn(name = "horarios_disponibles_id_horario", referencedColumnName = "id_horario", foreignKey = @ForeignKey(name = "FK_consulta_horarios_disponibles"))

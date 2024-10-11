@@ -1,7 +1,6 @@
 package com.petwellness.service.impl;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,7 +80,7 @@ public class UserVeterinarioServiceImpl implements UserVeterinarioService {
         nuevoHorario.setFecha(LocalDate.parse(nuevaFecha)); // Asegúrate de que la fecha esté en el formato correcto
 
         // Guardar el nuevo horario utilizando el servicio
-        horariosDisponiblesService.create(nuevoHorario);
+        //horariosDisponiblesService.create(nuevoHorario);
 
         // Actualizar la consulta para que use el nuevo horario
         consulta.setHorariosDisponibles(nuevoHorario);

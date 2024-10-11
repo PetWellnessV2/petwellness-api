@@ -1,6 +1,5 @@
 package com.petwellness.api;
 
-import com.petwellness.dto.NotificationRegistroDTO;
 import com.petwellness.dto.RegistroMascotaDTO;
 import com.petwellness.model.enums.Especie;
 import com.petwellness.model.enums.Genero;

@@ -1,58 +1,64 @@
 package com.petwellness.service.impl;
 
-import java.util.List;
-
+import com.petwellness.dto.HorariosDisponiblesDTO;
+import com.petwellness.exception.ResourceNotFoundException;
+import com.petwellness.mapper.HorariosDisponiblesMapper;
+import com.petwellness.model.entity.HorariosDisponibles;
+import com.petwellness.model.entity.Veterinario;
+import com.petwellness.repository.HorariosDisponiblesRepository;
+import com.petwellness.repository.VeterinarioRepository;
+import com.petwellness.service.HorariosDisponiblesService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.petwellness.model.entity.HorariosDisponibles;
-import com.petwellness.repository.HorariosDisponiblesRepository;
-import com.petwellness.service.HorariosDisponiblesService;
+import java.util.List;
 
-import lombok.RequiredArgsConstructor;
-
-@Service
 @RequiredArgsConstructor
+@Service
 public class HorariosDisponiblesServiceImpl implements HorariosDisponiblesService {
-
     private final HorariosDisponiblesRepository horariosDisponiblesRepository;
+    private final VeterinarioRepository veterinarioRepository;
+    private final HorariosDisponiblesMapper horariosDisponiblesMapper;
 
+    @Transactional
     @Override
-    @Transactional(readOnly = true)
-    public List<HorariosDisponibles> findAll() {
-        return horariosDisponiblesRepository.findAll();
+    public HorariosDisponiblesDTO agregarHorario(HorariosDisponiblesDTO horarioDTO) {
+        Veterinario veterinario = veterinarioRepository.findById(horarioDTO.getVeterinarioId())
+                .orElseThrow(() -> new ResourceNotFoundException("Veterinario no encontrado con id: " + horarioDTO.getVeterinarioId()));
+
+        HorariosDisponibles horario = horariosDisponiblesMapper.toEntity(horarioDTO);
+        horario.setVeterinario(veterinario);
+
+        HorariosDisponibles nuevoHorario = horariosDisponiblesRepository.save(horario);
+
+        return horariosDisponiblesMapper.toDTO(nuevoHorario);
     }
 
-    @Override
     @Transactional(readOnly = true)
-    public HorariosDisponibles findById(Integer id) {
-        return horariosDisponiblesRepository.findById(id).orElse(null);
+    @Override
+    public List<HorariosDisponiblesDTO> obtenerHorarios() {
+        List<HorariosDisponibles> horarios = horariosDisponiblesRepository.findAll();
+        return horarios.stream()
+                .map(horariosDisponiblesMapper::toDTO)
+                .toList();
     }
 
-
+    @Transactional(readOnly = true)
     @Override
-    public HorariosDisponibles update(Integer id,HorariosDisponibles horariosDisponibles) {
-        HorariosDisponibles horariosDisponiblesFromDb = findById(id);
+    public List<HorariosDisponiblesDTO> obtenerHorariosPorVeterinarioId(Integer userId) {
+        List<HorariosDisponibles> horarios = horariosDisponiblesRepository.findByVeterinarioUsuarioUserId(userId);
+        return horarios.stream()
+                .map(horariosDisponiblesMapper::toDTO)
+                .toList();
+    }
 
-        if(horariosDisponiblesFromDb == null){
-            throw new IllegalArgumentException("El horario con ID " + id + " no existe");
+    @Transactional
+    @Override
+    public void eliminarHorario(Integer id) {
+        if (!horariosDisponiblesRepository.existsById(id)) {
+            throw new ResourceNotFoundException("El horario disponible no existe con id: " + id);
         }
-
-        horariosDisponiblesFromDb.setHora(horariosDisponibles.getHora());
-        horariosDisponiblesFromDb.setFecha(horariosDisponibles.getFecha());
-        return horariosDisponiblesRepository.save(horariosDisponiblesFromDb);
-    }
-
-    @Override
-    public HorariosDisponibles create(HorariosDisponibles horariosDisponibles) {
-        return horariosDisponiblesRepository.save(horariosDisponibles);
-    }
-
-    @Override
-    public void deleteById(Integer id) {
         horariosDisponiblesRepository.deleteById(id);
     }
-
-
-
 }
