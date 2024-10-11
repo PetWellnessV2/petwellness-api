@@ -19,4 +19,5 @@ public class ArchivoDTO {
     private String descripcion;
     @NotBlank(message = "El nombre de la mascota es obligatorio")
     private String NomMascota;
+    private String path;
 }

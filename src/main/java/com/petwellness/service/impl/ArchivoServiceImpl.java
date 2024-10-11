@@ -11,9 +11,12 @@ import com.petwellness.model.entity.RegistroMascota;
 import com.petwellness.repository.ArchivoRepository;
 import com.petwellness.repository.MascotaDatosRepository;
 import com.petwellness.service.ArchivoService;
+import com.petwellness.service.MascotaDatosService;
+import com.petwellness.service.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,21 +28,22 @@ public class ArchivoServiceImpl implements ArchivoService {
     private final ArchivoRepository archivoRepository;
     private final MascotaDatosRepository mascotaDatosRepository;
     private final ArchivoRegistroMapper archivoRegistroMapper;
-    private final RegistroMascotaMapper registroMascotaMapper;
-    private final AdminMascotaDatosServiceImpl adminMascotaDatosServiceImpl;
+    private final StorageService storageService;
 
     @Transactional
     @Override
-    public ArchivoRegistroDTO createArchivo(ArchivoRegistroDTO archivoRegistroDTO) {
+    public ArchivoRegistroDTO createArchivo(ArchivoRegistroDTO archivoRegistroDTO, String path) {
         archivoRepository.findByNombreArchivo(archivoRegistroDTO.getNombreArchivo())
                 .ifPresent(existingArchivo ->{
-                    throw new BadRequestException("Ya existe un archivo con el misma título");
+                    throw new BadRequestException("Ya existe un archivo con el mismo título");
                 });
         Integer idMascota = archivoRegistroDTO.getIdRegistroMascota();
         RegistroMascota registroMascota = mascotaDatosRepository.findById(idMascota)
                 .orElseThrow(() -> new ResourceNotFoundException("La mascota con ID "+idMascota+" no existe"));
+
         Archivos archivo = archivoRegistroMapper.toEntity(archivoRegistroDTO);
         archivo.setFecha(LocalDate.now());
+        archivo.setPath(path);
         archivo.setRegistroMascota(registroMascota);
         archivo = archivoRepository.save(archivo);
         return archivoRegistroMapper.toDTO(archivo);
@@ -53,7 +57,7 @@ public class ArchivoServiceImpl implements ArchivoService {
         archivoRepository.findByNombreArchivo(archivoRegistroDTO.getNombreArchivo())
                 .filter(existingArchivo -> !existingArchivo.getIdArchivos().equals(id))
                 .ifPresent(existingArchivo ->{
-                    throw new BadRequestException("Ya existe un archivo con el misma título");
+                    throw new BadRequestException("Ya existe un archivo con el mismo título");
                 });
 
         Integer idMascota = archivoRegistroDTO.getIdRegistroMascota();
@@ -63,6 +67,7 @@ public class ArchivoServiceImpl implements ArchivoService {
         archivosFromDB.setNombreArchivo(archivoRegistroDTO.getNombreArchivo());
         archivosFromDB.setDescripcionArchivo(archivoRegistroDTO.getDescripcion());
         archivosFromDB.setFecha(LocalDate.now());
+        archivosFromDB.setPath(archivoRegistroDTO.getPath());
         archivosFromDB.setRegistroMascota(registroMascota);
         archivosFromDB = archivoRepository.save(archivosFromDB);
         return archivoRegistroMapper.toDTO(archivosFromDB);
@@ -85,6 +90,7 @@ public class ArchivoServiceImpl implements ArchivoService {
         archivoDTO.setId(archivo.getIdArchivos());
         archivoDTO.setNombreArchivo(archivo.getNombreArchivo());
         archivoDTO.setDescripcion(archivo.getDescripcionArchivo());
+        archivoDTO.setPath(archivo.getPath());
         archivoDTO.setNomMascota(archivo.getRegistroMascota().getNombre());
         return archivoDTO;
     }
@@ -99,6 +105,7 @@ public class ArchivoServiceImpl implements ArchivoService {
             archivoDTO.setNombreArchivo(archivo.getNombreArchivo());
             archivoDTO.setDescripcion(archivo.getDescripcionArchivo());
             archivoDTO.setNomMascota(archivo.getRegistroMascota().getNombre());
+            archivoDTO.setPath(archivo.getPath());
             return archivoDTO;
         }).toList();
     }

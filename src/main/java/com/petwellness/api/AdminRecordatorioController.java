@@ -4,6 +4,7 @@ import com.petwellness.dto.RecordatorioDTO;
 import com.petwellness.model.entity.Recordatorio;
 import com.petwellness.model.enums.RecordatorioStatus;
 import com.petwellness.service.AdminRecordatorioService;
+import com.petwellness.service.RecordatorioAutoGeneracionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,10 +18,10 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/admin/recordatorio")
+@RequestMapping("/recordatorio")
 public class AdminRecordatorioController {
     private final AdminRecordatorioService adminRecordatorioService;
-
+    private final RecordatorioAutoGeneracionService recordatorioAutoGeneracionService;
     @GetMapping
     public ResponseEntity<List<Recordatorio>> getAllRecordatorios() {
         return ResponseEntity.ok(adminRecordatorioService.getAll());
@@ -74,5 +75,11 @@ public class AdminRecordatorioController {
     public ResponseEntity<RecordatorioDTO> getRecordatorioById(@PathVariable Integer id) {
         RecordatorioDTO recordatorio = adminRecordatorioService.getRecordatorioById(id);
         return ResponseEntity.ok(recordatorio);
+    }
+
+    @PostMapping("/generar-automaticos")
+    public ResponseEntity<String> generarRecordatoriosAutomaticos() {
+        recordatorioAutoGeneracionService.generarRecordatoriosAutomaticos();
+        return ResponseEntity.ok("Recordatorios generados correctamente.");
     }
 }
