@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -121,24 +121,25 @@ public class PedidoServiceImpl implements PedidoService {
         
         pedido.setEstado(pedidoDTO.getEstado());
         
-        Map<Integer, DetallePedido> detallesMap = pedido.getDetalles().stream()
-                .collect(Collectors.toMap(DetallePedido::getIdProducto, d -> d));
+        List<DetallePedido> nuevosDetalles = new ArrayList<>();
         
-        pedidoDTO.getDetalles().forEach(detalleDTO -> {
-            DetallePedido detalle = detallesMap.get(detalleDTO.getIdProducto());
-            if (detalle == null) {
-                detalle = new DetallePedido();
-                detalle.setPedido(pedido);
-                detalle.setIdProducto(detalleDTO.getIdProducto());
-                pedido.getDetalles().add(detalle);
-            }
+        for (DetallePedidoDTO detalleDTO : pedidoDTO.getDetalles()) {
+            Producto producto = productoRepository.findById(detalleDTO.getIdProducto())
+                    .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + detalleDTO.getIdProducto()));
+            
+            DetallePedido detalle = new DetallePedido();
+            detalle.setPedido(pedido);
+            detalle.setIdProducto(detalleDTO.getIdProducto());
             detalle.setCantidad(detalleDTO.getCantidad());
-            detalle.setPrecioTotal(detalleDTO.getPrecioTotal());
-        });
+            
+            BigDecimal precioTotal = producto.getCosto().multiply(BigDecimal.valueOf(detalleDTO.getCantidad()));
+            detalle.setPrecioTotal(precioTotal);
+            
+            nuevosDetalles.add(detalle);
+        }
         
-        pedido.getDetalles().removeIf(detalle -> 
-            pedidoDTO.getDetalles().stream()
-                .noneMatch(dto -> dto.getIdProducto().equals(detalle.getIdProducto())));
+        pedido.getDetalles().clear();
+        pedido.getDetalles().addAll(nuevosDetalles);
         
         Pedido updatedPedido = pedidoRepository.save(pedido);
         return mapToDTO(updatedPedido);
@@ -157,7 +158,7 @@ public class PedidoServiceImpl implements PedidoService {
         }
         
         pedidoRepository.save(pedido);
-}
+    }
 
     @Override
     @Transactional
@@ -165,6 +166,14 @@ public class PedidoServiceImpl implements PedidoService {
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
         pedidoRepository.delete(pedido);
+    }
+
+    @Override
+    public List<PedidoDTO> obtenerPedidosDeUsuarioPorEstado(Integer usuarioId, EstadoPedido estado) {
+        List<Pedido> pedidos = pedidoRepository.findByUsuarioIdAndEstadoOrderByFechaPedidoDesc(usuarioId, estado);
+        return pedidos.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
     private PedidoDTO mapToDTO(Pedido pedido) {
@@ -187,13 +196,5 @@ public class PedidoServiceImpl implements PedidoService {
         dto.setCantidad(detallePedido.getCantidad());
         dto.setPrecioTotal(detallePedido.getPrecioTotal());
         return dto;
-    }
-
-    @Override
-    public List<PedidoDTO> obtenerPedidosDeUsuarioPorEstado(Integer usuarioId, EstadoPedido estado) {
-        List<Pedido> pedidos = pedidoRepository.findByUsuarioIdAndEstadoOrderByFechaPedidoDesc(usuarioId, estado);
-        return pedidos.stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
     }
 }

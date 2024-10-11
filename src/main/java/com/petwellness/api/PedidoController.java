@@ -54,7 +54,13 @@ public ResponseEntity<PedidoDTO> agregarProductoAPedidoDeUsuario(
         @RequestBody Map<String, Integer> requestBody) {
     Integer cantidad = requestBody.get("cantidad");
     return ResponseEntity.ok(pedidoService.agregarProductoAPedidoDeUsuario(usuarioId, productoId, cantidad));
-}
+    }
+
+    @PutMapping("/{pedidoId}")
+    public ResponseEntity<PedidoDTO> actualizarPedido(@PathVariable Integer pedidoId, @RequestBody PedidoDTO pedidoDTO) {
+        PedidoDTO pedidoActualizado = pedidoService.actualizarPedido(pedidoId, pedidoDTO);
+        return ResponseEntity.ok(pedidoActualizado);
+    }
 
 
     @DeleteMapping("/{pedidoId}/productos/{productoId}")
