@@ -1,6 +1,7 @@
 package com.petwellness.service.impl;
 
 import com.petwellness.dto.RecordatorioDTO;
+import com.petwellness.exception.ResourceNotFoundException;
 import com.petwellness.model.entity.Recordatorio;
 import com.petwellness.model.entity.Usuario;
 import com.petwellness.model.entity.RegistroMascota;
@@ -91,6 +92,24 @@ public class AdminRecordatorioServiceImpl implements AdminRecordatorioService {
     public void deleteRecordatoriosByUsuarioId(Integer usuarioId) {
         List<Recordatorio> recordatorios = recordatorioRepository.findByUsuario_UserId(usuarioId);
         recordatorioRepository.deleteAll(recordatorios);
+    }
+
+    @Override
+    @Transactional
+    public void deleteRecordatorioByIdAndUsuarioId(Integer recordatorioId, Integer usuarioId) {
+        Recordatorio recordatorio = recordatorioRepository.findByRecordatorioIdAndUsuario_UserId(recordatorioId, usuarioId)
+            .orElseThrow(() -> new ResourceNotFoundException("Recordatorio no encontrado para el id " + recordatorioId + " y usuario id " + usuarioId));
+        
+        recordatorioRepository.delete(recordatorio);
+    }
+
+    @Override
+    @Transactional
+    public void deleteRecordatorioById(Integer recordatorioId) {
+        Recordatorio recordatorio = recordatorioRepository.findById(recordatorioId)
+            .orElseThrow(() -> new ResourceNotFoundException("Recordatorio no encontrado para el id " + recordatorioId));
+        
+        recordatorioRepository.delete(recordatorio);
     }
 
     private Recordatorio mapToEntity(RecordatorioDTO dto) {
