@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface RecordatorioRepository extends JpaRepository<Recordatorio, Integer> {
 
@@ -18,4 +19,5 @@ public interface RecordatorioRepository extends JpaRepository<Recordatorio, Inte
     Page<Recordatorio> findByUsuario_UserId(Integer userId, Pageable pageable);
     boolean existsByUsuario_UserIdAndMascota_IdMascotaAndFechaHoraAndTipoRecordatorio(
             Integer userId, Integer mascotaId, LocalDateTime fechaHora, TipoRecordatorio tipoRecordatorio);
+    Optional<Recordatorio> findByRecordatorioIdAndUsuario_UserId(Integer recordatorioId, Integer usuarioId);
 }

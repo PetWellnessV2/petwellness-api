@@ -18,7 +18,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/admin/recordatorio")
+@RequestMapping("/recordatorio")
 public class AdminRecordatorioController {
     private final AdminRecordatorioService adminRecordatorioService;
     private final RecordatorioAutoGeneracionService recordatorioAutoGeneracionService;
@@ -63,6 +63,20 @@ public class AdminRecordatorioController {
     public ResponseEntity<RecordatorioDTO> updateRecordatorio(@PathVariable Integer id, @RequestBody RecordatorioDTO recordatorioDTO) {
         RecordatorioDTO recordatorioActualizado = adminRecordatorioService.updateRecordatorio(id, recordatorioDTO);
         return new ResponseEntity<>(recordatorioActualizado, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/usuario/{usuarioId}/recordatorio/{recordatorioId}")
+    public ResponseEntity<Void> deleteRecordatorioByIdAndUsuario(
+            @PathVariable Integer usuarioId,
+            @PathVariable Integer recordatorioId) {
+        adminRecordatorioService.deleteRecordatorioByIdAndUsuarioId(recordatorioId, usuarioId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{recordatorioId}")
+    public ResponseEntity<Void> deleteRecordatorio(@PathVariable Integer recordatorioId) {
+        adminRecordatorioService.deleteRecordatorioById(recordatorioId);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/usuario/{usuarioId}")
