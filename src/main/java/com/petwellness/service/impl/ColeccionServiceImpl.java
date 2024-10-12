@@ -1,20 +1,17 @@
 package com.petwellness.service.impl;
 
 import com.petwellness.dto.ColeccionDTO;
+import com.petwellness.mapper.ColeccionMapper;
 import com.petwellness.model.entity.Coleccion;
 import com.petwellness.model.entity.ProductoColeccion;
 import com.petwellness.model.entity.Producto;
-import com.petwellness.model.entity.Usuario;
 import com.petwellness.repository.ColeccionRepository;
-import com.petwellness.repository.ProductoColeccionRepository;
 import com.petwellness.repository.ProductoRepository;
-import com.petwellness.repository.UsuarioRepository;
 import com.petwellness.service.ColeccionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,31 +20,33 @@ import java.util.stream.Collectors;
 public class ColeccionServiceImpl implements ColeccionService {
 
     private final ColeccionRepository coleccionRepository;
-    private final ProductoColeccionRepository productoColeccionRepository;
     private final ProductoRepository productoRepository;
-    private final UsuarioRepository usuarioRepository;
+    private final ColeccionMapper coleccionMapper;
 
     @Override
-    public List<ColeccionDTO> obtenerColeccionesDeUsuario(Integer userId) {
-        List<Coleccion> colecciones = coleccionRepository.findByUsuarioUserId(userId);
+    @Transactional(readOnly = true)
+    public List<ColeccionDTO> obtenerTodasLasColecciones() {
+        List<Coleccion> colecciones = coleccionRepository.findAll();
         return colecciones.stream()
-                .map(this::mapToDTO)
+                .map(coleccionMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ColeccionDTO> obtenerColeccionesDeUsuario(Integer userId) {
+        List<Coleccion> colecciones = coleccionRepository.findByUsuarioId(userId);
+        return colecciones.stream()
+                .map(coleccionMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
     public ColeccionDTO crearColeccion(ColeccionDTO coleccionDTO) {
-        Usuario usuario = usuarioRepository.findById(coleccionDTO.getUsuarioId())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        
-        Coleccion coleccion = new Coleccion();
-        coleccion.setNombre(coleccionDTO.getNombre());
-        coleccion.setUsuario(usuario);
-        coleccion.setProductosColeccion(new HashSet<>());
-        
+        Coleccion coleccion = coleccionMapper.toEntity(coleccionDTO);
         coleccion = coleccionRepository.save(coleccion);
-        return mapToDTO(coleccion);
+        return coleccionMapper.toDTO(coleccion);
     }
 
     @Override
@@ -57,18 +56,7 @@ public class ColeccionServiceImpl implements ColeccionService {
                 .orElseThrow(() -> new RuntimeException("Colección no encontrada"));
         coleccion.setNombre(coleccionDTO.getNombre());
         coleccion = coleccionRepository.save(coleccion);
-        return mapToDTO(coleccion);
-    }
-
-    @Override
-    @Transactional
-    public void eliminarColeccion(Integer id) {
-        Coleccion coleccion = coleccionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Colección no encontrada"));
-        if (!coleccion.getProductosColeccion().isEmpty()) {
-            throw new RuntimeException("No se puede eliminar una colección con productos");
-        }
-        coleccionRepository.delete(coleccion);
+        return coleccionMapper.toDTO(coleccion);
     }
 
     @Override
@@ -76,36 +64,38 @@ public class ColeccionServiceImpl implements ColeccionService {
     public ColeccionDTO agregarProductoAColeccion(Integer coleccionId, Integer productoId) {
         Coleccion coleccion = coleccionRepository.findById(coleccionId)
                 .orElseThrow(() -> new RuntimeException("Colección no encontrada"));
+        
         Producto producto = productoRepository.findById(productoId)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-        boolean productoExiste = productoColeccionRepository.existsByColeccionIdAndProductoIdProducto(coleccionId, productoId);
+        boolean productoYaExiste = coleccion.getProductosColeccion().stream()
+                .anyMatch(pc -> pc.getProducto().getIdProducto().equals(productoId));
 
-        if (!productoExiste) {
+        if (!productoYaExiste) {
             ProductoColeccion productoColeccion = new ProductoColeccion();
             productoColeccion.setColeccion(coleccion);
             productoColeccion.setProducto(producto);
-            productoColeccionRepository.save(productoColeccion);
+            coleccion.getProductosColeccion().add(productoColeccion);
+            coleccion = coleccionRepository.save(coleccion);
         }
 
-        return mapToDTO(coleccion);
+        return coleccionMapper.toDTO(coleccion);
     }
+
 
     @Override
     @Transactional
     public void eliminarProductoDeColeccion(Integer coleccionId, Integer productoId) {
-        productoColeccionRepository.deleteByColeccionIdAndProductoIdProducto(coleccionId, productoId);
+        Coleccion coleccion = coleccionRepository.findById(coleccionId)
+                .orElseThrow(() -> new RuntimeException("Colección no encontrada"));
+
+        coleccion.getProductosColeccion().removeIf(pc -> pc.getProducto().getIdProducto().equals(productoId));
+        coleccionRepository.save(coleccion);
     }
-    
-    private ColeccionDTO mapToDTO(Coleccion coleccion) {
-        ColeccionDTO dto = new ColeccionDTO();
-        dto.setId(coleccion.getId());
-        dto.setNombre(coleccion.getNombre());
-        dto.setUsuarioId(coleccion.getUsuario().getUserId());
-        
-        List<Integer> productosIds = productoColeccionRepository.findProductIdsByColeccionId(coleccion.getId());
-        dto.setProductosIds(new HashSet<>(productosIds));
-        
-        return dto;
+
+    @Override
+    @Transactional
+    public void eliminarColeccion(Integer id) {
+        coleccionRepository.deleteById(id);
     }
 }
