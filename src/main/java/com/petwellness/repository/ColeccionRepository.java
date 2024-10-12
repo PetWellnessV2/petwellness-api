@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ColeccionRepository extends JpaRepository<Coleccion, Integer> {
-    List<Coleccion> findByUsuarioUserId(Integer userId);
+    List<Coleccion> findByUsuarioId(Integer usuarioId);
 }

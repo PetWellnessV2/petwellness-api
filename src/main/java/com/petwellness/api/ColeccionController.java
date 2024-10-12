@@ -43,7 +43,9 @@ public class ColeccionController {
     }
 
     @PostMapping("/{coleccionId}/productos/{productoId}")
-    public ResponseEntity<ColeccionDTO> agregarProductoAColeccion(@PathVariable Integer coleccionId, @PathVariable Integer productoId) {
+    public ResponseEntity<ColeccionDTO> agregarProductoAColeccion(
+            @PathVariable Integer coleccionId, 
+            @PathVariable Integer productoId) {
         return ResponseEntity.ok(coleccionService.agregarProductoAColeccion(coleccionId, productoId));
     }
 

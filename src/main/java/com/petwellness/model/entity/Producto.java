@@ -1,14 +1,13 @@
 package com.petwellness.model.entity;
 
-import com.petwellness.model.enums.TipoProducto;
 import jakarta.persistence.*;
 import lombok.Data;
-import java.math.BigDecimal;
-import java.util.Set;
-
+import com.petwellness.model.enums.TipoProducto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -38,9 +37,7 @@ public class Producto {
     @Column(name = "stock", nullable = false)
     private Integer stock;
 
-    @OneToMany(mappedBy = "producto")
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private Set<ProductoColeccion> productosColeccion;
-
-
+    private Set<ProductoColeccion> productosColeccion = new HashSet<>();
 }
