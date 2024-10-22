@@ -20,7 +20,7 @@ public class VeterinarioRegistroMapper {
             veterinarioRegistroDTO.setUserId(veterinario.getUsuario().getUserId());
             veterinarioRegistroDTO.setNombre(veterinario.getUsuario().getNombre());
             veterinarioRegistroDTO.setApellido(veterinario.getUsuario().getApellido());
-            veterinarioRegistroDTO.setEmail(veterinario.getUsuario().getEmail());
+z
             veterinarioRegistroDTO.setTelefono(veterinario.getUsuario().getTelefono());
             veterinarioRegistroDTO.setContrasena(veterinario.getUsuario().getContrasena());
             veterinarioRegistroDTO.setTipoUsuario(veterinario.getUsuario().getTipoUsuario());

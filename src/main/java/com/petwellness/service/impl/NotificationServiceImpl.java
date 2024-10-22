@@ -7,7 +7,7 @@ import com.petwellness.exception.ResourceNotFoundException;
 import com.petwellness.mapper.NotificationMapper;
 import com.petwellness.mapper.NotificationRegistroMapper;
 import com.petwellness.model.entity.Notification;
-import com.petwellness.model.entity.Usuario;
+import com.petwellness.model.entity.Customer;
 import com.petwellness.repository.NotificationRepository;
 import com.petwellness.repository.UsuarioRepository;
 import com.petwellness.service.NotificationService;
@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -66,7 +65,7 @@ public class NotificationServiceImpl implements NotificationService {
                     throw new BadRequestException("Ya existe una notificación con la misma descripción");
                 });
         Integer idUsuario = notificacionRegistroDTO.getUsuarioId();
-        Usuario usuario = usuarioRepository.findById(idUsuario)
+        Customer usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("El usuario con ID "+idUsuario+" no existe"));
         notificacionFromDB.setMensaje(notificacionRegistroDTO.getMensaje());
         notificacionFromDB.setUsuario(usuario);
@@ -111,7 +110,7 @@ public class NotificationServiceImpl implements NotificationService {
                     throw new BadRequestException("Ya existe una notificación con la misma descripción");
                 });
         Integer idUsuario = notificacionRegistroDTO.getUsuarioId();
-        Usuario usuario = usuarioRepository.findById(idUsuario)
+        Customer usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("El usuario con ID "+idUsuario+" no existe"));
         Notification notificacion = notificationRegistroMapper.toEntity(notificacionRegistroDTO);
         notificacion.setMensaje(notificacionRegistroDTO.getMensaje());

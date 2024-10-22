@@ -2,7 +2,7 @@ package com.petwellness.mapper;
 
 import com.petwellness.dto.RecordatorioDTO;
 import com.petwellness.model.entity.Recordatorio;
-import com.petwellness.model.entity.Usuario;
+import com.petwellness.model.entity.Customer;
 import com.petwellness.model.entity.RegistroMascota;
 import com.petwellness.repository.UsuarioRepository;
 import com.petwellness.repository.MascotaDatosRepository;
@@ -53,7 +53,7 @@ public class RecordatorioMapper {
         recordatorio.setFechaHora(dto.getFechaHora());
         recordatorio.setRecordatorioStatus(dto.getRecordatorioStatus());
 
-        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
+        Customer usuario = usuarioRepository.findById(dto.getUsuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         recordatorio.setUsuario(usuario);
 

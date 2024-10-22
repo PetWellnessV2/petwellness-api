@@ -1,7 +1,7 @@
 package com.petwellness.mapper;
 
 import com.petwellness.dto.UsuarioRegistroDTO;
-import com.petwellness.model.entity.Usuario;
+import com.petwellness.model.entity.Customer;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -11,10 +11,10 @@ public class UsuarioRegistroMapper {
     public UsuarioRegistroMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
-    public UsuarioRegistroDTO toDTO(Usuario usuario) {
+    public UsuarioRegistroDTO toDTO(Customer usuario) {
         return modelMapper.map(usuario, UsuarioRegistroDTO.class);
     }
-    public Usuario toEntity(Usuario usuarioRegistroDTO) {
-        return modelMapper.map(usuarioRegistroDTO, Usuario.class);
+    public Customer toEntity(Customer usuarioRegistroDTO) {
+        return modelMapper.map(usuarioRegistroDTO, Customer.class);
     }
 }

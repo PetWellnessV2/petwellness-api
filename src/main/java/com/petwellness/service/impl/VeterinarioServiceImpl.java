@@ -6,7 +6,8 @@ import com.petwellness.exception.BadRequestException;
 import com.petwellness.exception.ResourceNotFoundException;
 import com.petwellness.mapper.VeterinarioMapper;
 import com.petwellness.mapper.VeterinarioRegistroMapper;
-import com.petwellness.model.entity.Usuario;
+import com.petwellness.model.entity.Customer;
+import com.petwellness.model.entity.User;
 import com.petwellness.model.entity.Veterinario;
 import com.petwellness.repository.UsuarioRepository;
 import com.petwellness.repository.VeterinarioRepository;
@@ -32,7 +33,7 @@ public class VeterinarioServiceImpl implements VeterinarioService {
 
     @Transactional
     public VeterinarioRegistroDTO crearVeterinario(VeterinarioRegistroDTO veterinarioRegistroDTO) {
-        Optional<Usuario> usuarioExistente = usuarioRepository.findByNombreAndApellido(
+        Optional<User> usuarioExistente = usuarioRepository.findByNombreAndApellido(
                 veterinarioRegistroDTO.getNombre(),
                 veterinarioRegistroDTO.getApellido()
         );
@@ -41,7 +42,7 @@ public class VeterinarioServiceImpl implements VeterinarioService {
             throw new BadRequestException("Ya existe un usuario con el mismo nombre y apellido");
         }
         Veterinario veterinario = veterinarioRegistroMapper.toEntity(veterinarioRegistroDTO);
-        Usuario usuario = new Usuario();
+        Customer usuario = new Customer();
 
         usuario.setNombre(veterinarioRegistroDTO.getNombre());
         usuario.setApellido(veterinarioRegistroDTO.getApellido());
@@ -101,7 +102,7 @@ public class VeterinarioServiceImpl implements VeterinarioService {
         Veterinario veterinario = veterinarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("El veterinario con ID "+id+" no existe"));
 
-        Usuario usuario = veterinario.getUsuario();
+        Customer usuario = veterinario.getUsuario();
 
         usuario.setApellido(veterinarioRegistroDTO.getApellido());
         usuario.setNombre(veterinarioRegistroDTO.getNombre());

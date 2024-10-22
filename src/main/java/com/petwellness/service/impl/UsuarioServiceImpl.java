@@ -6,7 +6,7 @@ import com.petwellness.exception.BadRequestException;
 import com.petwellness.exception.ResourceNotFoundException;
 import com.petwellness.mapper.UsuarioMapper;
 import com.petwellness.mapper.UsuarioRegistroMapper;
-import com.petwellness.model.entity.Usuario;
+import com.petwellness.model.entity.Customer;
 import com.petwellness.repository.UsuarioRepository;
 import com.petwellness.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -26,12 +26,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Transactional
     @Override
-    public UsuarioRegistroDTO registerUsuario(Usuario usuarioRegistroDTO) {
+    public UsuarioRegistroDTO registerUsuario(Customer usuarioRegistroDTO) {
         usuarioRepository.findByNombreAndApellido(usuarioRegistroDTO.getNombre(), usuarioRegistroDTO.getApellido())
                 .ifPresent(existingUsuario ->{
                     throw new BadRequestException("Ya existe un usuario con el mismo nombre y apellido");
                 });
-        Usuario usuario = usuarioRegistroMapper.toEntity(usuarioRegistroDTO);
+        Customer usuario = usuarioRegistroMapper.toEntity(usuarioRegistroDTO);
         usuario.setCreatedAt(LocalDateTime.now());
         usuario.setUpdatedAt(LocalDateTime.now());
         usuario = usuarioRepository.save(usuario);
@@ -42,7 +42,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Transactional
     @Override
     public UsuarioRegistroDTO updateUsuario(Integer id, UsuarioRegistroDTO usuarioRegistroDTO) {
-        Usuario usuarioFromDB = usuarioRepository.findById(id)
+        Customer usuarioFromDB = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("El usuario con ID "+id+" no existe"));
         usuarioRepository.findByNombreAndApellido(usuarioRegistroDTO.getNombre(), usuarioRegistroDTO.getApellido())
                 .filter(existingUsuario -> !existingUsuario.getUserId().equals(id))
@@ -64,7 +64,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Transactional
     @Override
     public void deleteUsuario(Integer id) {
-        Usuario usuario = usuarioRepository.findById(id)
+        Customer usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("El usuario con ID "+id+" no existe"));
         usuarioRepository.delete(usuario);
     }
@@ -72,14 +72,14 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Transactional(readOnly = true)
     @Override
     public List<UsuarioDTO> getAllUsuarios() {
-        List<Usuario> usuarios = usuarioRepository.findAll();
+        List<Customer> usuarios = usuarioRepository.findAll();
         return usuarios.stream().map(usuarioMapper::toDTO).toList();
     }
 
     @Transactional(readOnly = true)
     @Override
     public UsuarioDTO getUsuarioById(Integer id) {
-        Usuario usuario = usuarioRepository.findById(id)
+        Customer usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("El usuario con ID "+id+" no existe"));
         return usuarioMapper.toDTO(usuario);
     }

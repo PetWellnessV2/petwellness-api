@@ -2,7 +2,6 @@ package com.petwellness.api;
 
 import com.petwellness.dto.UsuarioDTO;
 import com.petwellness.dto.UsuarioRegistroDTO;
-import com.petwellness.model.entity.Usuario;
 import com.petwellness.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
