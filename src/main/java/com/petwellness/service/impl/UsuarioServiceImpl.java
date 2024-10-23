@@ -27,14 +27,16 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Transactional
     @Override
     public UsuarioRegistroDTO registerUsuario(Customer usuarioRegistroDTO) {
-        usuarioRepository.findByNombreAndApellido(usuarioRegistroDTO.getNombre(), usuarioRegistroDTO.getApellido())
+        /*usuarioRepository.findByNombreAndApellido(usuarioRegistroDTO.getNombre(), usuarioRegistroDTO.getApellido())
                 .ifPresent(existingUsuario ->{
                     throw new BadRequestException("Ya existe un usuario con el mismo nombre y apellido");
                 });
+
+         */
         Customer usuario = usuarioRegistroMapper.toEntity(usuarioRegistroDTO);
         usuario.setCreatedAt(LocalDateTime.now());
         usuario.setUpdatedAt(LocalDateTime.now());
-        usuario = usuarioRepository.save(usuario);
+        //usuario = usuarioRepository.save(usuario);
         return usuarioRegistroMapper.toDTO(usuario);
 
     }
@@ -42,13 +44,16 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Transactional
     @Override
     public UsuarioRegistroDTO updateUsuario(Integer id, UsuarioRegistroDTO usuarioRegistroDTO) {
-        Customer usuarioFromDB = usuarioRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("El usuario con ID "+id+" no existe"));
-        usuarioRepository.findByNombreAndApellido(usuarioRegistroDTO.getNombre(), usuarioRegistroDTO.getApellido())
+        /*Customer usuarioFromDB = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("El usuario con ID "+id+" no existe"));*/
+        /*usuarioRepository.findByNombreAndApellido(usuarioRegistroDTO.getNombre(), usuarioRegistroDTO.getApellido())
                 .filter(existingUsuario -> !existingUsuario.getUserId().equals(id))
                 .ifPresent(existingUsuario -> {
                     throw new BadRequestException("Ya existe un usuario con el mismo id");
                 });
+
+         */
+        /*
         usuarioFromDB.setNombre(usuarioRegistroDTO.getNombre());
         usuarioFromDB.setApellido(usuarioRegistroDTO.getApellido());
         usuarioFromDB.setEmail(usuarioRegistroDTO.getEmail());
@@ -58,29 +63,35 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuarioFromDB.setUpdatedAt(LocalDateTime.now());
 
         usuarioFromDB = usuarioRepository.save(usuarioFromDB);
-        return usuarioRegistroMapper.toDTO(usuarioFromDB);
+        */
+        return null; //usuarioRegistroMapper.toDTO(usuarioFromDB);
     }
 
     @Transactional
     @Override
     public void deleteUsuario(Integer id) {
-        Customer usuario = usuarioRepository.findById(id)
+        /*Customer usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("El usuario con ID "+id+" no existe"));
         usuarioRepository.delete(usuario);
+         */
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<UsuarioDTO> getAllUsuarios() {
-        List<Customer> usuarios = usuarioRepository.findAll();
+        /*List<Customer> usuarios = usuarioRepository.findAll();
         return usuarios.stream().map(usuarioMapper::toDTO).toList();
+         */
+        return null;
     }
 
     @Transactional(readOnly = true)
     @Override
     public UsuarioDTO getUsuarioById(Integer id) {
-        Customer usuario = usuarioRepository.findById(id)
+        /*Customer usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("El usuario con ID "+id+" no existe"));
         return usuarioMapper.toDTO(usuario);
+         */
+        return null;
     }
 }

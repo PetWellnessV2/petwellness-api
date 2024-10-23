@@ -15,7 +15,7 @@ public class UserProfileDTO {
     private String firstName;
     private String lastName;
 
-    private LocalDateTime shippingAddress;
+    private String shippingAddress;
     private InstitucionEducativa institucionEducativa;
     private Especialidad especialidad;
 }

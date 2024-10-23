@@ -25,7 +25,7 @@ public class UserRegistroDTO {
     @Size(min = 9, max = 9, message = "El teléfono debe tener 9 dígitos")
     private String telefono;
 
-    private LocalDateTime shippingAddress;
+    private String shippingAddress;
     private InstitucionEducativa institucionEducativa;
     private Especialidad especialidad;
 }

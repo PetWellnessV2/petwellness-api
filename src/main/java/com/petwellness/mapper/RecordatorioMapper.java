@@ -52,11 +52,11 @@ public class RecordatorioMapper {
         recordatorio.setTipoRecordatorio(dto.getTipoRecordatorio());
         recordatorio.setFechaHora(dto.getFechaHora());
         recordatorio.setRecordatorioStatus(dto.getRecordatorioStatus());
-
+        /*
         Customer usuario = usuarioRepository.findById(dto.getUsuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         recordatorio.setUsuario(usuario);
-
+        */
         RegistroMascota mascota = mascotaDatosRepository.findById(dto.getMascotaId())
                 .orElseThrow(() -> new RuntimeException("Mascota no encontrada"));
         recordatorio.setMascota(mascota);

@@ -5,7 +5,8 @@ import com.petwellness.dto.UserRegistroDTO;
 
 public interface UserService {
     UserProfileDTO registerUser(UserRegistroDTO userRegistroDTO);
-    UserProfileDTO updateUserProfile(UserProfileDTO userProfileDTO);
-    UserProfileDTO getUserProfileById(String id);
+    public UserProfileDTO registerVet(UserRegistroDTO userRegistroDTO);
+    UserProfileDTO updateUserProfile(Integer id, UserProfileDTO userProfileDTO);
+    UserProfileDTO getUserProfileById(Integer id);
 
 }

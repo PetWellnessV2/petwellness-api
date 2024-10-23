@@ -32,25 +32,32 @@ public class UserServiceImpl implements UserService {
         return registerUserWhitRole(userRegistroDTO, ERole.CUSTOMER);
     }
 
+    public UserProfileDTO registerVet(UserRegistroDTO userRegistroDTO) {
+        return registerUserWhitRole(userRegistroDTO, ERole.VETERINARIO);
+    }
+
     @Override
-    public UserProfileDTO updateUserProfile(UserProfileDTO userProfileDTO) {
+    public UserProfileDTO updateUserProfile(Integer id, UserProfileDTO userProfileDTO) {
         return null;
     }
 
     @Override
-    public UserProfileDTO getUserProfileById(String id) {
+    public UserProfileDTO getUserProfileById(Integer id) {
         return null;
     }
 
     private UserProfileDTO registerUserWhitRole(UserRegistroDTO userRegistroDTO, ERole roleEnum) {
         boolean existingByEmail = usuarioRepository.existsByEmail(userRegistroDTO.getEmail());
         boolean existingAsCustomer = customerRepository.existsByNombreAndApellido(userRegistroDTO.getNombre(), userRegistroDTO.getApellido());
-
+        boolean existingAsVet = customerRepository.existsByNombreAndApellido(userRegistroDTO.getNombre(), userRegistroDTO.getApellido());
         if (existingByEmail) {
             throw new IllegalArgumentException("El email ya está registrado");
         }
         if (existingAsCustomer) {
             throw new IllegalArgumentException("Ya existe un usuario con ese nombre y apellido");
+        }
+        if (existingAsVet) {
+            throw new IllegalArgumentException("Ya existe un veterinario con ese nombre y apellido");
         }
         Role role = roleRepository.findByName(roleEnum)
                 .orElseThrow(() -> new RuntimeException("No existe un role en el usuario"));
@@ -58,7 +65,7 @@ public class UserServiceImpl implements UserService {
 
         User user = userMapper.toEntity(userRegistroDTO);
         user.setRole(role);
-        if(roleEnum==ERole.CUSTOMER){
+        if (roleEnum == ERole.CUSTOMER) {
             Customer customer = new Customer();
             customer.setNombre(userRegistroDTO.getNombre());
             customer.setApellido(userRegistroDTO.getApellido());
@@ -68,8 +75,8 @@ public class UserServiceImpl implements UserService {
             customer.setUpdatedAt(LocalDateTime.now());
             customer.setUser(user);
             user.setCustomer(customer);
-        }
-        if(roleEnum==ERole.VETERINARIO){
+        } else if (roleEnum == ERole.VETERINARIO) {
+            // Crear Customer
             Customer customer = new Customer();
             customer.setNombre(userRegistroDTO.getNombre());
             customer.setApellido(userRegistroDTO.getApellido());
@@ -80,13 +87,12 @@ public class UserServiceImpl implements UserService {
             customer.setUser(user);
             user.setCustomer(customer);
             Veterinario veterinario = new Veterinario();
+            veterinario.setUsuario(user);
             veterinario.setEspecialidad(userRegistroDTO.getEspecialidad());
             veterinario.setInstitucionEducativa(userRegistroDTO.getInstitucionEducativa());
-            veterinario.setUsuario(customer);
             user.setVeterinario(veterinario);
         }
         User saveUser = usuarioRepository.save(user);
-
         return userMapper.toUserProfileDto(saveUser);
     }
 }

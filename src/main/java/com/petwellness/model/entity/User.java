@@ -14,16 +14,16 @@ public class User {
     @Column(name = "user_id")
     private Integer userId;
 
-    @Column(name = "email", nullable = false, length = 250)
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "contrasena", nullable = false, length = 50)
+    @Column(name = "contrasena", nullable = false)
     private String contrasena;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Customer customer;
 
-    @OneToOne(mappedBy = "vet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "vet",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Veterinario veterinario;
 
     @ManyToOne(fetch = FetchType.EAGER)

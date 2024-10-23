@@ -65,10 +65,10 @@ public class NotificationServiceImpl implements NotificationService {
                     throw new BadRequestException("Ya existe una notificación con la misma descripción");
                 });
         Integer idUsuario = notificacionRegistroDTO.getUsuarioId();
-        Customer usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new ResourceNotFoundException("El usuario con ID "+idUsuario+" no existe"));
+        /*Customer usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new ResourceNotFoundException("El usuario con ID "+idUsuario+" no existe"));*/
         notificacionFromDB.setMensaje(notificacionRegistroDTO.getMensaje());
-        notificacionFromDB.setUsuario(usuario);
+        //notificacionFromDB.setUsuario(usuario);
         notificacionFromDB.setLeida(notificacionRegistroDTO.isLeida());
         notificacionFromDB.setFechaCreacion(LocalDateTime.now());
         notificacionFromDB = notificationRepository.save(notificacionFromDB);
@@ -110,11 +110,11 @@ public class NotificationServiceImpl implements NotificationService {
                     throw new BadRequestException("Ya existe una notificación con la misma descripción");
                 });
         Integer idUsuario = notificacionRegistroDTO.getUsuarioId();
-        Customer usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new ResourceNotFoundException("El usuario con ID "+idUsuario+" no existe"));
+        /*Customer usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new ResourceNotFoundException("El usuario con ID "+idUsuario+" no existe"));*/
         Notification notificacion = notificationRegistroMapper.toEntity(notificacionRegistroDTO);
         notificacion.setMensaje(notificacionRegistroDTO.getMensaje());
-        notificacion.setUsuario(usuario);
+        //notificacion.setUsuario(usuario);
         notificacion.setLeida(false);
         notificacion.setFechaCreacion(LocalDateTime.now());
         notificacion = notificationRepository.save(notificacion);

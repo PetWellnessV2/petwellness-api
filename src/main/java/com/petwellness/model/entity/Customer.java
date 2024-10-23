@@ -31,7 +31,7 @@ public class Customer {
     private TipoUser tipoUsuario;
 
     @Column(name = "shipping_address", nullable = false)
-    private LocalDateTime shippingAddress;
+    private String shippingAddress;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
