@@ -9,6 +9,7 @@ import com.petwellness.mapper.VeterinarioRegistroMapper;
 import com.petwellness.model.entity.Customer;
 import com.petwellness.model.entity.User;
 import com.petwellness.model.entity.Veterinario;
+import com.petwellness.repository.CustomerRepository;
 import com.petwellness.repository.UsuarioRepository;
 import com.petwellness.repository.VeterinarioRepository;
 import com.petwellness.service.UsuarioService;
@@ -30,32 +31,29 @@ public class VeterinarioServiceImpl implements VeterinarioService {
     private final UsuarioService usuarioService;
     private final UsuarioRepository usuarioRepository;
     private final VeterinarioRegistroMapper veterinarioRegistroMapper;
+    private final CustomerRepository customerRepository;
 
     @Transactional
     public VeterinarioRegistroDTO crearVeterinario(VeterinarioRegistroDTO veterinarioRegistroDTO) {
-        /*Optional<User> usuarioExistente = usuarioRepository.findByNombreAndApellido(
-                veterinarioRegistroDTO.getNombre(),
-                veterinarioRegistroDTO.getApellido()
-        );
-
-         */
-
-        /*if (usuarioExistente.isPresent()) {
-            throw new BadRequestException("Ya existe un usuario con el mismo nombre y apellido");
-        }*/
+        customerRepository.findByNombreAndApellido(veterinarioRegistroDTO.getNombre(), veterinarioRegistroDTO.getApellido())
+                .ifPresent(existingUsuario ->{
+                    throw new BadRequestException("Ya existe un veterinario con el mismo nombre y apellido");
+                });
         Veterinario veterinario = veterinarioRegistroMapper.toEntity(veterinarioRegistroDTO);
         Customer usuario = new Customer();
-
+        User user = new User();
         usuario.setNombre(veterinarioRegistroDTO.getNombre());
         usuario.setApellido(veterinarioRegistroDTO.getApellido());
-        //usuario.setEmail(veterinarioRegistroDTO.getEmail());
         usuario.setTelefono(veterinarioRegistroDTO.getTelefono());
-        //usuario.setContrasena(veterinarioRegistroDTO.getContrasena());
         usuario.setTipoUsuario(veterinarioRegistroDTO.getTipoUsuario());
         usuario.setCreatedAt(LocalDateTime.now());
         usuario.setUpdatedAt(LocalDateTime.now());
-
-        //veterinario.setUsuario(usuario);
+        user.setEmail(veterinarioRegistroDTO.getEmail());
+        user.setContrasena(veterinarioRegistroDTO.getContrasena());
+        user.setCustomer(usuario);
+        veterinario.setEspecialidad(veterinarioRegistroDTO.getEspecialidad());
+        veterinario.setInstitucionEducativa(veterinarioRegistroDTO.getInstitucionEducativa());
+        veterinario.setUsuario(user);
         veterinario = veterinarioRepository.save(veterinario);
 
         return veterinarioRegistroMapper.toDTO(veterinario);
@@ -71,13 +69,13 @@ public class VeterinarioServiceImpl implements VeterinarioService {
                         veterinario ->{
                             VeterinarioDTO veterinarioDTO = new VeterinarioDTO();
                             veterinarioDTO.setUserId(veterinario.getUsuario_user_id());
-                            //veterinarioDTO.setApellido(veterinario.getUsuario().getApellido());
-                            //veterinarioDTO.setNombre(veterinario.getUsuario().getNombre());
-                            //veterinarioDTO.setEmail(veterinario.getUsuario().getEmail());
-                            //veterinarioDTO.setTelefono(veterinario.getUsuario().getTelefono());
+                            veterinarioDTO.setApellido(veterinario.getUsuario().getCustomer().getApellido());
+                            veterinarioDTO.setNombre(veterinario.getUsuario().getCustomer().getNombre());
+                            veterinarioDTO.setEmail(veterinario.getUsuario().getEmail());
+                            veterinarioDTO.setTelefono(veterinario.getUsuario().getCustomer().getTelefono());
                             veterinarioDTO.setInstitucionEducativa(veterinario.getInstitucionEducativa());
                             veterinarioDTO.setEspecialidad(veterinario.getEspecialidad());
-                            //veterinarioDTO.setTipoUsuario(veterinario.getUsuario().getTipoUsuario());
+                            veterinarioDTO.setTipoUsuario(veterinario.getUsuario().getCustomer().getTipoUsuario());
                             return veterinarioDTO;
                         }
 
@@ -92,7 +90,6 @@ public class VeterinarioServiceImpl implements VeterinarioService {
         if (!veterinarioRepository.existsById(id)) {
             throw new RuntimeException("El veterinario no existe");
         }
-
         veterinarioRepository.deleteById(id);
     }
 
@@ -103,22 +100,21 @@ public class VeterinarioServiceImpl implements VeterinarioService {
     public VeterinarioRegistroDTO actualizarVeterinario(Integer id, VeterinarioRegistroDTO veterinarioRegistroDTO) {
         Veterinario veterinario = veterinarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("El veterinario con ID "+id+" no existe"));
-
-        //Customer usuario = veterinario.getUsuario();
-/*
+        Customer usuario = veterinario.getUsuario().getCustomer();
         usuario.setApellido(veterinarioRegistroDTO.getApellido());
         usuario.setNombre(veterinarioRegistroDTO.getNombre());
-        //usuario.setEmail(veterinarioRegistroDTO.getEmail());
         usuario.setTelefono(veterinarioRegistroDTO.getTelefono());
-        //usuario.setContrasena(veterinarioRegistroDTO.getContrasena());
         usuario.setTipoUsuario(veterinarioRegistroDTO.getTipoUsuario());
         usuario.setUpdatedAt(LocalDateTime.now());
-
-        veterinario.setUsuario(usuario);
+        User user = veterinario.getUsuario();
+        user.setEmail(veterinarioRegistroDTO.getEmail());
+        user.setContrasena(veterinarioRegistroDTO.getContrasena());
+        user.setCustomer(usuario);
         veterinario.setEspecialidad(veterinarioRegistroDTO.getEspecialidad());
         veterinario.setInstitucionEducativa(veterinarioRegistroDTO.getInstitucionEducativa());
+        user.setVeterinario(veterinario);
+        veterinario.setUsuario(user);
         veterinario = veterinarioRepository.save(veterinario);
-*/
         return veterinarioRegistroMapper.toDTO(veterinario);
 
     }

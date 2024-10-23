@@ -30,7 +30,7 @@ public class Customer {
     @Column(name = "tipo_usuario")
     private TipoUser tipoUsuario;
 
-    @Column(name = "shipping_address", nullable = false)
+    @Column(name = "shipping_address")
     private String shippingAddress;
 
     @Column(name = "created_at", nullable = false)

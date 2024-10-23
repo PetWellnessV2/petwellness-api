@@ -16,6 +16,7 @@ public class UserMapper {
 
     public User toEntity(UserRegistroDTO registroDTO){
         User user = modelMapper.map(registroDTO, User.class);
+        user.setContrasena(registroDTO.getContrasena());
         if (registroDTO.getInstitucionEducativa() != null) {
             Veterinario veterinario = new Veterinario();
             veterinario.setInstitucionEducativa(registroDTO.getInstitucionEducativa());

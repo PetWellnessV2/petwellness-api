@@ -14,7 +14,7 @@ public class UsuarioRegistroMapper {
     public UsuarioRegistroDTO toDTO(Customer usuario) {
         return modelMapper.map(usuario, UsuarioRegistroDTO.class);
     }
-    public Customer toEntity(Customer usuarioRegistroDTO) {
+    public Customer toEntity(UsuarioRegistroDTO usuarioRegistroDTO) {
         return modelMapper.map(usuarioRegistroDTO, Customer.class);
     }
 }

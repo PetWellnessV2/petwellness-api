@@ -86,6 +86,9 @@ public class UserServiceImpl implements UserService {
         boolean existingByEmail = usuarioRepository.existsByEmail(userRegistroDTO.getEmail());
         boolean existingAsCustomer = customerRepository.existsByNombreAndApellido(userRegistroDTO.getNombre(), userRegistroDTO.getApellido());
         boolean existingAsVet = customerRepository.existsByNombreAndApellido(userRegistroDTO.getNombre(), userRegistroDTO.getApellido());
+        if (userRegistroDTO.getContrasena() == null || userRegistroDTO.getContrasena().isBlank()) {
+            throw new IllegalArgumentException("La contraseña es obligatoria.");
+        }
         if (existingByEmail) {
             throw new IllegalArgumentException("El email ya está registrado");
         }
@@ -97,9 +100,11 @@ public class UserServiceImpl implements UserService {
         }
         Role role = roleRepository.findByName(roleEnum)
                 .orElseThrow(() -> new RuntimeException("No existe un role en el usuario"));
-        userRegistroDTO.setContrasena(passwordEncoder.encode(userRegistroDTO.getContrasena()));
+        String encodedPassword = passwordEncoder.encode(userRegistroDTO.getContrasena());
 
         User user = userMapper.toEntity(userRegistroDTO);
+        user.setContrasena(encodedPassword);
+        user.setEmail(userRegistroDTO.getEmail());
         user.setRole(role);
         if (roleEnum == ERole.CUSTOMER) {
             Customer customer = new Customer();
