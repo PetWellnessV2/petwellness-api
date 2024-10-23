@@ -9,5 +9,6 @@ public interface VeterinarioService {
     VeterinarioRegistroDTO crearVeterinario(VeterinarioRegistroDTO veterinarioRegistroDTO);
     List<VeterinarioDTO> obtenerVeterinarios();
     void eliminarVeterinario(Integer id);
+
     VeterinarioRegistroDTO actualizarVeterinario(Integer id, VeterinarioRegistroDTO veterinarioRegistroDTO);
 }

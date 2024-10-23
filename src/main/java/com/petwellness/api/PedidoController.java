@@ -1,6 +1,7 @@
 package com.petwellness.api;
 
 import com.petwellness.dto.PedidoDTO;
+import com.petwellness.model.enums.EstadoPedido;
 import com.petwellness.service.PedidoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,17 @@ public class PedidoController {
     @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<List<PedidoDTO>> obtenerPedidosDeUsuario(@PathVariable Integer usuarioId) {
         return ResponseEntity.ok(pedidoService.obtenerPedidosDeUsuario(usuarioId));
+    }
+
+    @GetMapping("/usuario/{usuarioId}/estado/{estado}")
+    public ResponseEntity<List<PedidoDTO>> obtenerPedidosDeUsuarioPorEstado(
+            @PathVariable Integer usuarioId,
+            @PathVariable EstadoPedido estado) {
+        List<PedidoDTO> pedidos = pedidoService.obtenerPedidosDeUsuarioPorEstado(usuarioId, estado);
+        if (pedidos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(pedidos);
     }
 
     @PostMapping
@@ -42,14 +54,14 @@ public ResponseEntity<PedidoDTO> agregarProductoAPedidoDeUsuario(
         @RequestBody Map<String, Integer> requestBody) {
     Integer cantidad = requestBody.get("cantidad");
     return ResponseEntity.ok(pedidoService.agregarProductoAPedidoDeUsuario(usuarioId, productoId, cantidad));
-}
+    }
 
     @PutMapping("/{pedidoId}")
-    public ResponseEntity<PedidoDTO> actualizarPedido(
-            @PathVariable Integer pedidoId,
-            @RequestBody PedidoDTO pedidoDTO) {
-        return ResponseEntity.ok(pedidoService.actualizarPedido(pedidoId, pedidoDTO));
+    public ResponseEntity<PedidoDTO> actualizarPedido(@PathVariable Integer pedidoId, @RequestBody PedidoDTO pedidoDTO) {
+        PedidoDTO pedidoActualizado = pedidoService.actualizarPedido(pedidoId, pedidoDTO);
+        return ResponseEntity.ok(pedidoActualizado);
     }
+
 
     @DeleteMapping("/{pedidoId}/productos/{productoId}")
     public ResponseEntity<Void> eliminarProductoDePedido(

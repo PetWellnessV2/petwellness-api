@@ -2,8 +2,8 @@ package com.petwellness.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
+import lombok.ToString;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
@@ -13,12 +13,15 @@ public class ProductoColeccion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coleccion_id", nullable = false)
-    @JsonBackReference
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Coleccion coleccion;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "producto_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Producto producto;
 }

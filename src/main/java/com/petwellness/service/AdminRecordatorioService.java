@@ -18,4 +18,7 @@ public interface AdminRecordatorioService {
     RecordatorioDTO createRecordatorio(RecordatorioDTO recordatorioDTO);
     RecordatorioDTO updateRecordatorio(Integer id, RecordatorioDTO recordatorioDTO);
     void deleteRecordatoriosByUsuarioId(Integer usuarioId);
+    void deleteRecordatorioByIdAndUsuarioId(Integer recordatorioId, Integer usuarioId);
+    void deleteRecordatorioById(Integer recordatorioId);
+
 }

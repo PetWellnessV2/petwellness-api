@@ -2,11 +2,11 @@ package com.petwellness.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
+import lombok.EqualsAndHashCode;
 
 import java.util.HashSet;
 import java.util.Set;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 
 @Data
 @Entity
@@ -19,11 +19,11 @@ public class Coleccion {
     @Column(nullable = false)
     private String nombre;
 
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+    @Column(name = "usuario_id", nullable = false)
+    private Integer usuarioId;
 
     @OneToMany(mappedBy = "coleccion", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<ProductoColeccion> productosColeccion = new HashSet<>();
 }

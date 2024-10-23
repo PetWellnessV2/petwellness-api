@@ -1,5 +1,6 @@
 package com.petwellness.api;
 
+
 import com.petwellness.dto.VeterinarioDTO;
 import com.petwellness.dto.VeterinarioRegistroDTO;
 import com.petwellness.model.entity.Usuario;
@@ -26,6 +27,7 @@ public class VeterinarioController {
     @PostMapping
     public ResponseEntity<VeterinarioRegistroDTO> crearVeterinario( @Valid @RequestBody VeterinarioRegistroDTO veterinario) {
         VeterinarioRegistroDTO nuevoVeterinario = veterinarioService.crearVeterinario(veterinario);
+
         return new ResponseEntity<>(nuevoVeterinario, HttpStatus.CREATED);
     }
 

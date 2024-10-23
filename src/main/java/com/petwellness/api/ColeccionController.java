@@ -21,6 +21,11 @@ public class ColeccionController {
         return ResponseEntity.ok(coleccionService.obtenerColeccionesDeUsuario(usuarioId));
     }
 
+    @GetMapping
+    public ResponseEntity<List<ColeccionDTO>> obtenerTodasLasColecciones() {
+        return ResponseEntity.ok(coleccionService.obtenerTodasLasColecciones());
+    }
+
     @PostMapping
     public ResponseEntity<ColeccionDTO> crearColeccion(@RequestBody ColeccionDTO coleccionDTO) {
         return new ResponseEntity<>(coleccionService.crearColeccion(coleccionDTO), HttpStatus.CREATED);
@@ -38,7 +43,9 @@ public class ColeccionController {
     }
 
     @PostMapping("/{coleccionId}/productos/{productoId}")
-    public ResponseEntity<ColeccionDTO> agregarProductoAColeccion(@PathVariable Integer coleccionId, @PathVariable Integer productoId) {
+    public ResponseEntity<ColeccionDTO> agregarProductoAColeccion(
+            @PathVariable Integer coleccionId, 
+            @PathVariable Integer productoId) {
         return ResponseEntity.ok(coleccionService.agregarProductoAColeccion(coleccionId, productoId));
     }
 
