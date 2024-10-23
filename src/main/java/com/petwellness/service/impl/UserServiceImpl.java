@@ -11,6 +11,7 @@ import com.petwellness.model.enums.ERole;
 import com.petwellness.repository.CustomerRepository;
 import com.petwellness.repository.RoleRepository;
 import com.petwellness.repository.UsuarioRepository;
+import com.petwellness.repository.VeterinarioRepository;
 import com.petwellness.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +27,7 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final VeterinarioRepository veterinarioRepository;
 
     @Override
     public UserProfileDTO registerUser(UserRegistroDTO userRegistroDTO) {
@@ -38,12 +40,46 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserProfileDTO updateUserProfile(Integer id, UserProfileDTO userProfileDTO) {
-        return null;
+        User user = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No existe un usuario con el ID: " + id));
+        user.setEmail(userProfileDTO.getEmail());
+
+        if (user.getRole().getName() == ERole.CUSTOMER) {
+            user.getCustomer().setNombre(userProfileDTO.getFirstName());
+            user.getCustomer().setApellido(userProfileDTO.getLastName());
+            user.getCustomer().setShippingAddress(userProfileDTO.getShippingAddress());
+            user.getCustomer().setTelefono(userProfileDTO.getTelefono());
+            user.getCustomer().setUpdatedAt(LocalDateTime.now());
+        }
+
+        if (user.getRole().getName() == ERole.VETERINARIO) {
+            Veterinario veterinario = veterinarioRepository.findById(user.getUserId())
+                    .orElseThrow(() -> new IllegalArgumentException("No existe un veterinario asociado al usuario con ID: " + id));
+            user.getCustomer().setNombre(userProfileDTO.getFirstName());
+            user.getCustomer().setApellido(userProfileDTO.getLastName());
+            user.getCustomer().setShippingAddress(userProfileDTO.getShippingAddress());
+            user.getCustomer().setTelefono(userProfileDTO.getTelefono());
+            user.getCustomer().setUpdatedAt(LocalDateTime.now());
+            veterinario.setUsuario(user);
+            veterinario.setInstitucionEducativa(userProfileDTO.getInstitucionEducativa());
+            veterinario.setEspecialidad(userProfileDTO.getEspecialidad());
+            user.setVeterinario(veterinario);
+        }
+
+        User updatedUser = usuarioRepository.save(user);
+        return userMapper.toUserProfileDto(updatedUser);
     }
 
     @Override
     public UserProfileDTO getUserProfileById(Integer id) {
-        return null;
+        User user = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No existe un usuario con el ID: " + id));
+        if (user.getRole() != null && user.getRole().getName() == ERole.VETERINARIO) {
+            Veterinario veterinario = veterinarioRepository.findById(user.getUserId())
+                    .orElseThrow(() -> new IllegalArgumentException("No existe un veterinario asociado al usuario con ID: " + id));
+            user.setVeterinario(veterinario);
+        }
+        return userMapper.toUserProfileDto(user);
     }
 
     private UserProfileDTO registerUserWhitRole(UserRegistroDTO userRegistroDTO, ERole roleEnum) {
@@ -76,7 +112,6 @@ public class UserServiceImpl implements UserService {
             customer.setUser(user);
             user.setCustomer(customer);
         } else if (roleEnum == ERole.VETERINARIO) {
-            // Crear Customer
             Customer customer = new Customer();
             customer.setNombre(userRegistroDTO.getNombre());
             customer.setApellido(userRegistroDTO.getApellido());

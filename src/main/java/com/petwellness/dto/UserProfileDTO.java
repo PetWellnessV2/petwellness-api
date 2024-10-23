@@ -14,7 +14,7 @@ public class UserProfileDTO {
     private ERole role;
     private String firstName;
     private String lastName;
-
+    private String telefono;
     private String shippingAddress;
     private InstitucionEducativa institucionEducativa;
     private Especialidad especialidad;

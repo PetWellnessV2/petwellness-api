@@ -28,19 +28,18 @@ public class UserMapper {
 
     public UserProfileDTO toUserProfileDto(User user){
         UserProfileDTO userProfileDTO = modelMapper.map(user, UserProfileDTO.class);
-        if(user.getCustomer() != null){
-            if(user.getCustomer().getTipoUsuario() != TipoUser.DUEÑO) {
-                userProfileDTO.setFirstName(user.getCustomer().getNombre());
-                userProfileDTO.setLastName(user.getCustomer().getApellido());
-                userProfileDTO.setShippingAddress(user.getCustomer().getShippingAddress());
-            }
-            if (user.getCustomer().getTipoUsuario() == TipoUser.VETERINARIO) {
-                if (user.getVeterinario() != null) {
-                    userProfileDTO.setInstitucionEducativa(user.getVeterinario().getInstitucionEducativa());
-                    userProfileDTO.setEspecialidad(user.getVeterinario().getEspecialidad());
-                }
+        if (user.getCustomer() != null) {
+            userProfileDTO.setFirstName(user.getCustomer().getNombre());
+            userProfileDTO.setLastName(user.getCustomer().getApellido());
+            userProfileDTO.setShippingAddress(user.getCustomer().getShippingAddress());
+            userProfileDTO.setTelefono(user.getCustomer().getTelefono());
+            if (user.getVeterinario() != null) {
+                userProfileDTO.setInstitucionEducativa(user.getVeterinario().getInstitucionEducativa());
+                userProfileDTO.setEspecialidad(user.getVeterinario().getEspecialidad());
             }
         }
+
         return userProfileDTO;
     }
+
 }
