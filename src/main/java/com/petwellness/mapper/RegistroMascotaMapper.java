@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.petwellness.dto.RegistroMascotaDTO;
 import com.petwellness.model.entity.RegistroMascota;
-import com.petwellness.model.entity.Usuario;
+import com.petwellness.model.entity.Customer;
 
 @Component
 public class RegistroMascotaMapper {
@@ -25,7 +25,7 @@ public class RegistroMascotaMapper {
 
 
             if (registroMascotaDTO.getUsuarioId() != null) {
-                Usuario usuario = new Usuario();
+                Customer usuario = new Customer();
                 usuario.setUserId(registroMascotaDTO.getUsuarioId());
                 registroMascota.setUsuario(usuario); 
             }

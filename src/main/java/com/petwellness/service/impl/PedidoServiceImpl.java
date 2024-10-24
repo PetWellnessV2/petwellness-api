@@ -78,6 +78,13 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
+    public PedidoDTO obtenerPedidoPorId(Integer pedidoId) {
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+            .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
+        return pedidoMapper.toDTO(pedido);
+    }
+
+    @Override
     @Transactional
     public PedidoDTO agregarProductoAPedido(Integer pedidoId, Integer productoId, Integer cantidad) {
         Pedido pedido = pedidoRepository.findById(pedidoId)

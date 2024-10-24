@@ -1,24 +1,43 @@
--- Insertar datos de prueba en la tabla usuarios
-INSERT INTO usuarios (user_id, nombre, apellido, email, telefono, contrasena, tipo_usuario, created_at, updated_at)
-VALUES
-    (1, 'Juan', 'Pérez', 'juan.perez@example.com', '123456789', 'password123', 'DUEÑO', '2023-09-01 12:00:00', '2023-09-01 12:00:00'),
-    (2, 'Ana', 'García', 'ana.garcia@example.com', '987654321', 'password456', 'VETERINARIO', '2023-09-02 13:00:00', '2023-09-02 13:00:00'),
-    (3, 'Jose', 'Jimenez', 'jose4@gmail.com', '985652985', 'contra123', 'VETERINARIO', '2023-10-08 13:00:00', '2023-10-08 13:00:00')
-ON CONFLICT (user_id) DO NOTHING;
+-- Insert Roles
+INSERT INTO roles (id, role) VALUES
+                                 (1, 'CUSTOMER'),
+                                 (2, 'ADMIN'),
+                                 (3, 'VETERINARIO')
+    ON CONFLICT (id) DO NOTHING;
 
--- Insertar datos de prueba en la tabla veterinario
+
+-- Insert Users (2 Veterinarians and 3 Customers)
+INSERT INTO users (user_id, email, contrasena, role_id)
+VALUES
+    (1, 'customer1@example.com', 'password123', 1),
+    (2, 'customer2@example.com', 'password123', 1),
+    (3, 'customer3@example.com', 'password123', 1),
+    (4, 'vet1@example.com', 'password123', 3),
+    (5, 'vet2@example.com', 'password123', 3)
+    ON CONFLICT (user_id) DO NOTHING;
+
+-- Insert Customers (Linked to Users)
+INSERT INTO usuarios (user_id, nombre, apellido, telefono, tipo_usuario, created_at, updated_at)
+VALUES
+    (1, 'Juan', 'Pérez', '123456789', 'DUEÑO', '2023-09-01 12:00:00', '2023-09-01 12:00:00'),  -- Customer 1
+    (2, 'Ana', 'García', '987654321', 'DUEÑO', '2023-09-02 13:00:00', '2023-09-02 13:00:00'), -- Customer 2
+    (3, 'Maria', 'Lopez', '998877665', 'DUEÑO', '2023-09-03 14:00:00', '2023-09-03 14:00:00') -- Customer 3
+    ON CONFLICT (user_id) DO NOTHING;
+
+-- Insert Veterinarians (Linked to Users)
 INSERT INTO veterinario (usuario_user_id, institucion_educativa, especialidad)
 VALUES
-    (2, 'UNIVERSIDAD_NACIONAL_MAYOR_DE_SAN_MARCOS', 'CIRUGIA'),
-    (3, 'CORNELL_UNIVERSITY', 'ODONTOLOGIA')
-ON CONFLICT (usuario_user_id) DO NOTHING;
+    (4, 'UNIVERSIDAD_NACIONAL_MAYOR_DE_SAN_MARCOS', 'CIRUGIA'),   -- Veterinarian 1
+    (5, 'CORNELL_UNIVERSITY', 'ODONTOLOGIA')                      -- Veterinarian 2
+    ON CONFLICT (usuario_user_id) DO NOTHING;
+
 
 -- Insertar datos de prueba en la tabla albergue
 INSERT INTO horarios_disponibles (id_horario, vet_user_id, hora, fecha)
 VALUES
-    (1, 2, 10, '2023-09-03'),
-    (2, 3, 15, '2023-09-04'),
-    (3, 2, 17, '2023-09-05')
+    (1, 4, 10, '2023-09-03'),
+    (2, 5, 15, '2023-09-04'),
+    (3, 4, 17, '2023-09-05')
 ON CONFLICT (id_horario) DO NOTHING;
 
 -- Insert sample data into albergue table
@@ -143,3 +162,9 @@ VALUES
     (1, 1, 'Tu mascota ha sido registrada exitosamente', false, '2023-09-01 10:00:00'),
     (2, 2, 'La información de tu mascota ha sido actualizada', false, '2023-09-01 10:00:00')
 ON CONFLICT (id_notificacion) DO NOTHING;
+
+ALTER TABLE usuarios
+    ADD COLUMN IF NOT EXISTS shipping_address VARCHAR(255);
+
+UPDATE usuarios SET shipping_address = 'Sin Dirección' WHERE shipping_address IS NULL;
+
