@@ -42,22 +42,23 @@ public class PayPalService {
 
     }
 
-    public String getAccessToken(){
+    public String getAccessToken() {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "client_credentials");
 
-        //Realización de Solicitudes: enviando una solicitud POST a la API de PayPal para obtener un toke de acceso:
+        // Enviar la solicitud POST a PayPal para obtener el token de acceso
         return Objects.requireNonNull(
-                paypalClient.post()
-                        .uri("/v1/oauth2/token")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .header(HttpHeaders.AUTHORIZATION, "Basics " + Base64.getEncoder()
-                                .encodeToString((clientId + ":" + clientSecret).getBytes()))
-                        .body(body)
-                        .retrieve()
-                        .toEntity(TokenResponse.class).getBody())
+                        paypalClient.post()
+                                .uri("/v1/oauth2/token")
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                                .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder()
+                                        .encodeToString((clientId + ":" + clientSecret).getBytes()))
+                                .body(body)
+                                .retrieve()
+                                .toEntity(TokenResponse.class).getBody())
                 .getAccessToken();
     }
+
 
     public OrderResponse createOrder(Integer purchaseId, String returnUrl, String cancelUrl){
         DetallePedido purchase= purchaseRepository.findById(purchaseId)
@@ -104,7 +105,11 @@ public class PayPalService {
                 .retrieve()
                 .toEntity(OrderCaptureResponse.class)
                 .getBody();
+
+
     }
+
+
 
 
 }
