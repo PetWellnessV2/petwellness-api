@@ -17,7 +17,7 @@ public class CarritoCompra {
 
     @ManyToOne
     @JoinColumn(name = "usuario_user_id", referencedColumnName = "user_id", foreignKey = @ForeignKey(name = "FK_carrito_usuario"), nullable = false)
-    private Usuario usuario;
+    private Customer usuario;
 
     @ManyToOne
     @JoinColumn(name = "producto_id_producto", referencedColumnName = "id_producto", foreignKey = @ForeignKey(name = "FK_carrito_producto"), nullable = false)
