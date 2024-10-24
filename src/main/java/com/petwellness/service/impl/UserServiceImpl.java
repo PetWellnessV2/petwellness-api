@@ -1,5 +1,7 @@
 package com.petwellness.service.impl;
 
+import com.petwellness.dto.AuthResponseDTO;
+import com.petwellness.dto.LoginDTO;
 import com.petwellness.dto.UserProfileDTO;
 import com.petwellness.dto.UserRegistroDTO;
 import com.petwellness.mapper.UserMapper;
@@ -12,10 +14,17 @@ import com.petwellness.repository.CustomerRepository;
 import com.petwellness.repository.RoleRepository;
 import com.petwellness.repository.UsuarioRepository;
 import com.petwellness.repository.VeterinarioRepository;
+import com.petwellness.security.TokenProvider;
+import com.petwellness.security.UserPrincipal;
 import com.petwellness.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.time.LocalDateTime;
 
@@ -29,15 +38,44 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final VeterinarioRepository veterinarioRepository;
 
+    private final AuthenticationManager authenticationManager;
+    private final TokenProvider tokenProvider;
+
+    @Transactional
     @Override
     public UserProfileDTO registerUser(UserRegistroDTO userRegistroDTO) {
         return registerUserWhitRole(userRegistroDTO, ERole.CUSTOMER);
     }
 
+    @Transactional
+    @Override
     public UserProfileDTO registerVet(UserRegistroDTO userRegistroDTO) {
         return registerUserWhitRole(userRegistroDTO, ERole.VETERINARIO);
     }
 
+    @Override
+    public AuthResponseDTO login(LoginDTO loginDTO) {
+        //Autenticar al usuario utilizando AuthenticationManager
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword())
+        );
+
+        //Una vez autenticado, el objeto authentication contiene la información del usuario autenticado
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        User user = userPrincipal.getUser();
+
+        // Verificar si es un administrador
+        boolean isAdmin = user.getRole().getName().equals(ERole.ADMIN);
+
+        String token=tokenProvider.createAccessToken(authentication);
+
+        AuthResponseDTO responseDTO = userMapper.toAuthResponseDTO(user, token);
+
+        return responseDTO;
+    }
+
+
+    @Transactional
     @Override
     public UserProfileDTO updateUserProfile(Integer id, UserProfileDTO userProfileDTO) {
         User user = usuarioRepository.findById(id)
@@ -70,6 +108,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserProfileDto(updatedUser);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public UserProfileDTO getUserProfileById(Integer id) {
         User user = usuarioRepository.findById(id)

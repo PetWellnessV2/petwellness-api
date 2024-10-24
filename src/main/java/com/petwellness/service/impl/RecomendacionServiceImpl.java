@@ -9,6 +9,7 @@ import com.petwellness.repository.MascotaDatosRepository;
 import com.petwellness.repository.ProductoRepository;
 import com.petwellness.service.RecomendacionService;
 import com.petwellness.exception.ResourceNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public class RecomendacionServiceImpl implements RecomendacionService {
 
         // 5. Si no hay productos, obtener productos generales
         if (productos.isEmpty()) {
-            productos = productoRepository.findAll(); // O puedes filtrar productos generales si lo prefieres
+            productos = productoRepository.findAll();
         }
 
         // 6. Mapear productos a DTOs
@@ -63,16 +64,12 @@ public class RecomendacionServiceImpl implements RecomendacionService {
             case PERRO:
                 tipos.add(TipoProducto.ALIMENTO);
                 tipos.add(TipoProducto.JUGUETE);
-                // Agrega más tipos si es necesario
                 break;
             case GATO:
                 tipos.add(TipoProducto.ALIMENTO);
                 tipos.add(TipoProducto.JUGUETE);
-                // Agrega más tipos si es necesario
                 break;
-            // Añade más casos para otras especies
             default:
-                // Tipos de producto generales o vacíos
                 break;
         }
         return tipos;
@@ -81,5 +78,17 @@ public class RecomendacionServiceImpl implements RecomendacionService {
     @Override
     public <Producto> List<Producto> getRecomendaciones(Long mascotaId) {
         return List.of();
+    }
+
+    @Override
+    @Transactional()
+    public List<ProductoDTO> getAllRecomendaciones() {
+        // 1. Obtener todos los productos desde la base de datos
+        List<Producto> productos = productoRepository.findAll();
+
+        // 2. Mapear los productos a DTOs
+        return productos.stream()
+                .map(producto -> modelMapper.map(producto, ProductoDTO.class))
+                .collect(Collectors.toList());
     }
 }

@@ -50,4 +50,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
        
         return new ResponseEntity<>(err, HttpStatus.UNPROCESSABLE_ENTITY);
     }
+
+    @ExceptionHandler(RoleNotFoundException.class)
+    public ResponseEntity<CustomErrorResponse> handleRoleNotFoundException(RoleNotFoundException ex, WebRequest request){
+        CustomErrorResponse err = new CustomErrorResponse(LocalDateTime.now(), ex.getMessage(), request.getDescription(false));
+
+        return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+    }
 }
