@@ -23,6 +23,12 @@ public class PedidoController {
         return ResponseEntity.ok(pedidoService.obtenerPedidosDeUsuario(usuarioId));
     }
 
+    @GetMapping("/{pedidoId}")
+    public ResponseEntity<PedidoDTO> obtenerPedidoPorId(@PathVariable Integer pedidoId) {
+        PedidoDTO pedido = pedidoService.obtenerPedidoPorId(pedidoId);
+        return ResponseEntity.ok(pedido);
+    }
+
     @GetMapping("/usuario/{usuarioId}/estado/{estado}")
     public ResponseEntity<List<PedidoDTO>> obtenerPedidosDeUsuarioPorEstado(
             @PathVariable Integer usuarioId,
