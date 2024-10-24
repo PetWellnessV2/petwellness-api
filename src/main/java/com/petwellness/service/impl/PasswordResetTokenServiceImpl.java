@@ -10,6 +10,7 @@ import com.petwellness.repository.UsuarioRepository;
 import com.petwellness.service.PasswordResetTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final UsuarioRepository userRepository; //vre si se cambia
     private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${spring.mail.username}")
     private String mailFrom;
@@ -31,7 +33,7 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
     @Override
     public void creatAndSendPasswordResetToken(String email) throws Exception {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado conn email: " + email));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con email: " + email));
         PasswordResetToken passwordResetToken = new PasswordResetToken();
         passwordResetToken.setToken(UUID.randomUUID().toString());
         passwordResetToken.setUser(user);
@@ -80,6 +82,7 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
                 .orElseThrow(() -> new ResourceNotFoundException("Token invalido o expirado"));
 
         User user = resetToken.getUser();
+        user.setContrasena(passwordEncoder.encode(newPassword));
         user.setContrasena(newPassword);
         userRepository.save(user);
         passwordResetTokenRepository.delete(resetToken);
