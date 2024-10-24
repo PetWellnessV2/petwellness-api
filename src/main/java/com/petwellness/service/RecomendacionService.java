@@ -8,4 +8,6 @@ public interface RecomendacionService {
     List<ProductoDTO> getRecomendaciones(Integer mascotaId);
 
     <Producto> List<Producto> getRecomendaciones(Long mascotaId);
+
+    List<ProductoDTO> getAllRecomendaciones();
 }

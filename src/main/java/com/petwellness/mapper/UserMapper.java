@@ -1,5 +1,7 @@
 package com.petwellness.mapper;
 
+import com.petwellness.dto.AuthResponseDTO;
+import com.petwellness.dto.LoginDTO;
 import com.petwellness.dto.UserProfileDTO;
 import com.petwellness.dto.UserRegistroDTO;
 import com.petwellness.model.entity.User;
@@ -41,6 +43,32 @@ public class UserMapper {
         }
 
         return userProfileDTO;
+    }
+
+    //Convertir de LoginDTO a User (cuando procesas el login)
+    public User toUserEntity(LoginDTO loginDTO) {
+        return modelMapper.map(loginDTO, User.class);
+    }
+
+    //Convertir de User a AuthResponseDTO para la respuesta de autenticación
+    public AuthResponseDTO toAuthResponseDTO(User user, String token){
+        AuthResponseDTO authResponseDTO = new AuthResponseDTO();
+        authResponseDTO.setToken(token);
+
+        // Obtener el nombre y apellido
+        // Obtener el nombre y apellido
+        String firstName = (user.getCustomer() != null) ? user.getCustomer().getNombre()
+                : (user.getVeterinario() != null) ? "Veterinario" : "Admin";
+        String lastName = (user.getCustomer() != null) ? user.getCustomer().getApellido()
+                : (user.getVeterinario() != null) ? "Veterinario" : "User";
+
+        authResponseDTO.setId(user.getUserId());
+        authResponseDTO.setFirstName(firstName);
+        authResponseDTO.setLastName(lastName);
+
+        authResponseDTO.setRole(user.getRole().getName().name());
+
+        return authResponseDTO;
     }
 
 }

@@ -1,5 +1,7 @@
 package com.petwellness.api;
 
+import com.petwellness.dto.AuthResponseDTO;
+import com.petwellness.dto.LoginDTO;
 import com.petwellness.dto.UserProfileDTO;
 import com.petwellness.dto.UserRegistroDTO;
 import com.petwellness.service.UserService;
@@ -28,5 +30,11 @@ public class AuthController {
     public ResponseEntity<UserProfileDTO> registerVet(@Valid @RequestBody UserRegistroDTO userRegistroDTO) {
         UserProfileDTO userProfileDTO = userService.registerVet(userRegistroDTO);
         return new ResponseEntity<>(userProfileDTO, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponseDTO> login(@Valid  @RequestBody LoginDTO loginDTO) {
+        AuthResponseDTO authResponse = userService.login(loginDTO);
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 }
