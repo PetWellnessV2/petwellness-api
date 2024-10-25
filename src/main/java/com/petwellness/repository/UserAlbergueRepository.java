@@ -1,7 +1,9 @@
 package com.petwellness.repository;
 
 import java.util.List;
+import java.util.Optional;
 
+import com.petwellness.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +16,6 @@ import com.petwellness.model.enums.Genero;
 
 @Repository
 public interface UserAlbergueRepository extends JpaRepository<Albergue, Integer> {
-
     // Consultar mascotas asignadas a un albergue
     @Query("SELECT r FROM RegistroMascota r WHERE r.usuario.userId = :usuarioUserId")
     List<RegistroMascota> findRegistroMascotasByUsuario_user_id(@Param("usuarioUserId") Integer usuarioUserId);

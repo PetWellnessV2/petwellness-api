@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name= "usuarios")
-public class Usuario {
+public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -23,18 +23,15 @@ public class Usuario {
     @Column(name = "apellido", nullable = false, length = 50)
     private String apellido;
 
-    @Column(name = "email", nullable = false, length = 250)
-    private String email;
-
     @Column(name = "telefono", nullable = false, length = 9)
     private String telefono;
 
-    @Column(name = "contrasena", nullable = false, length = 50)
-    private String contrasena;
-
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_usuario", nullable = false)
+    @Column(name = "tipo_usuario")
     private TipoUser tipoUsuario;
+
+    @Column(name = "shipping_address")
+    private String shippingAddress;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -46,5 +43,7 @@ public class Usuario {
     @JsonIgnore
     private List<RegistroMascota> mascotas;
 
-
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
 }

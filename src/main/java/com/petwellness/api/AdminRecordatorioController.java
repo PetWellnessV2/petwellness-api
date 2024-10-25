@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,9 +20,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/recordatorio")
+@PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
 public class AdminRecordatorioController {
     private final AdminRecordatorioService adminRecordatorioService;
     private final RecordatorioAutoGeneracionService recordatorioAutoGeneracionService;
+    /*
     @GetMapping
     public ResponseEntity<List<Recordatorio>> getAllRecordatorios() {
         return ResponseEntity.ok(adminRecordatorioService.getAll());
@@ -96,4 +99,6 @@ public class AdminRecordatorioController {
         recordatorioAutoGeneracionService.generarRecordatoriosAutomaticos();
         return ResponseEntity.ok("Recordatorios generados correctamente.");
     }
+
+     */
 }

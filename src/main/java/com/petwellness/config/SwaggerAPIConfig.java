@@ -10,10 +10,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 @Configuration
 public class SwaggerAPIConfig {
     @Value("${petwellness.openapi.dev-url}")
     private String devUrl;
+
+    @Value("${petwellness.openapi.prod-url}")
+    private String prodUrl;
 
     @Bean
     public OpenAPI myOpenAPI(){
@@ -21,6 +26,11 @@ public class SwaggerAPIConfig {
         Server devServer = new Server();
         devServer.setUrl(this.devUrl);
         devServer.setDescription("Development Server");
+
+        //Definir el servidor de producción
+        Server prodServer = new Server();
+        prodServer.setUrl(this.prodUrl);
+        prodServer.setDescription("Production Server");
 
         //Información de contacto
         Contact contact = new Contact();
@@ -39,6 +49,6 @@ public class SwaggerAPIConfig {
                 .termsOfService("https://www.petwellness.com/terms")
                 .license(mitLicense);
 
-        return new OpenAPI().info(info).addServersItem(devServer);
+        return new OpenAPI().info(info).servers(List.of(devServer, prodServer));
     }
 }

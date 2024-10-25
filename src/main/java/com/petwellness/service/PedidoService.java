@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface PedidoService {
     List<PedidoDTO> obtenerPedidosDeUsuario(Integer usuarioId);
+    PedidoDTO obtenerPedidoPorId(Integer pedidoId);
     PedidoDTO crearPedido(PedidoDTO pedidoDTO);
     PedidoDTO agregarProductoAPedido(Integer pedidoId, Integer productoId, Integer cantidad);
     PedidoDTO agregarProductoAPedidoDeUsuario(Integer usuarioId, Integer productoId, Integer cantidad);
@@ -15,5 +16,5 @@ public interface PedidoService {
     void eliminarPedido(Integer pedidoId);
 
     List<PedidoDTO> obtenerPedidosDeUsuarioPorEstado(Integer usuarioId, EstadoPedido estado);
-
+    PedidoDTO confirmarPedido(Integer pedidoId);
 }

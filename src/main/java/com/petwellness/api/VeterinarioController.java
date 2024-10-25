@@ -3,8 +3,6 @@ package com.petwellness.api;
 
 import com.petwellness.dto.VeterinarioDTO;
 import com.petwellness.dto.VeterinarioRegistroDTO;
-import com.petwellness.model.entity.Usuario;
-import com.petwellness.model.entity.Veterinario;
 import com.petwellness.service.UsuarioService;
 import com.petwellness.service.VeterinarioService;
 import jakarta.validation.Valid;
