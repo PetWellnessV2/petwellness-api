@@ -66,7 +66,6 @@ public class TokenProvider {
                 .builder()
                 .setSubject(email)  // El sujeto del token es el email o nombre de usuario
                 .claim("role", role)  // El rol se incluye como claim en el token
-
                 .claim("userId", userId)  // Agregar el userId como un claim
                 .signWith(key, SignatureAlgorithm.HS512)  // Firmar el token con el algoritmo HS512 y la clave
                 .setExpiration(new Date(System.currentTimeMillis() + jwtValidityInSeconds * 1000))  // Configurar la fecha de expiración del token
