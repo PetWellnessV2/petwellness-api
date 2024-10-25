@@ -54,14 +54,15 @@ public class UserMapper {
 
         // Obtener el nombre y apellido
         // Obtener el nombre
+        // Obtener el nombre
         String firstName = (user.getCliente() != null) ? user.getCliente().getNombre()
-                : (user.getVeterinario() != null) ? "Veterinario"
+                : (user.getVeterinario() != null) ? user.getVeterinario().getNombre()
                         : (user.getAlbergue() != null) ? user.getAlbergue().getNombreAlbergue()
                                 : "Admin";
 
         // Obtener el apellido
         String lastName = (user.getCliente() != null) ? user.getCliente().getApellido()
-                : (user.getVeterinario() != null) ? "Veterinario"
+                : (user.getVeterinario() != null) ? user.getVeterinario().getApellido()
                         : (user.getAlbergue() != null) ? "Albergue"
                                 : "User";
 
