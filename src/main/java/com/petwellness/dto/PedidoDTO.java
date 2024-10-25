@@ -15,4 +15,5 @@ public class PedidoDTO {
     private EstadoPedido estado;
     private List<DetallePedidoDTO> detalles;
     private BigDecimal precioTotalPedido;
+    private String nombreUsuario;
 }

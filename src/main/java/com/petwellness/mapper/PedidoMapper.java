@@ -1,22 +1,63 @@
 package com.petwellness.mapper;
 
+import com.petwellness.dto.DetallePedidoCreateDTO;
 import com.petwellness.dto.DetallePedidoDTO;
+import com.petwellness.dto.PedidoCreateDTO;
 import com.petwellness.dto.PedidoDTO;
 import com.petwellness.model.entity.DetallePedido;
 import com.petwellness.model.entity.Pedido;
+import com.petwellness.model.entity.Producto;
+import com.petwellness.model.entity.Usuario;
+import com.petwellness.model.enums.EstadoPedido;
 import com.petwellness.repository.ProductoRepository;
+import com.petwellness.repository.UsuarioRepository;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @Component
 public class PedidoMapper {
 
     private final ProductoRepository productoRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    public PedidoMapper(ProductoRepository productoRepository) {
+    public PedidoMapper(ProductoRepository productoRepository, UsuarioRepository usuarioRepository) {
         this.productoRepository = productoRepository;
+        this.usuarioRepository = usuarioRepository;
+    }
+
+    public Pedido toPedidoEntity(PedidoCreateDTO createDTO) {
+        if (createDTO == null) {
+            return null;
+        }
+
+        Pedido pedido = new Pedido();
+        pedido.setUsuarioId(createDTO.getUsuarioId());
+        pedido.setFechaPedido(LocalDateTime.now());
+        pedido.setEstado(EstadoPedido.PENDIENTE);
+        
+        if (createDTO.getDetalles() != null) {
+            pedido.setDetalles(createDTO.getDetalles().stream()
+                    .map(detalleDTO -> toDetallePedidoEntity(detalleDTO, pedido))
+                    .collect(Collectors.toList()));
+        }
+
+        return pedido;
+    }
+
+    private DetallePedido toDetallePedidoEntity(DetallePedidoCreateDTO createDTO, Pedido pedido) {
+        if (createDTO == null) {
+            return null;
+        }
+
+        DetallePedido detallePedido = new DetallePedido();
+        detallePedido.setPedido(pedido);
+        detallePedido.setIdProducto(createDTO.getIdProducto());
+        detallePedido.setCantidad(createDTO.getCantidad());
+        detallePedido.setPrecioTotal(createDTO.getPrecioTotal());
+
+        return detallePedido;
     }
 
     public PedidoDTO toDTO(Pedido pedido) {
@@ -29,14 +70,36 @@ public class PedidoMapper {
         dto.setUsuarioId(pedido.getUsuarioId());
         dto.setFechaPedido(pedido.getFechaPedido());
         dto.setEstado(pedido.getEstado());
+        dto.setPrecioTotalPedido(pedido.getPrecioTotalPedido());
+        
+        // Add user name from Usuario entity
+        usuarioRepository.findById(pedido.getUsuarioId())
+            .ifPresent(usuario -> dto.setNombreUsuario(
+                usuario.getNombre() + " " + usuario.getApellido()
+            ));
+
         dto.setDetalles(pedido.getDetalles().stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList()));
 
-        BigDecimal total = pedido.getDetalles().stream()
-            .map(DetallePedido::getPrecioTotal)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
-        dto.setPrecioTotalPedido(total);
+        return dto;
+    }
+
+    public DetallePedidoDTO toDTO(DetallePedido detallePedido) {
+        if (detallePedido == null) {
+            return null;
+        }
+
+        DetallePedidoDTO dto = new DetallePedidoDTO();
+        dto.setIdDetalle(detallePedido.getIdDetalle());
+        dto.setIdPedido(detallePedido.getPedido().getIdPedido());
+        dto.setIdProducto(detallePedido.getIdProducto());
+        dto.setCantidad(detallePedido.getCantidad());
+        dto.setPrecioTotal(detallePedido.getPrecioTotal());
+        
+        productoRepository.findById(detallePedido.getIdProducto())
+            .ifPresent(producto -> dto.setNombreProducto(producto.getNombreProducto()));
+
         return dto;
     }
 
@@ -56,20 +119,6 @@ public class PedidoMapper {
         return pedido;
     }
 
-    public DetallePedidoDTO toDTO(DetallePedido detallePedido) {
-        if (detallePedido == null) {
-            return null;
-        }
-
-        DetallePedidoDTO dto = new DetallePedidoDTO();
-        dto.setIdDetalle(detallePedido.getIdDetalle());
-        dto.setIdPedido(detallePedido.getPedido().getIdPedido());
-        dto.setIdProducto(detallePedido.getIdProducto());
-        dto.setCantidad(detallePedido.getCantidad());
-        dto.setPrecioTotal(detallePedido.getPrecioTotal());
-        return dto;
-    }
-
     public DetallePedido toEntity(DetallePedidoDTO dto, Pedido pedido) {
         if (dto == null) {
             return null;
@@ -80,11 +129,7 @@ public class PedidoMapper {
         detallePedido.setPedido(pedido);
         detallePedido.setIdProducto(dto.getIdProducto());
         detallePedido.setCantidad(dto.getCantidad());
-
-        BigDecimal precioTotal = productoRepository.findById(dto.getIdProducto())
-                .map(producto -> producto.getCosto().multiply(BigDecimal.valueOf(dto.getCantidad())))
-                .orElse(BigDecimal.ZERO);
-        detallePedido.setPrecioTotal(precioTotal);
+        detallePedido.setPrecioTotal(dto.getPrecioTotal());
 
         return detallePedido;
     }

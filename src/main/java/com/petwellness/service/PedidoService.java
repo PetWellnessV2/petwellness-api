@@ -1,5 +1,6 @@
 package com.petwellness.service;
 
+import com.petwellness.dto.PedidoCreateDTO;
 import com.petwellness.dto.PedidoDTO;
 import com.petwellness.model.enums.EstadoPedido;
 
@@ -17,4 +18,5 @@ public interface PedidoService {
 
     List<PedidoDTO> obtenerPedidosDeUsuarioPorEstado(Integer usuarioId, EstadoPedido estado);
 
+    PedidoDTO crearPedido(PedidoCreateDTO pedidoCreateDTO);
 }
