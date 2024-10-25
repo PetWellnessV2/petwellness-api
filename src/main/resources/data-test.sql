@@ -13,7 +13,8 @@ VALUES
     (2, 'customer2@example.com', 'password123', 1),
     (3, 'customer3@example.com', 'password123', 1),
     (4, 'vet1@example.com', 'password123', 3),
-    (5, 'vet2@example.com', 'password123', 3)
+    (5, 'vet2@example.com', 'password123', 3),
+    (6, 'admin1@example.com', 'password123', 2)
     ON CONFLICT (user_id) DO NOTHING;
 
 -- Insert Customers (Linked to Users)
@@ -69,14 +70,30 @@ VALUES
 (3, 'Favoritos de Maria', 2)
 ON CONFLICT (id) DO NOTHING;
 
--- Insertar datos de prueba en la tabla producto
-INSERT INTO producto (id_producto, nombre_producto, imagen, descripcion, costo, tipo_producto, stock)
+-- Insertar datos en la tabla categoria_producto
+INSERT INTO categoria_producto (id, name, description, created_at, updated_at)
 VALUES
-    (1, 'Collar para perro', 'collar.png', 'Collar resistente para perros grandes', 20.50, 'ACCESORIO', 100),
-    (2, 'Arena para gatos', 'arena.png', 'Arena absorbente para gatos', 10.25, 'MEDICAMENTO', 200),
-    (3, 'Comida para gatos', 'cat_food.jpg', 'Alimento premium para gatos', 25.50, 'ALIMENTO', 200)
+    (1, 'Alimentos', 'Productos de alimentación para animales', NOW(), NOW()),
+    (2, 'Juguetes', 'Juguetes para entretenimiento de mascotas', NOW(), NOW()),
+    (3, 'Medicamentos', 'Productos médicos y suplementos para mascotas', NOW(), NOW()),
+    (4, 'Accesorios', 'Accesorios como collares, correas, etc.', NOW(), NOW()),
+    (5, 'Higiene', 'Productos para la higiene y limpieza de mascotas', NOW(), NOW())
+
+ON CONFLICT (id) DO NOTHING;
+
+
+-- Insertar datos de prueba en la tabla producto
+-- Insertar datos de prueba en la tabla producto
+INSERT INTO producto (id_producto, nombre_producto, imagen, descripcion, costo, categoria_producto_id, stock)
+VALUES
+    (1, 'Collar para perro', 'collar.png', 'Collar resistente para perros grandes', 20.50, 4, 100),  -- Accesorios
+    (2, 'Arena para gatos', 'arena.png', 'Arena absorbente para gatos', 10.25, 3, 200),  -- Medicamentos
+    (3, 'Comida para gatos', 'cat_food.jpg', 'Alimento premium para gatos', 25.50, 1, 200),  -- Alimentos
+    (4, 'Pelota para perros', 'pelota.png', 'Juguete de goma para perros', 5.75, 2, 150),  -- Juguetes
+    (5, 'Shampoo para perros', 'shampoo.png', 'Shampoo especial para el cuidado de la piel de los perros', 15.00, 5, 80)  -- Higiene
 
 ON CONFLICT (id_producto) DO NOTHING;
+
 
 -- Insertar datos de prueba de relaciones producto-colección
 INSERT INTO productos_coleccion (id, coleccion_id, producto_id)

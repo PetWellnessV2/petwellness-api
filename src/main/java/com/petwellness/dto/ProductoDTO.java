@@ -1,6 +1,5 @@
 package com.petwellness.dto;
 
-import com.petwellness.model.enums.TipoProducto;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -12,6 +11,6 @@ public class ProductoDTO {
     private String imagen;
     private String descripcion;
     private BigDecimal costo;
-    private TipoProducto tipoProducto;
+    private String categoriaProducto;
     private Integer stock;
 }

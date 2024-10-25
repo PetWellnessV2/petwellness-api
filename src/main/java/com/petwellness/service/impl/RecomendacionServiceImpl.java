@@ -4,11 +4,12 @@ import com.petwellness.dto.ProductoDTO;
 import com.petwellness.dto.RegistroMascotaDTO;
 import com.petwellness.model.entity.Producto;
 import com.petwellness.model.enums.Especie;
-import com.petwellness.model.enums.TipoProducto;
+import com.petwellness.repository.CategoriaProductoRepository;
 import com.petwellness.repository.MascotaDatosRepository;
 import com.petwellness.repository.ProductoRepository;
 import com.petwellness.service.RecomendacionService;
 import com.petwellness.exception.ResourceNotFoundException;
+import com.petwellness.model.entity.CategoriaProducto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -23,6 +24,7 @@ public class RecomendacionServiceImpl implements RecomendacionService {
 
     private final MascotaDatosRepository mascotaRepository;
     private final ProductoRepository productoRepository;
+    private final CategoriaProductoRepository categoriaProductoRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -34,10 +36,10 @@ public class RecomendacionServiceImpl implements RecomendacionService {
         Especie especie = mascotaDTO.getEspecie();
 
         // 3. Obtener los tipos de producto recomendados para la especie
-        List<TipoProducto> tiposProducto = getTipoProductosPorEspecie(especie);
+        List<CategoriaProducto> tiposProducto = getTipoProductosPorEspecie(especie);
 
         // 4. Obtener los productos basados en los tipos de producto
-        List<Producto> productos = productoRepository.findByTipoProductoIn(tiposProducto);
+        List<Producto> productos = productoRepository.findByCategoriaProductoIn(tiposProducto);
 
         // 5. Si no hay productos, obtener productos generales
         if (productos.isEmpty()) {
@@ -58,16 +60,20 @@ public class RecomendacionServiceImpl implements RecomendacionService {
                 .orElseThrow(() -> new ResourceNotFoundException("La mascota con ID " + mascotaId + " no existe."));
     }
 
-    private List<TipoProducto> getTipoProductosPorEspecie(Especie especie) {
-        List<TipoProducto> tipos = new ArrayList<>();
+    private List<CategoriaProducto> getTipoProductosPorEspecie(Especie especie) {
+        List<CategoriaProducto> tipos = new ArrayList<>();
         switch (especie) {
             case PERRO:
-                tipos.add(TipoProducto.ALIMENTO);
-                tipos.add(TipoProducto.JUGUETE);
+                categoriaProductoRepository.findByName("Alimentos")
+                        .ifPresent(tipos::add);
+                categoriaProductoRepository.findByName("Juguetes")
+                        .ifPresent(tipos::add);
                 break;
             case GATO:
-                tipos.add(TipoProducto.ALIMENTO);
-                tipos.add(TipoProducto.JUGUETE);
+                categoriaProductoRepository.findByName("Alimentos")
+                        .ifPresent(tipos::add);
+                categoriaProductoRepository.findByName("Juguetes")
+                        .ifPresent(tipos::add);
                 break;
             default:
                 break;

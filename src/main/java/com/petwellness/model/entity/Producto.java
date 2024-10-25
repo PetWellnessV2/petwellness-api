@@ -2,7 +2,6 @@ package com.petwellness.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import com.petwellness.model.enums.TipoProducto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.math.BigDecimal;
@@ -30,9 +29,9 @@ public class Producto {
     @Column(name = "costo", nullable = false)
     private BigDecimal costo;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_producto", nullable = false)
-    private TipoProducto tipoProducto;
+    @ManyToOne
+    @JoinColumn(name = "categoria_producto_id", referencedColumnName = "id", nullable = false)
+    private CategoriaProducto categoriaProducto;
 
     @Column(name = "stock", nullable = false)
     private Integer stock;
