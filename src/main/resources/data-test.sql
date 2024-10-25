@@ -9,7 +9,7 @@ INSERT INTO roles (id, role) VALUES
 -- Insert Users (2 Veterinarians and 3 Customers)
 INSERT INTO users (user_id, email, contrasena, role_id)
 VALUES
-    (1, 'customer1@example.com', 'password123', 1),
+    (1, 'customer1@example.com', '$2a$10$Z0FQqPzHh6i5yJw9lH2Z8Oe3cM8hF0E7N5B6qR9mT3Rz1uZ5d4bUq', 1),
     (2, 'customer2@example.com', 'password123', 1),
     (3, 'customer3@example.com', 'password123', 1),
     (4, 'vet1@example.com', 'password123', 3),

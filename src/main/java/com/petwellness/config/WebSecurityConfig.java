@@ -42,20 +42,31 @@ public class WebSecurityConfig {
         http
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
+
                 .authorizeHttpRequests(authorize -> authorize
+                        // Public endpoints - anyone can access
                         .requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/auth/register/customer").permitAll()
-                        .requestMatchers("/auth/register/vet").permitAll()
                         .requestMatchers("/mail/**").permitAll()
-                        .requestMatchers("/api/v1/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/webjars/**").permitAll()
+                        .requestMatchers("/media/**").permitAll()
+                        .requestMatchers("/api/v1/swagger-ui/*", "/v3/api-docs/", "/swagger-ui.html", "/swagger-ui/", "/webjars/*").permitAll()
+
+                        // Any other request needs to be authenticated
                         .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults())
+
+                // TODO: Permite la autenticación básica (para testing con Postman, por ejemplo)
+                //.httpBasic(Customizer.withDefaults())
+                // TODO: Desactiva el formulario de inicio de sesión predeterminado, ya que se usará JWT
                 .formLogin(AbstractHttpConfigurer::disable)
+                // TODO: Configura el manejo de excepciones para autenticación. Usa JwtAuthenticationEntryPoint para manejar errores 401 (no autorizado)
                 .exceptionHandling(e -> e.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                // TODO: Configura la política de sesiones como "sin estado" (stateless), ya que JWT maneja la autenticación, no las sesiones de servidor
                 .sessionManagement(h -> h.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // TODO: Agrega la configuración para JWT en el filtro antes de los filtros predeterminados de Spring Security
                 .with(new JWTConfigurer(tokenProvider), Customizer.withDefaults());
 
+        // Add the custom JWT filter before the UsernamePasswordAuthenticationFilter
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
