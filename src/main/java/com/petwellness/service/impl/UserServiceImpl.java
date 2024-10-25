@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +53,21 @@ public class UserServiceImpl implements UserService {
     public UserProfileDTO registerVet(UserRegistroDTO userRegistroDTO) {
         return registerUserWhitRole(userRegistroDTO, ERole.VETERINARIO);
     }
+
+    @Transactional
+    public void encryptExistingPasswords() {
+        List<User> users = usuarioRepository.findAll();
+        for (User user : users) {
+            System.out.println("Verificando usuario: " + user.getEmail());
+            if (!passwordEncoder.matches(user.getContrasena(), user.getContrasena())) {
+                System.out.println("Encriptando contraseña para usuario: " + user.getEmail());
+                String encodedPassword = passwordEncoder.encode(user.getContrasena());
+                user.setContrasena(encodedPassword);
+                usuarioRepository.save(user);
+            }
+        }
+    }
+
 
     @Override
     public AuthResponseDTO login(LoginDTO loginDTO) {

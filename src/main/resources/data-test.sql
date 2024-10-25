@@ -14,7 +14,11 @@ VALUES
     (3, 'customer3@example.com', 'password123', 1),
     (4, 'vet1@example.com', 'password123', 3),
     (5, 'vet2@example.com', 'password123', 3),
-    (6, 'admin1@example.com', 'password123', 2)
+    (6, 'admin1@example.com', 'password123', 2),
+    (7, 'm159c00@gmail.com', 'hola12344', 1),
+    (8, 'yamirpariona@gmail.com', 'hola12344', 1),
+    (9, 'hmendo81@gmail.com', 'hola12344', 1),
+    (10, 'diegoballonvi204@gmail.com', 'hola12344', 1)
     ON CONFLICT (user_id) DO NOTHING;
 
 -- Insert Customers (Linked to Users)
