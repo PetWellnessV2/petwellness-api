@@ -32,6 +32,11 @@ public class PedidoMapper {
         dto.setDetalles(pedido.getDetalles().stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList()));
+
+        BigDecimal total = pedido.getDetalles().stream()
+            .map(DetallePedido::getPrecioTotal)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        dto.setPrecioTotalPedido(total);
         return dto;
     }
 

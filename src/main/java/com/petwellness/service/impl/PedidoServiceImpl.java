@@ -58,6 +58,7 @@ public class PedidoServiceImpl implements PedidoService {
             pedido.setDetalles(detalles);
         }
         
+        pedido.calcularPrecioTotal();
         Pedido savedPedido = pedidoRepository.save(pedido);
         return pedidoMapper.toDTO(savedPedido);
     }
@@ -119,6 +120,9 @@ public class PedidoServiceImpl implements PedidoService {
         detallePedido.setPrecioTotal(producto.getCosto().multiply(BigDecimal.valueOf(cantidad)));
 
         pedido.getDetalles().add(detallePedido);
+
+        pedido.calcularPrecioTotal();
+
         Pedido updatedPedido = pedidoRepository.save(pedido);
         return pedidoMapper.toDTO(updatedPedido);
     }
@@ -135,8 +139,10 @@ public class PedidoServiceImpl implements PedidoService {
                 .map(detalleDTO -> pedidoMapper.toEntity(detalleDTO, pedido))
                 .collect(Collectors.toList()));
         
+        pedido.calcularPrecioTotal();
         Pedido updatedPedido = pedidoRepository.save(pedido);
         return pedidoMapper.toDTO(updatedPedido);
+
     }
 
     @Override
