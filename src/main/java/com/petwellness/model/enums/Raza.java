@@ -37,4 +37,5 @@ public enum Raza {
     COBAYA,
     RATON,
     CHINCHILLA
+
 }
