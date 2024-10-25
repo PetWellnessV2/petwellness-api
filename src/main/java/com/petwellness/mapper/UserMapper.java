@@ -56,11 +56,12 @@ public class UserMapper {
         authResponseDTO.setToken(token);
 
         // Obtener el nombre y apellido
-        // Obtener el nombre y apellido
         String firstName = (user.getCustomer() != null) ? user.getCustomer().getNombre()
-                : (user.getVeterinario() != null) ? "Veterinario" : "Admin";
+                : (user.getVeterinario() != null) ? user.getVeterinario().getVet().getCustomer().getNombre()
+                : "Admin";
         String lastName = (user.getCustomer() != null) ? user.getCustomer().getApellido()
-                : (user.getVeterinario() != null) ? "Veterinario" : "User";
+                : (user.getVeterinario() != null) ? user.getVeterinario().getVet().getCustomer().getApellido()
+                : "User";
 
         authResponseDTO.setId(user.getUserId());
         authResponseDTO.setFirstName(firstName);
