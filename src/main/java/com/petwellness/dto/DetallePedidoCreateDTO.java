@@ -8,5 +8,5 @@ import java.math.BigDecimal;
 public class DetallePedidoCreateDTO {
     private Integer idProducto;
     private Integer cantidad;
-    private BigDecimal precioTotal;
+    private BigDecimal precio;
 }

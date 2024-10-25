@@ -6,13 +6,13 @@ import com.petwellness.dto.PedidoCreateDTO;
 import com.petwellness.dto.PedidoDTO;
 import com.petwellness.model.entity.DetallePedido;
 import com.petwellness.model.entity.Pedido;
-import com.petwellness.model.entity.Producto;
 import com.petwellness.model.entity.Usuario;
 import com.petwellness.model.enums.EstadoPedido;
 import com.petwellness.repository.ProductoRepository;
 import com.petwellness.repository.UsuarioRepository;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
@@ -55,7 +55,7 @@ public class PedidoMapper {
         detallePedido.setPedido(pedido);
         detallePedido.setIdProducto(createDTO.getIdProducto());
         detallePedido.setCantidad(createDTO.getCantidad());
-        detallePedido.setPrecioTotal(createDTO.getPrecioTotal());
+        detallePedido.setPrecioTotal(createDTO.getPrecio().multiply(BigDecimal.valueOf(createDTO.getCantidad())));
 
         return detallePedido;
     }
@@ -72,7 +72,6 @@ public class PedidoMapper {
         dto.setEstado(pedido.getEstado());
         dto.setPrecioTotalPedido(pedido.getPrecioTotalPedido());
         
-        // Add user name from Usuario entity
         usuarioRepository.findById(pedido.getUsuarioId())
             .ifPresent(usuario -> dto.setNombreUsuario(
                 usuario.getNombre() + " " + usuario.getApellido()

@@ -1,8 +1,10 @@
 package com.petwellness.api;
 
+import com.petwellness.dto.PedidoCreateDTO;
 import com.petwellness.dto.PedidoDTO;
 import com.petwellness.model.enums.EstadoPedido;
 import com.petwellness.service.PedidoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,8 +43,8 @@ public class PedidoController {
     }
 
     @PostMapping
-    public ResponseEntity<PedidoDTO> crearPedido(@RequestBody PedidoDTO pedidoDTO) {
-        return new ResponseEntity<>(pedidoService.crearPedido(pedidoDTO), HttpStatus.CREATED);
+    public ResponseEntity<PedidoDTO> crearPedido(@Valid @RequestBody PedidoCreateDTO pedidoCreateDTO) {
+        return new ResponseEntity<>(pedidoService.crearPedido(pedidoCreateDTO), HttpStatus.CREATED);
     }
 
     @PostMapping("/{pedidoId}/productos/{productoId}")
@@ -53,21 +55,23 @@ public class PedidoController {
         Integer cantidad = requestBody.get("cantidad");
         return ResponseEntity.ok(pedidoService.agregarProductoAPedido(pedidoId, productoId, cantidad));
     }
+
     @PostMapping("/usuario/{usuarioId}/productos/{productoId}")
-public ResponseEntity<PedidoDTO> agregarProductoAPedidoDeUsuario(
-        @PathVariable Integer usuarioId,
-        @PathVariable Integer productoId,
-        @RequestBody Map<String, Integer> requestBody) {
-    Integer cantidad = requestBody.get("cantidad");
-    return ResponseEntity.ok(pedidoService.agregarProductoAPedidoDeUsuario(usuarioId, productoId, cantidad));
+    public ResponseEntity<PedidoDTO> agregarProductoAPedidoDeUsuario(
+            @PathVariable Integer usuarioId,
+            @PathVariable Integer productoId,
+            @RequestBody Map<String, Integer> requestBody) {
+        Integer cantidad = requestBody.get("cantidad");
+        return ResponseEntity.ok(pedidoService.agregarProductoAPedidoDeUsuario(usuarioId, productoId, cantidad));
     }
 
     @PutMapping("/{pedidoId}")
-    public ResponseEntity<PedidoDTO> actualizarPedido(@PathVariable Integer pedidoId, @RequestBody PedidoDTO pedidoDTO) {
+    public ResponseEntity<PedidoDTO> actualizarPedido(
+            @PathVariable Integer pedidoId,
+            @Valid @RequestBody PedidoDTO pedidoDTO) {
         PedidoDTO pedidoActualizado = pedidoService.actualizarPedido(pedidoId, pedidoDTO);
         return ResponseEntity.ok(pedidoActualizado);
     }
-
 
     @DeleteMapping("/{pedidoId}/productos/{productoId}")
     public ResponseEntity<Void> eliminarProductoDePedido(
