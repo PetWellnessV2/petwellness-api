@@ -16,5 +16,5 @@ public interface PedidoService {
     void eliminarPedido(Integer pedidoId);
 
     List<PedidoDTO> obtenerPedidosDeUsuarioPorEstado(Integer usuarioId, EstadoPedido estado);
-
+    PedidoDTO confirmarPedido(Integer pedidoId);
 }

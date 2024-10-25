@@ -6,6 +6,7 @@ import com.petwellness.model.entity.DetallePedido;
 import com.petwellness.model.entity.Pedido;
 import com.petwellness.model.entity.Producto;
 import com.petwellness.model.enums.EstadoPedido;
+import com.petwellness.model.enums.PaymentStatus;
 import com.petwellness.repository.PedidoRepository;
 import com.petwellness.repository.ProductoRepository;
 import com.petwellness.service.PedidoService;
@@ -148,4 +149,23 @@ public class PedidoServiceImpl implements PedidoService {
                 .map(pedidoMapper::toDTO)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public PedidoDTO confirmarPedido(Integer pedidoId) {
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
+
+        // Calcular el total del pedido sumando el precio total de cada detalle
+        /*
+        BigDecimal total = pedido.getDetalles().stream()
+                .map(DetallePedido::getPrecioTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+         */
+        pedido.setEstado(EstadoPedido.PAGADO);
+
+        Pedido pedidoActualizado = pedidoRepository.save(pedido);
+        return pedidoMapper.toDTO(pedidoActualizado);
+    }
+
 }

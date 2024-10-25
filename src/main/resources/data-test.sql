@@ -158,9 +158,9 @@ ON CONFLICT (recordatorio_id) DO NOTHING;
 -- Insertar datos de prueba en la tabla pedidos
 INSERT INTO pedidos (id_pedido, usuario_id, fecha_pedido, estado)
 VALUES
-    (1, 1, '2023-09-01 10:00:00', 'ENVIADO'),
-    (2, 2, '2023-09-02 11:00:00', 'EN_PROCESO'),
-    (3, 1, '2023-09-03 12:00:00', 'ENVIADO')
+    (1, 1, '2023-09-01 10:00:00', 'PENDIENTE'),
+    (2, 2, '2023-09-02 11:00:00', 'PENDIENTE'),
+    (3, 1, '2023-09-03 12:00:00', 'PENDIENTE')
 ON CONFLICT (id_pedido) DO NOTHING;
 
 -- Insertar datos de prueba en la tabla detalle_pedidos
