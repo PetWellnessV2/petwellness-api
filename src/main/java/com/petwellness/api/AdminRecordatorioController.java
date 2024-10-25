@@ -24,6 +24,7 @@ import java.util.List;
 public class AdminRecordatorioController {
     private final AdminRecordatorioService adminRecordatorioService;
     private final RecordatorioAutoGeneracionService recordatorioAutoGeneracionService;
+    /*
     @GetMapping
     public ResponseEntity<List<Recordatorio>> getAllRecordatorios() {
         return ResponseEntity.ok(adminRecordatorioService.getAll());
@@ -98,4 +99,6 @@ public class AdminRecordatorioController {
         recordatorioAutoGeneracionService.generarRecordatoriosAutomaticos();
         return ResponseEntity.ok("Recordatorios generados correctamente.");
     }
+
+     */
 }

@@ -47,7 +47,6 @@ public class UserMapper {
 
     //Convertir de LoginDTO a User (cuando procesas el login)
     public User toEntity(LoginDTO loginDTO) {
-
         return modelMapper.map(loginDTO, User.class);
     }
 
