@@ -35,8 +35,29 @@ public class PedidoServiceImpl implements PedidoService {
     @Override
     @Transactional
     public PedidoDTO crearPedido(PedidoDTO pedidoDTO) {
-        Pedido pedido = pedidoMapper.toEntity(pedidoDTO);
+        Pedido pedido = new Pedido();
+        pedido.setUsuarioId(pedidoDTO.getUsuarioId());
         pedido.setFechaPedido(LocalDateTime.now());
+        pedido.setEstado(EstadoPedido.PENDIENTE);
+        
+        if (pedidoDTO.getDetalles() != null) {
+            List<DetallePedido> detalles = pedidoDTO.getDetalles().stream()
+                .map(detalleDTO -> {
+                    DetallePedido detalle = new DetallePedido();
+                    detalle.setPedido(pedido);
+                    detalle.setIdProducto(detalleDTO.getIdProducto());
+                    detalle.setCantidad(detalleDTO.getCantidad());
+                    
+                    Producto producto = productoRepository.findById(detalleDTO.getIdProducto())
+                        .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + detalleDTO.getIdProducto()));
+                    detalle.setPrecioTotal(producto.getCosto().multiply(BigDecimal.valueOf(detalleDTO.getCantidad())));
+                    
+                    return detalle;
+                })
+                .collect(Collectors.toList());
+            pedido.setDetalles(detalles);
+        }
+        
         Pedido savedPedido = pedidoRepository.save(pedido);
         return pedidoMapper.toDTO(savedPedido);
     }
