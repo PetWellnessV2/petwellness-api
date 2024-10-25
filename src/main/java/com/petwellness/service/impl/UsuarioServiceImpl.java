@@ -48,7 +48,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         user.setNombre(usuarioRegistroDTO.getNombre());
         user.setApellido(usuarioRegistroDTO.getApellido());
         user.setTelefono(usuarioRegistroDTO.getTelefono());
-        user.setTipoUsuario(TipoUser.DUEÑO);
+        user.setTipoUsuario(TipoUser.CUSTOMER);
         user.setShippingAddress(usuarioRegistroDTO.getShippingAddress());
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());

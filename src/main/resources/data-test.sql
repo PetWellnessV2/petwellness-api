@@ -18,13 +18,13 @@ VALUES
     ON CONFLICT (user_id) DO NOTHING;
 
 -- Insert Customers (Linked to Users)
-INSERT INTO usuarios (user_id, nombre, apellido, telefono, tipo_usuario, created_at, updated_at)
+INSERT INTO usuarios (user_id, nombre, apellido, telefono, tipo_usuario, created_at, updated_at, shipping_address)
 VALUES
-    (1, 'Juan', 'Pérez', '123456789', 'DUEÑO', '2023-09-01 12:00:00', '2023-09-01 12:00:00'),  -- Customer 1
-    (2, 'Ana', 'García', '987654321', 'DUEÑO', '2023-09-02 13:00:00', '2023-09-02 13:00:00'), -- Customer 2
-    (3, 'Maria', 'Lopez', '998877665', 'DUEÑO', '2023-09-03 14:00:00', '2023-09-03 14:00:00'),
-    (4, 'Delia', 'García', '987654321', 'VETERINARIO', '2023-09-02 13:00:00', '2023-09-02 13:00:00'), -- Customer 2
-    (5, 'Ronaldo', 'Lopez', '998877665', 'VETERINARIO', '2023-09-03 14:00:00', '2023-09-03 14:00:00')
+    (1, 'Juan', 'Pérez', '123456789', 'CUSTOMER', '2023-09-01 12:00:00', '2023-09-01 12:00:00', 'Sin dirección'),  -- Customer 1
+    (2, 'Ana', 'García', '987654321', 'CUSTOMER', '2023-09-02 13:00:00', '2023-09-02 13:00:00', 'Sin dirección'), -- Customer 2
+    (3, 'Maria', 'Lopez', '998877665', 'CUSTOMER', '2023-09-03 14:00:00', '2023-09-03 14:00:00', 'Sin dirección'),
+    (4, 'Delia', 'García', '987654321', 'VETERINARIO', '2023-09-02 13:00:00', '2023-09-02 13:00:00', 'Sin dirección'), -- Customer 2
+    (5, 'Ronaldo', 'Lopez', '998877665', 'VETERINARIO', '2023-09-03 14:00:00', '2023-09-03 14:00:00', 'Sin dirección')
     ON CONFLICT (user_id) DO NOTHING;
 
 -- Insert Veterinarians (Linked to Users)
