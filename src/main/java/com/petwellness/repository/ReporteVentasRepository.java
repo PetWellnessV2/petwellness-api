@@ -1,6 +1,5 @@
 package com.petwellness.repository;
 
-import com.petwellness.dto.ReporteVentasDTO;
 import com.petwellness.model.entity.DetallePedido;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

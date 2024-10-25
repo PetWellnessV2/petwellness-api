@@ -8,5 +8,5 @@ public interface HorariosDisponiblesService {
     HorariosDisponiblesDTO agregarHorario(HorariosDisponiblesDTO horarioDTO);
     void eliminarHorario(Integer id);
     List<HorariosDisponiblesDTO> obtenerHorarios();
-    List<HorariosDisponiblesDTO> obtenerHorariosPorVeterinarioId(Integer veterinarioId);
+    List<HorariosDisponiblesDTO> obtenerHorariosPorUserId(Integer veterinarioId);
 }

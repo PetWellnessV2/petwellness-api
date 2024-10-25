@@ -7,26 +7,27 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name= "veterinario")
+@Table(name= "veterinarios")
 public class Veterinario {
     @Id
-    @Column(name = "usuario_user_id")
-    private Integer usuario_user_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "usuario_user_id", referencedColumnName = "user_id", foreignKey = @ForeignKey(name = "FK_veterinario_usuario"))
-    private User usuario;
+    @Column(name = "nombre", nullable = false, length = 50)
+    private String nombre;
+
+    @Column(name = "apellido", nullable = false, length = 50)
+    private String apellido;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "institucion_educativa", nullable = false)
     private InstitucionEducativa institucionEducativa;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    private User vet;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "especialidad", nullable = false)
     private Especialidad especialidad;
+    
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 }

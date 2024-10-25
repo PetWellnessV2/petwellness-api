@@ -15,20 +15,20 @@ import java.util.List;
 @Repository
 public interface UserVeterinarioRepository extends JpaRepository<Veterinario, Integer> {
 
-            
     // Consultar mascotas asignadas a un veterinario
-    @Query("SELECT r FROM RegistroMascota r WHERE r.usuario.userId = :usuarioUserId")
-    List<RegistroMascota> findRegistroMascotasByUsuario_user_id(@Param("usuarioUserId") Integer usuarioUserId);
+    @Query("SELECT r FROM RegistroMascota r WHERE r.user.id = :usuarioUserId")
+    List<RegistroMascota> findRegistroMascotasByUserId(@Param("usuarioUserId") Integer usuarioUserId);
     
     // Consultar consultas de una mascota asignada a un veterinario
-    @Query("SELECT c FROM Consulta c WHERE c.registroMascota.idMascota = :mascotaId AND c.registroMascota.usuario.userId = :usuarioUserId")
-    List<Consulta> findConsultasByMascotaAndUsuarioUserId(@Param("mascotaId") Integer mascotaId, @Param("usuarioUserId") Integer usuarioUserId);
+    @Query("SELECT c FROM Consulta c WHERE c.registroMascota.idMascota = :mascotaId AND c.registroMascota.user.id = :usuarioUserId")
+    List<Consulta> findConsultasByMascotaAndUserId(@Param("mascotaId") Integer mascotaId, @Param("usuarioUserId") Integer usuarioUserId);
     
     // Consultar exámenes físicos de una mascota asignada a un veterinario
-    @Query("SELECT e FROM ExamenFisico e WHERE e.registroMascota.idMascota = :mascotaId AND e.registroMascota.usuario.userId = :usuarioUserId")
-    List<ExamenFisico> findExamenesFisicosByMascotaAndUsuarioUserId(@Param("mascotaId") Integer mascotaId, @Param("usuarioUserId") Integer usuarioUserId);
+    @Query("SELECT e FROM ExamenFisico e WHERE e.registroMascota.idMascota = :mascotaId AND e.registroMascota.user.id = :usuarioUserId")
+    List<ExamenFisico> findExamenesFisicosByMascotaAndUserId(@Param("mascotaId") Integer mascotaId, @Param("usuarioUserId") Integer usuarioUserId);
     
     // Consultar exámenes de laboratorio de una mascota asignada a un veterinario
-    @Query("SELECT e FROM ExamenesLaboratorio e WHERE e.registroMascota.idMascota = :mascotaId AND e.registroMascota.usuario.userId = :usuarioUserId")
-    List<ExamenesLaboratorio> findExamenesLaboratorioByMascotaAndUsuarioUserId(@Param("mascotaId") Integer mascotaId, @Param("usuarioUserId") Integer usuarioUserId);
+    @Query("SELECT e FROM ExamenesLaboratorio e WHERE e.registroMascota.idMascota = :mascotaId AND e.registroMascota.user.id = :usuarioUserId")
+    List<ExamenesLaboratorio> findExamenesLaboratorioByMascotaAndUserId(@Param("mascotaId") Integer mascotaId, @Param("usuarioUserId") Integer usuarioUserId);
 }
+

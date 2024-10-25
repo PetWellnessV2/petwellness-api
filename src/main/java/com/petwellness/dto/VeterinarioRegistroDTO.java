@@ -2,7 +2,6 @@ package com.petwellness.dto;
 
 import com.petwellness.model.enums.Especialidad;
 import com.petwellness.model.enums.InstitucionEducativa;
-import com.petwellness.model.enums.TipoUser;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -25,8 +24,6 @@ public class VeterinarioRegistroDTO {
     @NotBlank(message = "La contraseña es obligatorio")
     @Size(min = 8, max = 12, message = "La contraseña debe tener entre 8 y 12 caracteres")
     private String contrasena;
-
-    private TipoUser tipoUsuario;
 
     @NotNull(message = "La institucion educativa es obligatoria")
     private InstitucionEducativa institucionEducativa;

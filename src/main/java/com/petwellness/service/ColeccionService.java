@@ -4,7 +4,7 @@ import com.petwellness.dto.ColeccionDTO;
 import java.util.List;
 
 public interface ColeccionService {
-    List<ColeccionDTO> obtenerColeccionesDeUsuario(Integer usuarioId);
+    List<ColeccionDTO> obtenerColeccionesDeUser(Integer usuarioId);
     List<ColeccionDTO> obtenerTodasLasColecciones();
     ColeccionDTO crearColeccion(ColeccionDTO coleccionDTO);
     ColeccionDTO actualizarColeccion(Integer id, ColeccionDTO coleccionDTO);

@@ -2,7 +2,6 @@ package com.petwellness.service;
 
 import com.petwellness.dto.ArchivoDTO;
 import com.petwellness.dto.ArchivoRegistroDTO;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 

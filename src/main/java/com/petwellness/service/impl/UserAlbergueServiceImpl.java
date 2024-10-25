@@ -27,8 +27,8 @@ public class UserAlbergueServiceImpl implements UserAlbergueService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<RegistroMascotaDTO> findRegistroMascotasByUsuario_user_id(Integer usuarioId) {
-        List<RegistroMascota> mascotas = userAlbergueRepository.findRegistroMascotasByUsuario_user_id(usuarioId);
+    public List<RegistroMascotaDTO> findRegistroMascotasByUserId(Integer usuarioId) {
+        List<RegistroMascota> mascotas = userAlbergueRepository.findRegistroMascotasByUserId(usuarioId);
         return mascotas.stream()
                 .map(registroMascotaMapper::toDTO)
                 .collect(Collectors.toList());

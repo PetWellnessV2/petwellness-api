@@ -33,7 +33,7 @@ public class NotificationController {
 
     @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<List<NotificationDTO>> getNotificacionesByUsuarioId(@PathVariable Integer usuarioId) {
-        List<NotificationDTO> notifications = notificationService.getNotificacionesByUsuarioId(usuarioId);
+        List<NotificationDTO> notifications = notificationService.getNotificacionesByUserId(usuarioId);
         return new ResponseEntity<>(notifications, HttpStatus.OK);
     }
 

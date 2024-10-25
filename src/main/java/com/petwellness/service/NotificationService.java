@@ -1,7 +1,6 @@
 package com.petwellness.service;
 import com.petwellness.dto.NotificationDTO;
 import com.petwellness.dto.NotificationRegistroDTO;
-import com.petwellness.model.entity.Notification;
 import java.util.List;
 
 public interface NotificationService {
@@ -12,5 +11,5 @@ public interface NotificationService {
     NotificationRegistroDTO createNotificacion(NotificationRegistroDTO notificacionRegistroDTO);
     void deleteNotificacion(Integer id);
     NotificationRegistroDTO markAsRead(Integer id);
-    List<NotificationDTO> getNotificacionesByUsuarioId(Integer usuarioId);
+    List<NotificationDTO> getNotificacionesByUserId(Integer usuarioId);
 }

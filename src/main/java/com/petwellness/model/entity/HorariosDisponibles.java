@@ -15,8 +15,8 @@ public class HorariosDisponibles {
     private Integer idHorario;
 
     @ManyToOne
-    @JoinColumn(name = "vet_user_id", referencedColumnName = "usuario_user_id", foreignKey = @ForeignKey(name = "FK_horarios_veterinario"), nullable = false)
-    private Veterinario veterinario;
+    @JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_horarios_user"), nullable = false)
+    private User user;
 
     @Column(name = "hora", nullable = false)
     private Integer hora;

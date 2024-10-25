@@ -38,7 +38,7 @@ public class HorariosDisponiblesController {
 
     @GetMapping("/veterinario/{userId}")
     public ResponseEntity<List<HorariosDisponiblesDTO>> obtenerHorariosPorVeterinario(@PathVariable Integer userId) {
-        List<HorariosDisponiblesDTO> horarios = horariosDisponiblesService.obtenerHorariosPorVeterinarioId(userId);
+        List<HorariosDisponiblesDTO> horarios = horariosDisponiblesService.obtenerHorariosPorUserId(userId);
         return new ResponseEntity<>(horarios, HttpStatus.OK);
     }
 }

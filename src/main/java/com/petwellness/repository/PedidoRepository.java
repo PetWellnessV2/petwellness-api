@@ -10,8 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
-    List<Pedido> findByUsuarioId(Integer usuarioId);
-    Optional<Pedido> findTopByUsuarioIdAndEstadoOrderByFechaPedidoDesc(Integer usuarioId, EstadoPedido estado);
-    List<Pedido> findByUsuarioIdAndEstadoOrderByFechaPedidoDesc(Integer usuarioId, EstadoPedido estado);
+    List<Pedido> findByUserId(Integer usuarioId);
+    Optional<Pedido> findTopByUserIdAndEstadoOrderByFechaPedidoDesc(Integer usuarioId, EstadoPedido estado);
+    List<Pedido> findByUserIdAndEstadoOrderByFechaPedidoDesc(Integer usuarioId, EstadoPedido estado);
 
 }

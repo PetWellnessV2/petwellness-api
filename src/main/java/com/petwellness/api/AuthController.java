@@ -3,7 +3,7 @@ package com.petwellness.api;
 import com.petwellness.dto.AuthResponseDTO;
 import com.petwellness.dto.LoginDTO;
 import com.petwellness.dto.UserProfileDTO;
-import com.petwellness.dto.UserRegistroDTO;
+import com.petwellness.dto.UserRegisterDTO;
 import com.petwellness.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +21,20 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/register/customer")
-    public ResponseEntity<UserProfileDTO> registerCustomer(@Valid @RequestBody UserRegistroDTO userRegistroDTO) {
-        UserProfileDTO userProfileDTO = userService.registerUser(userRegistroDTO);
+    public ResponseEntity<UserProfileDTO> registerCustomer(@Valid @RequestBody UserRegisterDTO userRegistroDTO) {
+        UserProfileDTO userProfileDTO = userService.registerCliente(userRegistroDTO);
         return new ResponseEntity<>(userProfileDTO, HttpStatus.CREATED);
     }
 
-    @PostMapping("/register/vet")
-    public ResponseEntity<UserProfileDTO> registerVet(@Valid @RequestBody UserRegistroDTO userRegistroDTO) {
-        UserProfileDTO userProfileDTO = userService.registerVet(userRegistroDTO);
+    @PostMapping("/register/veterinario")
+    public ResponseEntity<UserProfileDTO> registerVet(@Valid @RequestBody UserRegisterDTO userRegistroDTO) {
+        UserProfileDTO userProfileDTO = userService.registerVeterinario(userRegistroDTO);
+        return new ResponseEntity<>(userProfileDTO, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/register/albergue")
+    public ResponseEntity<UserProfileDTO> registerAlbergue(@Valid @RequestBody UserRegisterDTO userRegistroDTO) {
+        UserProfileDTO userProfileDTO = userService.registerAlbergue(userRegistroDTO);
         return new ResponseEntity<>(userProfileDTO, HttpStatus.CREATED);
     }
 

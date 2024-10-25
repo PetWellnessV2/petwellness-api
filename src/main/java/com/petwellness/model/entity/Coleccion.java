@@ -19,8 +19,8 @@ public class Coleccion {
     @Column(nullable = false)
     private String nombre;
 
-    @Column(name = "usuario_id", nullable = false)
-    private Integer usuarioId;
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
     @OneToMany(mappedBy = "coleccion", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude

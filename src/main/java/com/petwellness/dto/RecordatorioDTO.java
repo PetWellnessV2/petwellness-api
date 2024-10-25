@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 public class RecordatorioDTO {
     private Integer recordatorioId;
-    private Integer usuarioId;
+    private Integer clienteId;
     private Integer mascotaId;
     private TipoRecordatorio tipoRecordatorio;
     private String titulo;

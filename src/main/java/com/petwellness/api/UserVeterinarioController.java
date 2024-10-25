@@ -29,7 +29,7 @@ public class UserVeterinarioController {
     // Listar mascotas asignadas a un veterinario
     @GetMapping("/{usuarioUserId}/mascotas")
     public ResponseEntity<List<RegistroMascotaDTO>> getMascotas(@PathVariable Integer usuarioUserId) {
-        List<RegistroMascotaDTO> mascotas = veterinarioService.findRegistroMascotasByUsuario_user_id(usuarioUserId);
+        List<RegistroMascotaDTO> mascotas = veterinarioService.findRegistroMascotasByUserId(usuarioUserId);
         return ResponseEntity.ok(mascotas);
     }
 
@@ -37,7 +37,7 @@ public class UserVeterinarioController {
     @GetMapping("/{usuarioUserId}/mascotas/{mascotaId}/consultas")
     public ResponseEntity<List<Consulta>> getConsultas(
             @PathVariable Integer mascotaId, @PathVariable Integer usuarioUserId) {
-        List<Consulta> consultas = veterinarioService.findConsultasByMascotaAndUsuarioUserId(mascotaId, usuarioUserId);
+        List<Consulta> consultas = veterinarioService.findConsultasByMascotaAndUserId(mascotaId, usuarioUserId);
         return ResponseEntity.ok(consultas);
     }
 
@@ -45,7 +45,7 @@ public class UserVeterinarioController {
     @GetMapping("/{usuarioUserId}/mascotas/{mascotaId}/examenes-fisicos")
     public ResponseEntity<List<ExamenFisico>> getExamenesFisicos(
             @PathVariable Integer mascotaId, @PathVariable Integer usuarioUserId) {
-        List<ExamenFisico> examenesFisicos = veterinarioService.findExamenesFisicosByMascotaAndUsuarioUserId(mascotaId,
+        List<ExamenFisico> examenesFisicos = veterinarioService.findExamenesFisicosByMascotaAndUserId(mascotaId,
                 usuarioUserId);
         return ResponseEntity.ok(examenesFisicos);
     }
@@ -55,7 +55,7 @@ public class UserVeterinarioController {
     public ResponseEntity<List<ExamenesLaboratorio>> getExamenesLaboratorio(
             @PathVariable Integer mascotaId, @PathVariable Integer usuarioUserId) {
         List<ExamenesLaboratorio> examenesLaboratorio = veterinarioService
-                .findExamenesLaboratorioByMascotaAndUsuarioUserId(mascotaId, usuarioUserId);
+                .findExamenesLaboratorioByMascotaAndUserId(mascotaId, usuarioUserId);
         return ResponseEntity.ok(examenesLaboratorio);
     }
 

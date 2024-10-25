@@ -6,16 +6,11 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "albergue")
+@Table(name = "albergues")
 public class Albergue {
     @Id
-    @Column(name="usuario_user_id")
-    private Integer idUsuario;
-
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "usuario_user_id", referencedColumnName = "user_id", foreignKey = @ForeignKey(name = "FK_albergue_usuario"))
-    private Customer usuario;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @Column(name = "nombre_albergue", length = 50, nullable = false)
     private String nombreAlbergue;
@@ -26,5 +21,9 @@ public class Albergue {
 
     @Column(name = "ruc", length = 11, nullable = false)
     private String ruc;
+    
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
 }

@@ -28,7 +28,7 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     public List<PedidoDTO> obtenerPedidosDeUsuario(Integer usuarioId) {
-        List<Pedido> pedidos = pedidoRepository.findByUsuarioId(usuarioId);
+        List<Pedido> pedidos = pedidoRepository.findByUserId(usuarioId);
         return pedidos.stream().map(pedidoMapper::toDTO).collect(Collectors.toList());
     }
 
@@ -44,10 +44,10 @@ public class PedidoServiceImpl implements PedidoService {
     @Override
     @Transactional
     public PedidoDTO agregarProductoAPedidoDeUsuario(Integer usuarioId, Integer productoId, Integer cantidad) {
-        Pedido pedido = pedidoRepository.findTopByUsuarioIdAndEstadoOrderByFechaPedidoDesc(usuarioId, EstadoPedido.PENDIENTE)
+        Pedido pedido = pedidoRepository.findTopByUserIdAndEstadoOrderByFechaPedidoDesc(usuarioId, EstadoPedido.PENDIENTE)
                 .orElseGet(() -> {
                     Pedido newPedido = new Pedido();
-                    newPedido.setUsuarioId(usuarioId);
+                    newPedido.setUserId(usuarioId);
                     newPedido.setFechaPedido(LocalDateTime.now());
                     newPedido.setEstado(EstadoPedido.PENDIENTE);
                     return pedidoRepository.save(newPedido);
@@ -143,7 +143,7 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     public List<PedidoDTO> obtenerPedidosDeUsuarioPorEstado(Integer usuarioId, EstadoPedido estado) {
-        List<Pedido> pedidos = pedidoRepository.findByUsuarioIdAndEstadoOrderByFechaPedidoDesc(usuarioId, estado);
+        List<Pedido> pedidos = pedidoRepository.findByUserIdAndEstadoOrderByFechaPedidoDesc(usuarioId, estado);
         return pedidos.stream()
                 .map(pedidoMapper::toDTO)
                 .collect(Collectors.toList());

@@ -4,7 +4,6 @@ import com.petwellness.dto.MedicamentosDTO;
 import com.petwellness.dto.MedicamentosRegistroDTO;
 import com.petwellness.exception.BadRequestException;
 import com.petwellness.exception.ResourceNotFoundException;
-import com.petwellness.mapper.MedicamentosMapper;
 import com.petwellness.mapper.MedicamentosRegistroMapper;
 import com.petwellness.model.entity.Medicamentos;
 import com.petwellness.model.entity.RegistroMascota;

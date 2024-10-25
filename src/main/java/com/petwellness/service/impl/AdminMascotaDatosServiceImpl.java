@@ -42,11 +42,11 @@ public class AdminMascotaDatosServiceImpl implements MascotaDatosService {
     @Transactional
     @Override
     public RegistroMascotaDTO create(RegistroMascotaDTO registroMascotaDTO) {
-        mascotaDatosRepository.findByNombreAndEspecieAndGeneroAndUsuario_UserId(
+        mascotaDatosRepository.findByNombreAndEspecieAndGeneroAndUserId(
                 registroMascotaDTO.getNombre(),
                 registroMascotaDTO.getEspecie(),
                 registroMascotaDTO.getGenero(),
-                registroMascotaDTO.getUsuarioId()).ifPresent(mascota -> {
+                registroMascotaDTO.getClienteId()).ifPresent(mascota -> {
                     throw new BadRequestException("La mascota ya esta registrada.");
                 });
 
@@ -71,11 +71,11 @@ public class AdminMascotaDatosServiceImpl implements MascotaDatosService {
         RegistroMascota mascota = mascotaDatosRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("La mascota con ID " + id + " no existe."));
 
-        mascotaDatosRepository.findByNombreAndEspecieAndGeneroAndUsuario_UserId(
+        mascotaDatosRepository.findByNombreAndEspecieAndGeneroAndUserId(
                 registroMascotaDTO.getNombre(),
                 registroMascotaDTO.getEspecie(),
                 registroMascotaDTO.getGenero(),
-                registroMascotaDTO.getUsuarioId()).filter(existingMascota -> !existingMascota.getIdMascota().equals(id))
+                registroMascotaDTO.getClienteId()).filter(existingMascota -> !existingMascota.getIdMascota().equals(id))
                 .ifPresent(existingMascota -> {
                     throw new BadRequestException("Ya existe esa mascota.");
                 });

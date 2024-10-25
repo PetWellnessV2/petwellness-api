@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class RegistroMascotaDTO {
 
     private Integer idMascota;
-    private Integer usuarioId; // Asociado al usuario
+    private Integer clienteId; // Asociado al cliente
 
     @NotNull(message = "La especie es obligatoria")
     private Especie especie;

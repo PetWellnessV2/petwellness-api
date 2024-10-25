@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -32,20 +31,20 @@ public class AdminRecordatorioServiceImpl implements AdminRecordatorioService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Recordatorio> findByUsuarioId(Integer userId) {
-        return recordatorioRepository.findByUsuario_UserId(userId);
+    public List<Recordatorio> findByUserId(Integer userId) {
+        return recordatorioRepository.findByUserId(userId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Recordatorio> findByUsuarioIdAndStatus(Integer userId, RecordatorioStatus status) {
-        return recordatorioRepository.findByUsuario_UserIdAndRecordatorioStatus(userId, status);
+    public List<Recordatorio> findByUserIdAndStatus(Integer userId, RecordatorioStatus status) {
+        return recordatorioRepository.findByUserIdAndRecordatorioStatus(userId, status);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Recordatorio> paginateByUsuarioId(Integer usuarioId, Pageable pageable) {
-        return recordatorioRepository.findByUsuario_UserId(usuarioId, pageable);
+    public Page<Recordatorio> paginateByUserId(Integer usuarioId, Pageable pageable) {
+        return recordatorioRepository.findByUserId(usuarioId, pageable);
     }
 
     @Override
@@ -84,15 +83,15 @@ public class AdminRecordatorioServiceImpl implements AdminRecordatorioService {
 
     @Override
     @Transactional
-    public void deleteRecordatoriosByUsuarioId(Integer usuarioId) {
-        List<Recordatorio> recordatorios = recordatorioRepository.findByUsuario_UserId(usuarioId);
+    public void deleteRecordatoriosByUserId(Integer usuarioId) {
+        List<Recordatorio> recordatorios = recordatorioRepository.findByUserId(usuarioId);
         recordatorioRepository.deleteAll(recordatorios);
     }
 
     @Override
     @Transactional
-    public void deleteRecordatorioByIdAndUsuarioId(Integer recordatorioId, Integer usuarioId) {
-        Recordatorio recordatorio = recordatorioRepository.findByRecordatorioIdAndUsuario_UserId(recordatorioId, usuarioId)
+    public void deleteRecordatorioByIdAndUserId(Integer recordatorioId, Integer usuarioId) {
+        Recordatorio recordatorio = recordatorioRepository.findByRecordatorioIdAndUserId(recordatorioId, usuarioId)
             .orElseThrow(() -> new ResourceNotFoundException("Recordatorio no encontrado para el id " + recordatorioId + " y usuario id " + usuarioId));
         
         recordatorioRepository.delete(recordatorio);

@@ -33,15 +33,15 @@ public class RecordatorioAutoGeneracionServiceImpl implements RecordatorioAutoGe
         List<EventoSalud> eventosProximos = eventoSaludRepository.findByFechaEventoBetween(hoy, fechaLimite);
 
         for (EventoSalud evento : eventosProximos) {
-            boolean recordatorioExistente = recordatorioRepository.existsByUsuario_UserIdAndMascota_IdMascotaAndFechaHoraAndTipoRecordatorio(
-                    evento.getMascota().getUsuario().getUserId(),
+            boolean recordatorioExistente = recordatorioRepository.existsByUserIdAndMascota_IdMascotaAndFechaHoraAndTipoRecordatorio(
+                    evento.getMascota().getUser().getId(),
                     evento.getMascota().getIdMascota(),
                     evento.getFechaEvento().atStartOfDay(),
                     TipoRecordatorio.AUTOMATICO);
 
             if (!recordatorioExistente) {
                 Recordatorio recordatorio = new Recordatorio();
-                recordatorio.setUsuario(evento.getMascota().getUsuario());
+                recordatorio.setUser(evento.getMascota().getUser());;
                 recordatorio.setMascota(evento.getMascota());
                 recordatorio.setTitulo("Recordatorio de " + evento.getTipoEvento().name());
                 recordatorio.setDescripcion(evento.getDescripcion());

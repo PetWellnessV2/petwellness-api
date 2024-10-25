@@ -17,8 +17,8 @@ public class Pedido {
     @Column(name = "id_pedido")
     private Integer idPedido;
 
-    @Column(name = "usuario_id", nullable = false)
-    private Integer usuarioId;
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
     @Column(name = "fecha_pedido", nullable = false)
     private LocalDateTime fechaPedido;

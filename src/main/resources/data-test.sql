@@ -1,40 +1,41 @@
 -- Insert Roles
-INSERT INTO roles (id, role) VALUES
+INSERT INTO roles (id, name) VALUES
                                  (1, 'CUSTOMER'),
                                  (2, 'ADMIN'),
-                                 (3, 'VETERINARIO')
+                                 (3, 'VETERINARIO'),
+                                 (4, 'ALBERGUE')
     ON CONFLICT (id) DO NOTHING;
 
 
 -- Insert Users (2 Veterinarians and 3 Customers)
-INSERT INTO users (user_id, email, contrasena, role_id)
+INSERT INTO users (id, email, contrasena, role_id)
 VALUES
-    (1, 'customer1@example.com', 'password123', 1),
+    (1, 'e@example.com', 'password123', 1),
     (2, 'customer2@example.com', 'password123', 1),
     (3, 'customer3@example.com', 'password123', 1),
     (4, 'vet1@example.com', 'password123', 3),
     (5, 'vet2@example.com', 'password123', 3),
-    (6, 'admin1@example.com', 'password123', 2)
-    ON CONFLICT (user_id) DO NOTHING;
+    (6, 'albergue@example.com', 'password123', 4)
+    ON CONFLICT (id) DO NOTHING;
 
 -- Insert Customers (Linked to Users)
-INSERT INTO usuarios (user_id, nombre, apellido, telefono, tipo_usuario, created_at, updated_at)
+INSERT INTO clientes (id, nombre, apellido, telefono, shipping_address, created_at, updated_at, user_id)
 VALUES
-    (1, 'Juan', 'Pérez', '123456789', 'DUEÑO', '2023-09-01 12:00:00', '2023-09-01 12:00:00'),  -- Customer 1
-    (2, 'Ana', 'García', '987654321', 'DUEÑO', '2023-09-02 13:00:00', '2023-09-02 13:00:00'), -- Customer 2
-    (3, 'Maria', 'Lopez', '998877665', 'DUEÑO', '2023-09-03 14:00:00', '2023-09-03 14:00:00') -- Customer 3
-    ON CONFLICT (user_id) DO NOTHING;
+    (1, 'Juan', 'Pérez', '123456789', 'Address 1', '2023-09-01 12:00:00', '2023-09-01 12:00:00', 1),  -- Customer 1
+    (2, 'Ana', 'García', '987654321', 'Address 2', '2023-09-02 13:00:00', '2023-09-02 13:00:00', 2), -- Customer 2
+    (3, 'Maria', 'Lopez', '998877665', 'Address 3', '2023-09-03 14:00:00', '2023-09-03 14:00:00', 3) -- Customer 3
+    ON CONFLICT (id) DO NOTHING;
 
 -- Insert Veterinarians (Linked to Users)
-INSERT INTO veterinario (usuario_user_id, institucion_educativa, especialidad)
+INSERT INTO veterinarios (id, institucion_educativa, especialidad, user_id, nombre, apellido)
 VALUES
-    (4, 'UNIVERSIDAD_NACIONAL_MAYOR_DE_SAN_MARCOS', 'CIRUGIA'),   -- Veterinarian 1
-    (5, 'CORNELL_UNIVERSITY', 'ODONTOLOGIA')                      -- Veterinarian 2
-    ON CONFLICT (usuario_user_id) DO NOTHING;
+    (1, 'UNIVERSIDAD_NACIONAL_MAYOR_DE_SAN_MARCOS', 'CIRUGIA', 4, 'Carlos', 'Ramirez'),   -- Veterinarian 1
+    (2, 'CORNELL_UNIVERSITY', 'ODONTOLOGIA', 5, 'Laura', 'Smith')                        -- Veterinarian 2
+    ON CONFLICT (id) DO NOTHING;
 
 
 -- Insertar datos de prueba en la tabla albergue
-INSERT INTO horarios_disponibles (id_horario, vet_user_id, hora, fecha)
+INSERT INTO horarios_disponibles (id_horario, user_id, hora, fecha)
 VALUES
     (1, 4, 10, '2023-09-03'),
     (2, 5, 15, '2023-09-04'),
@@ -42,13 +43,13 @@ VALUES
 ON CONFLICT (id_horario) DO NOTHING;
 
 -- Insert sample data into albergue table
-INSERT INTO albergue (usuario_user_id, nombre_albergue, tipo_albergue, ruc)
+INSERT INTO albergues (id, nombre_albergue, tipo_albergue, ruc, user_id)
 VALUES
-    (1, 'Refugio de Animales Felices', 'PRIVADO', '12345678901')
-ON CONFLICT (usuario_user_id) DO NOTHING;
+    (1, 'Refugio de Animales Felices', 'PRIVADO', '12345678901', 6)
+    ON CONFLICT (id) DO NOTHING;
 
 -- Insertar datos de prueba en la tabla registro_mascota
-INSERT INTO registro_mascota (id_mascota, usuario_user_id, especie, genero, raza, nombre, edad, foto, fecha_nacimiento, descripcion, direccion, miembro_id, titular_poliza, info_adicional)
+INSERT INTO registro_mascota (id_mascota, user_id, especie, genero, raza, nombre, edad, foto, fecha_nacimiento, descripcion, direccion, miembro_id, titular_poliza, info_adicional)
 VALUES
     (1, 1, 'PERRO', 'MACHO', 'LABRADOR', 'Firulais', 5, 'foto_perro.png', '2018-01-01', 'Perro juguetón', 'Av. Siempre Viva 123', '00000123', 'Juan Pérez', 'Sin observaciones'),
     (2, 2, 'GATO', 'HEMBRA', 'SIAMES', 'Mishifu', 3, 'foto_gato.png', '2020-03-01', 'Gato independiente', 'Calle Falsa 456', '00000456', 'Ana García', 'Observaciones de salud')
@@ -63,7 +64,7 @@ ON CONFLICT (id_archivos) DO NOTHING;
 
 
 -- Insertar datos de prueba en la tabla colecciones
-INSERT INTO colecciones (id, nombre, usuario_id)
+INSERT INTO colecciones (id, nombre, user_id)
 VALUES 
 (1, 'Favoritos de Juan', 1),
 (2, 'Lista de deseos de Juan', 1),
@@ -82,7 +83,6 @@ VALUES
 ON CONFLICT (id) DO NOTHING;
 
 
--- Insertar datos de prueba en la tabla producto
 -- Insertar datos de prueba en la tabla producto
 INSERT INTO producto (id_producto, nombre_producto, imagen, descripcion, costo, categoria_producto_id, stock)
 VALUES
@@ -104,7 +104,7 @@ VALUES
 ON CONFLICT (id) DO NOTHING;
 
 -- Insertar datos de prueba en la tabla carrito_compra
-INSERT INTO carrito_compra (id_compra, usuario_user_id, producto_id_producto, precio_total, created_at, payment_status)
+INSERT INTO carrito_compra (id_compra, user_id, producto_id_producto, precio_total, created_at, payment_status)
 VALUES
     (1, 1, 1, 100.50, '2023-09-01 10:00:00', 'PENDIENTE'),
     (2, 2, 2, 50.25, '2023-09-02 11:00:00', 'PAGADO')
@@ -148,7 +148,7 @@ ON CONFLICT (id_notas) DO NOTHING;
 
 -- Insertar datos de prueba en la tabla recordatorios
 INSERT INTO recordatorio (
-    recordatorio_id, usuario_id, mascota_id, tipo_recordatorio, titulo, descripcion, fecha_hora, recordatorio_status
+    recordatorio_id, user_id, mascota_id, tipo_recordatorio, titulo, descripcion, fecha_hora, recordatorio_status
 )
 VALUES
     (1, 1, 1, 'VACUNACION', 'Vacunación Anual', 'Vacunación anual para Firulais', '2023-09-05 09:00:00', 'CREADO'),
@@ -156,7 +156,7 @@ VALUES
 ON CONFLICT (recordatorio_id) DO NOTHING;
 
 -- Insertar datos de prueba en la tabla pedidos
-INSERT INTO pedidos (id_pedido, usuario_id, fecha_pedido, estado)
+INSERT INTO pedidos (id_pedido, user_id, fecha_pedido, estado)
 VALUES
     (1, 1, '2023-09-01 10:00:00', 'ENVIADO'),
     (2, 2, '2023-09-02 11:00:00', 'EN_PROCESO'),
@@ -174,14 +174,8 @@ VALUES
 ON CONFLICT (id_detalle) DO NOTHING;
 
 -- Insertar datos de prueba en la tabla notificacion
-INSERT INTO notificaciones (id_notificacion, usuario_user_id, mensaje, leida, fecha_creacion)
+INSERT INTO notificaciones (id_notificacion, user_id, mensaje, leida, fecha_creacion)
 VALUES
     (1, 1, 'Tu mascota ha sido registrada exitosamente', false, '2023-09-01 10:00:00'),
     (2, 2, 'La información de tu mascota ha sido actualizada', false, '2023-09-01 10:00:00')
 ON CONFLICT (id_notificacion) DO NOTHING;
-
-ALTER TABLE usuarios
-    ADD COLUMN IF NOT EXISTS shipping_address VARCHAR(255);
-
-UPDATE usuarios SET shipping_address = 'Sin Dirección' WHERE shipping_address IS NULL;
-

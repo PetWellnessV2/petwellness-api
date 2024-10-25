@@ -2,8 +2,6 @@ package com.petwellness.api;
 
 
 import com.petwellness.dto.VeterinarioDTO;
-import com.petwellness.dto.VeterinarioRegistroDTO;
-import com.petwellness.service.UsuarioService;
 import com.petwellness.service.VeterinarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +17,11 @@ import java.util.List;
 public class VeterinarioController {
 
     private final VeterinarioService veterinarioService;
-    private final UsuarioService usuarioService;
 
     // Crear veterinario
     @PostMapping
-    public ResponseEntity<VeterinarioRegistroDTO> crearVeterinario( @Valid @RequestBody VeterinarioRegistroDTO veterinario) {
-        VeterinarioRegistroDTO nuevoVeterinario = veterinarioService.crearVeterinario(veterinario);
+    public ResponseEntity<VeterinarioDTO> crearVeterinario( @Valid @RequestBody VeterinarioDTO veterinario) {
+        VeterinarioDTO nuevoVeterinario = veterinarioService.crearVeterinario(veterinario);
 
         return new ResponseEntity<>(nuevoVeterinario, HttpStatus.CREATED);
     }
@@ -45,8 +42,8 @@ public class VeterinarioController {
 
     // Actualizar un veterinario
     @PutMapping("/{id}")
-    public ResponseEntity<VeterinarioRegistroDTO> actualizarVeterinario(@PathVariable Integer id, @Valid @RequestBody VeterinarioRegistroDTO veterinarioActualizado) {
-        VeterinarioRegistroDTO veterinarioExistente = veterinarioService.actualizarVeterinario(id, veterinarioActualizado);
+    public ResponseEntity<VeterinarioDTO> actualizarVeterinario(@PathVariable Integer id, @Valid @RequestBody VeterinarioDTO veterinarioActualizado) {
+        VeterinarioDTO veterinarioExistente = veterinarioService.actualizarVeterinario(id, veterinarioActualizado);
         return new ResponseEntity<>(veterinarioExistente, HttpStatus.OK);
     }
 }

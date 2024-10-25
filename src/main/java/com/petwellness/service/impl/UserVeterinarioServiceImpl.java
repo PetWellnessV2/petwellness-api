@@ -30,30 +30,29 @@ public class UserVeterinarioServiceImpl implements UserVeterinarioService {
     private final RegistroMascotaMapper registroMascotaMapper;
     private final ConsultaRepository consultaRepository;
     private final HorariosDisponiblesRepository horariosDisponiblesRepository;
-    private final HorariosDisponiblesServiceImpl horariosDisponiblesService;
 
     @Override
-    public List<RegistroMascotaDTO> findRegistroMascotasByUsuario_user_id(Integer usuario_user_id) {
-        List<RegistroMascota> mascotas = veterinarioRepository.findRegistroMascotasByUsuario_user_id(usuario_user_id);
+    public List<RegistroMascotaDTO> findRegistroMascotasByUserId(Integer usuario_user_id) {
+        List<RegistroMascota> mascotas = veterinarioRepository.findRegistroMascotasByUserId(usuario_user_id);
         return mascotas.stream()
                 .map(registroMascotaMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<Consulta> findConsultasByMascotaAndUsuarioUserId(Integer mascotaId, Integer usuarioUserId) {
-        return veterinarioRepository.findConsultasByMascotaAndUsuarioUserId(mascotaId, usuarioUserId);
+    public List<Consulta> findConsultasByMascotaAndUserId(Integer mascotaId, Integer usuarioUserId) {
+        return veterinarioRepository.findConsultasByMascotaAndUserId(mascotaId, usuarioUserId);
     }
 
     @Override
-    public List<ExamenFisico> findExamenesFisicosByMascotaAndUsuarioUserId(Integer mascotaId, Integer usuarioUserId) {
-        return veterinarioRepository.findExamenesFisicosByMascotaAndUsuarioUserId(mascotaId, usuarioUserId);
+    public List<ExamenFisico> findExamenesFisicosByMascotaAndUserId(Integer mascotaId, Integer usuarioUserId) {
+        return veterinarioRepository.findExamenesFisicosByMascotaAndUserId(mascotaId, usuarioUserId);
     }
 
     @Override
-    public List<ExamenesLaboratorio> findExamenesLaboratorioByMascotaAndUsuarioUserId(Integer mascotaId,
+    public List<ExamenesLaboratorio> findExamenesLaboratorioByMascotaAndUserId(Integer mascotaId,
             Integer usuarioUserId) {
-        return veterinarioRepository.findExamenesLaboratorioByMascotaAndUsuarioUserId(mascotaId, usuarioUserId);
+        return veterinarioRepository.findExamenesLaboratorioByMascotaAndUserId(mascotaId, usuarioUserId);
     }
 
     @Override
@@ -68,14 +67,14 @@ public class UserVeterinarioServiceImpl implements UserVeterinarioService {
                 .orElseThrow(() -> new ResourceNotFoundException("Horario no encontrado"));
 
         // Verificar si el veterinario tiene acceso a la consulta
-        Integer idVeterinario = horarioActual.getVeterinario().getUsuario_user_id();
+        Integer idVeterinario = horarioActual.getUser().getId();
         if (!idVeterinario.equals(veterinarioUserId)) {
             throw new UnauthorizedException("El veterinario no tiene acceso a esta consulta");
         }
 
         // Crear un nuevo horario disponible
         HorariosDisponibles nuevoHorario = new HorariosDisponibles();
-        nuevoHorario.setVeterinario(horarioActual.getVeterinario()); // Asignar el mismo veterinario
+        nuevoHorario.setUser(horarioActual.getUser()); // Asignar el mismo veterinario
         nuevoHorario.setHora(nuevaHora); // Suponiendo que has cambiado esto a Integer
         nuevoHorario.setFecha(LocalDate.parse(nuevaFecha)); // Asegúrate de que la fecha esté en el formato correcto
 

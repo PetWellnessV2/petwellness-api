@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MascotaDatosRepository extends JpaRepository<RegistroMascota, Integer> {
-    Optional<RegistroMascota> findByNombreAndEspecieAndGeneroAndUsuario_UserId(
+    Optional<RegistroMascota> findByNombreAndEspecieAndGeneroAndUserId(
     String nombre, Especie especie, Genero genero, Integer usuarioId);
 
     // Implementacion de busqueda de mascotas por filtros usando JPQL(Java Persistence Query Language)

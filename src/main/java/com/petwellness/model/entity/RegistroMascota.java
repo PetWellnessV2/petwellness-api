@@ -18,8 +18,8 @@ public class RegistroMascota {
     private Integer idMascota;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_user_id", referencedColumnName = "user_id", foreignKey = @ForeignKey(name = "FK_registro_mascota_usuario"), nullable = false)
-    private Customer usuario;
+    @JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_registro_mascota_user"), nullable = false)
+    private User user;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "especie", nullable = false)

@@ -10,15 +10,15 @@ import java.util.List;
 
 public interface AdminRecordatorioService {
     List<Recordatorio> getAll();
-    List<Recordatorio> findByUsuarioId(Integer userId);
-    List<Recordatorio> findByUsuarioIdAndStatus(Integer userId, RecordatorioStatus status);
-    Page<Recordatorio> paginateByUsuarioId(Integer usuarioId, Pageable pageable);
+    List<Recordatorio> findByUserId(Integer userId);
+    List<Recordatorio> findByUserIdAndStatus(Integer userId, RecordatorioStatus status);
+    Page<Recordatorio> paginateByUserId(Integer usuarioId, Pageable pageable);
     Page<Recordatorio> paginate(Pageable pageable);
     RecordatorioDTO getRecordatorioById(Integer id);
     RecordatorioDTO createRecordatorio(RecordatorioDTO recordatorioDTO);
     RecordatorioDTO updateRecordatorio(Integer id, RecordatorioDTO recordatorioDTO);
-    void deleteRecordatoriosByUsuarioId(Integer usuarioId);
-    void deleteRecordatorioByIdAndUsuarioId(Integer recordatorioId, Integer usuarioId);
+    void deleteRecordatoriosByUserId(Integer usuarioId);
+    void deleteRecordatorioByIdAndUserId(Integer recordatorioId, Integer usuarioId);
     void deleteRecordatorioById(Integer recordatorioId);
 
 }

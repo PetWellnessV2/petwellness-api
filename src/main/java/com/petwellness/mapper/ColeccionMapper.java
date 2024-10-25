@@ -19,7 +19,7 @@ public class ColeccionMapper {
         ColeccionDTO dto = new ColeccionDTO();
         dto.setId(coleccion.getId());
         dto.setNombre(coleccion.getNombre());
-        dto.setUsuarioId(coleccion.getUsuarioId());
+        dto.setId(coleccion.getUserId());
         dto.setProductosIds(coleccion.getProductosColeccion().stream()
                 .map(pc -> pc.getProducto().getIdProducto())
                 .collect(Collectors.toSet()));
@@ -34,7 +34,7 @@ public class ColeccionMapper {
         Coleccion coleccion = new Coleccion();
         coleccion.setId(dto.getId());
         coleccion.setNombre(dto.getNombre());
-        coleccion.setUsuarioId(dto.getUsuarioId());
+        coleccion.setUserId(dto.getClienteId());
         return coleccion;
     }
 

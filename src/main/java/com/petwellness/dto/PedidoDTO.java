@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class PedidoDTO {
     private Integer idPedido;
-    private Integer usuarioId;
+    private Integer clienteId;
     private LocalDateTime fechaPedido;
     private EstadoPedido estado;
     private List<DetallePedidoDTO> detalles;

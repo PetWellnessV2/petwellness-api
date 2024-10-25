@@ -5,16 +5,18 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 
 @Data
 public class NotificationRegistroDTO {
     private Integer id;
+
     @NotNull(message = "El nombre del usuario es obligatorio")
-    private Integer usuarioId;
+    private Integer clienteId;
+
     @NotBlank(message = "El mensaje es obligatorio")
     @Size(max = 50, message = "El mensaje no debe ser de más 50 caracteres")
     private String mensaje;
+    
     @NotNull(message = "El estado del recordatorio es obligatorio")
     private boolean leida;
 }

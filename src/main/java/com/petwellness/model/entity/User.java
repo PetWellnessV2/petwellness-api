@@ -3,6 +3,7 @@ package com.petwellness.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
 
 @Data
 @Entity
@@ -10,8 +11,7 @@ import lombok.Data;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Integer userId;
+    private Integer id;
 
     @Column(name = "email", nullable = false)
     private String email;
@@ -20,12 +20,18 @@ public class User {
     private String contrasena;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Customer customer;
+    private Cliente cliente;
 
-    @OneToOne(mappedBy = "vet",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Veterinario veterinario;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Albergue albergue;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RegistroMascota> mascotas;
 }

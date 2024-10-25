@@ -26,7 +26,7 @@ public class UserAlbergueController {
     @GetMapping("/{usuarioUserId}/mascotas")
     public ResponseEntity<List<RegistroMascotaDTO>> getMascotas(
             @PathVariable Integer usuarioUserId) {
-        List<RegistroMascotaDTO> mascotas = userAlbergueService.findRegistroMascotasByUsuario_user_id(usuarioUserId);
+        List<RegistroMascotaDTO> mascotas = userAlbergueService.findRegistroMascotasByUserId(usuarioUserId);
         return ResponseEntity.ok(mascotas);
     }
 

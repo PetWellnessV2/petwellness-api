@@ -26,7 +26,7 @@ public class PedidoMapper {
 
         PedidoDTO dto = new PedidoDTO();
         dto.setIdPedido(pedido.getIdPedido());
-        dto.setUsuarioId(pedido.getUsuarioId());
+        dto.setClienteId(pedido.getUserId());
         dto.setFechaPedido(pedido.getFechaPedido());
         dto.setEstado(pedido.getEstado());
         dto.setDetalles(pedido.getDetalles().stream()
@@ -42,7 +42,7 @@ public class PedidoMapper {
 
         Pedido pedido = new Pedido();
         pedido.setIdPedido(dto.getIdPedido());
-        pedido.setUsuarioId(dto.getUsuarioId());
+        pedido.setUserId(dto.getClienteId());
         pedido.setFechaPedido(dto.getFechaPedido());
         pedido.setEstado(dto.getEstado());
         pedido.setDetalles(dto.getDetalles().stream()

@@ -28,7 +28,7 @@ public class HorariosDisponiblesServiceImpl implements HorariosDisponiblesServic
                 .orElseThrow(() -> new ResourceNotFoundException("Veterinario no encontrado con id: " + horarioDTO.getVeterinarioId()));
 
         HorariosDisponibles horario = horariosDisponiblesMapper.toEntity(horarioDTO);
-        horario.setVeterinario(veterinario);
+        horario.setUser(veterinario.getUser());
 
         HorariosDisponibles nuevoHorario = horariosDisponiblesRepository.save(horario);
 
@@ -46,8 +46,8 @@ public class HorariosDisponiblesServiceImpl implements HorariosDisponiblesServic
 
     @Transactional(readOnly = true)
     @Override
-    public List<HorariosDisponiblesDTO> obtenerHorariosPorVeterinarioId(Integer userId) {
-        List<HorariosDisponibles> horarios = horariosDisponiblesRepository.findByVeterinarioUsuarioUserId(userId);
+    public List<HorariosDisponiblesDTO> obtenerHorariosPorUserId(Integer userId) {
+        List<HorariosDisponibles> horarios = horariosDisponiblesRepository.findByUserId(userId);
         return horarios.stream()
                 .map(horariosDisponiblesMapper::toDTO)
                 .toList();

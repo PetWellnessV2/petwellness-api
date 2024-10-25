@@ -20,10 +20,10 @@ public class Recordatorio {
     private Integer recordatorioId;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id", referencedColumnName = "user_id",
-            foreignKey = @ForeignKey(name = "fk_recordatorio_usuario"))
+    @JoinColumn(name = "user_id", referencedColumnName = "id",
+            foreignKey = @ForeignKey(name = "fk_recordatorio_user"))
     @EqualsAndHashCode.Include
-    private Customer usuario;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "mascota_id", referencedColumnName = "id_mascota",

@@ -2,20 +2,16 @@ package com.petwellness.mapper;
 
 import com.petwellness.dto.RecordatorioDTO;
 import com.petwellness.model.entity.Recordatorio;
-import com.petwellness.model.entity.Customer;
 import com.petwellness.model.entity.RegistroMascota;
-import com.petwellness.repository.UsuarioRepository;
 import com.petwellness.repository.MascotaDatosRepository;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RecordatorioMapper {
 
-    private final UsuarioRepository usuarioRepository;
     private final MascotaDatosRepository mascotaDatosRepository;
 
-    public RecordatorioMapper(UsuarioRepository usuarioRepository, MascotaDatosRepository mascotaDatosRepository) {
-        this.usuarioRepository = usuarioRepository;
+    public RecordatorioMapper(MascotaDatosRepository mascotaDatosRepository) {
         this.mascotaDatosRepository = mascotaDatosRepository;
     }
 
@@ -26,7 +22,7 @@ public class RecordatorioMapper {
 
         RecordatorioDTO dto = new RecordatorioDTO();
         dto.setRecordatorioId(recordatorio.getRecordatorioId());
-        dto.setUsuarioId(recordatorio.getUsuario().getUserId());
+        dto.setClienteId(recordatorio.getUser().getId());
         dto.setMascotaId(recordatorio.getMascota().getIdMascota());
         dto.setTitulo(recordatorio.getTitulo());
         dto.setDescripcion(recordatorio.getDescripcion());

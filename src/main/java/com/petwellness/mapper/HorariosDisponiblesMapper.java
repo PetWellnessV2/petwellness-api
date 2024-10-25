@@ -20,7 +20,7 @@ public class HorariosDisponiblesMapper {
         dto.setIdHorario(horariosDisponibles.getIdHorario());
         dto.setHora(horariosDisponibles.getHora());
         dto.setFecha(horariosDisponibles.getFecha());
-        dto.setVeterinarioId(horariosDisponibles.getVeterinario().getUsuario_user_id());
+        dto.setVeterinarioId(horariosDisponibles.getUser().getId());
         return dto;
     }
 
@@ -31,8 +31,8 @@ public class HorariosDisponiblesMapper {
         horario.setFecha(horariosDisponiblesDTO.getFecha());
 
         Veterinario veterinario = new Veterinario();
-        veterinario.setUsuario_user_id(horariosDisponiblesDTO.getVeterinarioId());
-        horario.setVeterinario(veterinario);
+        veterinario.setId(horariosDisponiblesDTO.getVeterinarioId());
+        horario.setUser(veterinario.getUser());;
 
         return horario;
     }

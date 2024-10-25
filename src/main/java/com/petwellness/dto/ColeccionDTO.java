@@ -7,6 +7,6 @@ import java.util.Set;
 public class ColeccionDTO {
     private Integer id;
     private String nombre;
-    private Integer usuarioId;
+    private Integer clienteId;
     private Set<Integer> productosIds;
 }

@@ -20,7 +20,7 @@ public class ColeccionController {
 
     @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<List<ColeccionDTO>> obtenerColeccionesDeUsuario(@PathVariable Integer usuarioId) {
-        return ResponseEntity.ok(coleccionService.obtenerColeccionesDeUsuario(usuarioId));
+        return ResponseEntity.ok(coleccionService.obtenerColeccionesDeUser(usuarioId));
     }
 
     @GetMapping

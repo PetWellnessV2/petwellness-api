@@ -5,18 +5,14 @@ import com.petwellness.dto.ArchivoRegistroDTO;
 import com.petwellness.exception.BadRequestException;
 import com.petwellness.exception.ResourceNotFoundException;
 import com.petwellness.mapper.ArchivoRegistroMapper;
-import com.petwellness.mapper.RegistroMascotaMapper;
 import com.petwellness.model.entity.Archivos;
 import com.petwellness.model.entity.RegistroMascota;
 import com.petwellness.repository.ArchivoRepository;
 import com.petwellness.repository.MascotaDatosRepository;
 import com.petwellness.service.ArchivoService;
-import com.petwellness.service.MascotaDatosService;
-import com.petwellness.service.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,7 +24,6 @@ public class ArchivoServiceImpl implements ArchivoService {
     private final ArchivoRepository archivoRepository;
     private final MascotaDatosRepository mascotaDatosRepository;
     private final ArchivoRegistroMapper archivoRegistroMapper;
-    private final StorageService storageService;
 
     @Transactional
     @Override

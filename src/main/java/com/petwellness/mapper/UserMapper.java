@@ -3,10 +3,8 @@ package com.petwellness.mapper;
 import com.petwellness.dto.AuthResponseDTO;
 import com.petwellness.dto.LoginDTO;
 import com.petwellness.dto.UserProfileDTO;
-import com.petwellness.dto.UserRegistroDTO;
+import com.petwellness.dto.UserRegisterDTO;
 import com.petwellness.model.entity.User;
-import com.petwellness.model.entity.Veterinario;
-import com.petwellness.model.enums.TipoUser;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -16,53 +14,57 @@ import org.springframework.stereotype.Component;
 public class UserMapper {
     private final ModelMapper modelMapper;
 
-    public User toEntity(UserRegistroDTO registroDTO){
-        User user = modelMapper.map(registroDTO, User.class);
-        user.setContrasena(registroDTO.getContrasena());
-        if (registroDTO.getInstitucionEducativa() != null) {
-            Veterinario veterinario = new Veterinario();
-            veterinario.setInstitucionEducativa(registroDTO.getInstitucionEducativa());
-            veterinario.setEspecialidad(registroDTO.getEspecialidad());
-            user.setVeterinario(veterinario);
-        }
-
-        return user;
+    public User toEntity(UserRegisterDTO registroDTO) {
+        return modelMapper.map(registroDTO, User.class);
     }
 
-    public UserProfileDTO toUserProfileDto(User user){
+    public UserProfileDTO toUserProfileDTO(User user) {
         UserProfileDTO userProfileDTO = modelMapper.map(user, UserProfileDTO.class);
-        if (user.getCustomer() != null) {
-            userProfileDTO.setFirstName(user.getCustomer().getNombre());
-            userProfileDTO.setLastName(user.getCustomer().getApellido());
-            userProfileDTO.setShippingAddress(user.getCustomer().getShippingAddress());
-            userProfileDTO.setTelefono(user.getCustomer().getTelefono());
-            if (user.getVeterinario() != null) {
-                userProfileDTO.setInstitucionEducativa(user.getVeterinario().getInstitucionEducativa());
-                userProfileDTO.setEspecialidad(user.getVeterinario().getEspecialidad());
-            }
+        if (user.getCliente() != null) {
+            userProfileDTO.setFirstName(user.getCliente().getNombre());
+            userProfileDTO.setLastName(user.getCliente().getApellido());
+            userProfileDTO.setShippingAddress(user.getCliente().getShippingAddress());
+            userProfileDTO.setTelefono(user.getCliente().getTelefono());
+        }
+        if (user.getVeterinario() != null) {
+            userProfileDTO.setFirstName(user.getVeterinario().getNombre());
+            userProfileDTO.setLastName(user.getVeterinario().getApellido());
+            userProfileDTO.setInstitucionEducativa(user.getVeterinario().getInstitucionEducativa());
+            userProfileDTO.setEspecialidad(user.getVeterinario().getEspecialidad());
+        }
+        if (user.getAlbergue() != null) {
+            userProfileDTO.setNombreAlbergue(user.getAlbergue().getNombreAlbergue());
+            userProfileDTO.setTipoAlbergue(user.getAlbergue().getTipoAlbergue());
+            userProfileDTO.setRuc(user.getAlbergue().getRuc());
         }
 
         return userProfileDTO;
+
     }
 
-    //Convertir de LoginDTO a User (cuando procesas el login)
+    // Convertir de LoginDTO a User (cuando procesas el login)
     public User toEntity(LoginDTO loginDTO) {
         return modelMapper.map(loginDTO, User.class);
     }
 
-    //Convertir de User a AuthResponseDTO para la respuesta de autenticación
-    public AuthResponseDTO toAuthResponseDTO(User user, String token){
+    // Convertir de User a AuthResponseDTO para la respuesta de autenticación
+    public AuthResponseDTO toAuthResponseDTO(User user, String token) {
         AuthResponseDTO authResponseDTO = new AuthResponseDTO();
         authResponseDTO.setToken(token);
 
         // Obtener el nombre y apellido
-        // Obtener el nombre y apellido
-        String firstName = (user.getCustomer() != null) ? user.getCustomer().getNombre()
-                : (user.getVeterinario() != null) ? "Veterinario" : "Admin";
-        String lastName = (user.getCustomer() != null) ? user.getCustomer().getApellido()
-                : (user.getVeterinario() != null) ? "Veterinario" : "User";
+        // Obtener el nombre
+        String firstName = (user.getCliente() != null) ? user.getCliente().getNombre()
+                : (user.getVeterinario() != null) ? "Veterinario"
+                        : (user.getAlbergue() != null) ? user.getAlbergue().getNombreAlbergue()
+                                : "Admin";
 
-        authResponseDTO.setId(user.getUserId());
+        // Obtener el apellido
+        String lastName = (user.getCliente() != null) ? user.getCliente().getApellido()
+                : (user.getVeterinario() != null) ? "Veterinario"
+                        : (user.getAlbergue() != null) ? "Albergue"
+                                : "User";
+
         authResponseDTO.setFirstName(firstName);
         authResponseDTO.setLastName(lastName);
 

@@ -13,7 +13,7 @@ public class NotificationRegistroMapper {
     }
     public NotificationRegistroDTO toDTO(Notification notification) {
         NotificationRegistroDTO notificationRegistroDTO = modelMapper.map(notification, NotificationRegistroDTO.class);
-        notificationRegistroDTO.setUsuarioId(notification.getUsuario().getUserId());
+        notificationRegistroDTO.setClienteId(notification.getUser().getId());
         return notificationRegistroDTO;
     }
 

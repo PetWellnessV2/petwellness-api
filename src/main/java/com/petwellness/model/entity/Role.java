@@ -14,7 +14,7 @@ public class Role {
     private Integer id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false, unique = true)
+    @Column(name = "name", nullable = false, unique = true)
     private ERole name;
 
 }
