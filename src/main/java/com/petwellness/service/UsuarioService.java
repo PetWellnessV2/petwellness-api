@@ -2,9 +2,7 @@ package com.petwellness.service;
 
 import com.petwellness.dto.UserProfileDTO;
 import com.petwellness.dto.UserRegistroDTO;
-import com.petwellness.dto.UsuarioDTO;
 import com.petwellness.dto.UsuarioRegistroDTO;
-import com.petwellness.model.entity.Customer;
 
 import java.util.List;
 
