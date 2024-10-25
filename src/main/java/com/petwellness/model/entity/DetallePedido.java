@@ -2,11 +2,13 @@ package com.petwellness.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "detalle_pedidos")
 public class DetallePedido {
     @Id
