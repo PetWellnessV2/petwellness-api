@@ -54,21 +54,20 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     @Transactional
-public ProductoDTO updateProducto(Integer id, ProductoDTO productoDTO) {
+    public ProductoDTO updateProducto(Integer id, ProductoDTO productoDTO) {
         Producto producto = productoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-        
+
         producto.setNombreProducto(productoDTO.getNombreProducto());
         producto.setImagen(productoDTO.getImagen());
         producto.setDescripcion(productoDTO.getDescripcion());
         producto.setCosto(productoDTO.getCosto());
-        producto.setTipoProducto(productoDTO.getTipoProducto());
+        producto.setCategoriaProducto(producto.getCategoriaProducto());
         producto.setStock(productoDTO.getStock());
-        
+
         producto = productoRepository.save(producto);
         return mapToDTO(producto);
     }
-
 
     @Override
     @Transactional
