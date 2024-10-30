@@ -10,6 +10,7 @@ import com.petwellness.model.entity.Role;
 import com.petwellness.model.entity.User;
 import com.petwellness.model.entity.Veterinario;
 import com.petwellness.model.enums.ERole;
+import com.petwellness.model.enums.TipoUser;
 import com.petwellness.repository.CustomerRepository;
 import com.petwellness.repository.RoleRepository;
 import com.petwellness.repository.UsuarioRepository;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -53,26 +55,51 @@ public class UserServiceImpl implements UserService {
         return registerUserWhitRole(userRegistroDTO, ERole.VETERINARIO);
     }
 
+    @Transactional
+    public void encryptExistingPasswords() {
+        List<User> users = usuarioRepository.findAll();
+        for (User user : users) {
+            System.out.println("Verificando usuario: " + user.getEmail());
+            if (!passwordEncoder.matches(user.getContrasena(), user.getContrasena())) {
+                System.out.println("Encriptando contraseña para usuario: " + user.getEmail());
+                String encodedPassword = passwordEncoder.encode(user.getContrasena());
+                user.setContrasena(encodedPassword);
+                usuarioRepository.save(user);
+            }
+        }
+    }
+
+
     @Override
     public AuthResponseDTO login(LoginDTO loginDTO) {
-        //Autenticar al usuario utilizando AuthenticationManager
+        User user = usuarioRepository.findByEmail(loginDTO.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+        boolean passwordMatches;
+        if (passwordEncoder.matches(loginDTO.getPassword(), user.getContrasena())) {
+            passwordMatches = true;
+        } else {
+            passwordMatches = loginDTO.getPassword().equals(user.getContrasena());
+            if (passwordMatches) {
+                user.setContrasena(passwordEncoder.encode(user.getContrasena()));
+                usuarioRepository.save(user);
+            }
+        }
+        if (!passwordMatches) {
+            throw new IllegalArgumentException("Contraseña incorrecta");
+        }
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword())
         );
 
-        //Una vez autenticado, el objeto authentication contiene la información del usuario autenticado
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        User user = userPrincipal.getUser();
+        //UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        //boolean isAdmin = user.getRole().getName().equals(ERole.ADMIN);
 
-        // Verificar si es un administrador
-        boolean isAdmin = user.getRole().getName().equals(ERole.ADMIN);
-
-        String token=tokenProvider.createAccessToken(authentication);
-
+        String token = tokenProvider.createAccessToken(authentication);
         AuthResponseDTO responseDTO = userMapper.toAuthResponseDTO(user, token);
 
         return responseDTO;
     }
+
 
 
     @Transactional
@@ -98,7 +125,7 @@ public class UserServiceImpl implements UserService {
             user.getCustomer().setShippingAddress(userProfileDTO.getShippingAddress());
             user.getCustomer().setTelefono(userProfileDTO.getTelefono());
             user.getCustomer().setUpdatedAt(LocalDateTime.now());
-            veterinario.setUsuario(user);
+            veterinario.setVet(user);
             veterinario.setInstitucionEducativa(userProfileDTO.getInstitucionEducativa());
             veterinario.setEspecialidad(userProfileDTO.getEspecialidad());
             user.setVeterinario(veterinario);
@@ -145,33 +172,27 @@ public class UserServiceImpl implements UserService {
         user.setContrasena(encodedPassword);
         user.setEmail(userRegistroDTO.getEmail());
         user.setRole(role);
-        if (roleEnum == ERole.CUSTOMER) {
-            Customer customer = new Customer();
-            customer.setNombre(userRegistroDTO.getNombre());
-            customer.setApellido(userRegistroDTO.getApellido());
-            customer.setTelefono(userRegistroDTO.getTelefono());
-            customer.setShippingAddress(userRegistroDTO.getShippingAddress());
-            customer.setCreatedAt(LocalDateTime.now());
-            customer.setUpdatedAt(LocalDateTime.now());
-            customer.setUser(user);
-            user.setCustomer(customer);
-        } else if (roleEnum == ERole.VETERINARIO) {
-            Customer customer = new Customer();
-            customer.setNombre(userRegistroDTO.getNombre());
-            customer.setApellido(userRegistroDTO.getApellido());
-            customer.setTelefono(userRegistroDTO.getTelefono());
-            customer.setShippingAddress(userRegistroDTO.getShippingAddress());
-            customer.setCreatedAt(LocalDateTime.now());
-            customer.setUpdatedAt(LocalDateTime.now());
-            customer.setUser(user);
-            user.setCustomer(customer);
+
+        Customer customer = new Customer();
+        customer.setNombre(userRegistroDTO.getNombre());
+        customer.setApellido(userRegistroDTO.getApellido());
+        customer.setTelefono(userRegistroDTO.getTelefono());
+        customer.setShippingAddress(userRegistroDTO.getShippingAddress());
+        customer.setCreatedAt(LocalDateTime.now());
+        customer.setUpdatedAt(LocalDateTime.now());
+        customer.setTipoUsuario(roleEnum == ERole.CUSTOMER ? TipoUser.DUEÑO : TipoUser.VETERINARIO);
+        customer.setUser(user);
+        user.setCustomer(customer);
+
+        if (roleEnum == ERole.VETERINARIO) {
             Veterinario veterinario = new Veterinario();
-            veterinario.setUsuario(user);
-            veterinario.setEspecialidad(userRegistroDTO.getEspecialidad());
             veterinario.setInstitucionEducativa(userRegistroDTO.getInstitucionEducativa());
+            veterinario.setEspecialidad(userRegistroDTO.getEspecialidad());
+            veterinario.setVet(user);
             user.setVeterinario(veterinario);
         }
-        User saveUser = usuarioRepository.save(user);
-        return userMapper.toUserProfileDto(saveUser);
+
+        User savedUser = usuarioRepository.save(user);
+        return userMapper.toUserProfileDto(savedUser);
     }
 }

@@ -47,7 +47,7 @@ public class HorariosDisponiblesServiceImpl implements HorariosDisponiblesServic
     @Transactional(readOnly = true)
     @Override
     public List<HorariosDisponiblesDTO> obtenerHorariosPorVeterinarioId(Integer userId) {
-        List<HorariosDisponibles> horarios = horariosDisponiblesRepository.findByVeterinarioUsuarioUserId(userId);
+        List<HorariosDisponibles> horarios = horariosDisponiblesRepository.findByVeterinario_Vet_UserId(userId);
         return horarios.stream()
                 .map(horariosDisponiblesMapper::toDTO)
                 .toList();

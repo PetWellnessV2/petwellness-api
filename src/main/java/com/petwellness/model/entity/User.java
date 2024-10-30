@@ -19,10 +19,10 @@ public class User {
     @Column(name = "contrasena", nullable = false)
     private String contrasena;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Customer customer;
 
-    @OneToOne(mappedBy = "vet",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "vet",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Veterinario veterinario;
 
     @ManyToOne(fetch = FetchType.EAGER)

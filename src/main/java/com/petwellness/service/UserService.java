@@ -8,8 +8,8 @@ import com.petwellness.dto.UserRegistroDTO;
 public interface UserService {
     UserProfileDTO registerUser(UserRegistroDTO userRegistroDTO);
     public UserProfileDTO registerVet(UserRegistroDTO userRegistroDTO);
+    void encryptExistingPasswords();
     AuthResponseDTO login(LoginDTO loginDTO);
     UserProfileDTO updateUserProfile(Integer id, UserProfileDTO userProfileDTO);
     UserProfileDTO getUserProfileById(Integer id);
-
 }

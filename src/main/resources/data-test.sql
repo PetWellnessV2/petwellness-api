@@ -13,23 +13,29 @@ VALUES
     (2, 'customer2@example.com', 'password123', 1),
     (3, 'customer3@example.com', 'password123', 1),
     (4, 'vet1@example.com', 'password123', 3),
-    (5, 'vet2@example.com', 'password123', 3),
-    (6, 'admin1@example.com', 'password123', 2)
+    (5, 'vet2@example.com', 'password123', 3)
     ON CONFLICT (user_id) DO NOTHING;
 
+
 -- Insert Customers (Linked to Users)
-INSERT INTO usuarios (user_id, nombre, apellido, telefono, tipo_usuario, created_at, updated_at)
+INSERT INTO usuarios (user_id, nombre, apellido, telefono, tipo_usuario, shipping_address, created_at, updated_at)
 VALUES
-    (1, 'Juan', 'Pérez', '123456789', 'DUEÑO', '2023-09-01 12:00:00', '2023-09-01 12:00:00'),  -- Customer 1
-    (2, 'Ana', 'García', '987654321', 'DUEÑO', '2023-09-02 13:00:00', '2023-09-02 13:00:00'), -- Customer 2
-    (3, 'Maria', 'Lopez', '998877665', 'DUEÑO', '2023-09-03 14:00:00', '2023-09-03 14:00:00') -- Customer 3
+    (1, 'Juan', 'Pérez', '123456789', 'DUEÑO', 'Av. Siempre Viva 123', '2023-09-01 12:00:00', '2023-09-01 12:00:00'),
+    (2, 'Ana', 'García', '987654321', 'DUEÑO', 'Calle Falsa 456', '2023-09-02 13:00:00', '2023-09-02 13:00:00'),
+    (3, 'Maria', 'Lopez', '998877665', 'DUEÑO', 'Av. Libertad 789', '2023-09-03 14:00:00', '2023-09-03 14:00:00')
+    ON CONFLICT (user_id) DO NOTHING;
+
+INSERT INTO usuarios (user_id, nombre, apellido, telefono, tipo_usuario, shipping_address, created_at, updated_at)
+VALUES
+    (4, 'Carlos', 'Santos', '111222333', 'VETERINARIO', 'Clinica San Marcos', '2023-09-04 15:00:00', '2023-09-04 15:00:00'),
+    (5, 'Lucia', 'Martinez', '444555666', 'VETERINARIO', 'Cornell Veterinary Clinic', '2023-09-05 16:00:00', '2023-09-05 16:00:00')
     ON CONFLICT (user_id) DO NOTHING;
 
 -- Insert Veterinarians (Linked to Users)
 INSERT INTO veterinario (usuario_user_id, institucion_educativa, especialidad)
 VALUES
-    (4, 'UNIVERSIDAD_NACIONAL_MAYOR_DE_SAN_MARCOS', 'CIRUGIA'),   -- Veterinarian 1
-    (5, 'CORNELL_UNIVERSITY', 'ODONTOLOGIA')                      -- Veterinarian 2
+    (4, 'UNIVERSIDAD_NACIONAL_MAYOR_DE_SAN_MARCOS', 'CIRUGIA'),
+    (5, 'CORNELL_UNIVERSITY', 'ODONTOLOGIA')
     ON CONFLICT (usuario_user_id) DO NOTHING;
 
 
