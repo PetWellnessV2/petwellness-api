@@ -16,13 +16,13 @@ public class VeterinarioRegistroMapper {
 
     public VeterinarioRegistroDTO toDTO(Veterinario veterinario) {
         VeterinarioRegistroDTO veterinarioRegistroDTO = modelMapper.map(veterinario, VeterinarioRegistroDTO.class);
-        if (veterinario.getUsuario() != null) {
-            veterinarioRegistroDTO.setUserId(veterinario.getUsuario().getUserId());
-            veterinarioRegistroDTO.setNombre(veterinario.getUsuario().getCustomer().getNombre());
-            veterinarioRegistroDTO.setApellido(veterinario.getUsuario().getCustomer().getApellido());
-            veterinarioRegistroDTO.setTelefono(veterinario.getUsuario().getCustomer().getTelefono());
-            veterinarioRegistroDTO.setContrasena(veterinario.getUsuario().getContrasena());
-            veterinarioRegistroDTO.setTipoUsuario(veterinario.getUsuario().getCustomer().getTipoUsuario());
+        if (veterinario.getVet() != null) {
+            veterinarioRegistroDTO.setUserId(veterinario.getVet().getUserId());
+            veterinarioRegistroDTO.setNombre(veterinario.getVet().getCustomer().getNombre());
+            veterinarioRegistroDTO.setApellido(veterinario.getVet().getCustomer().getApellido());
+            veterinarioRegistroDTO.setTelefono(veterinario.getVet().getCustomer().getTelefono());
+            veterinarioRegistroDTO.setContrasena(veterinario.getVet().getContrasena());
+            veterinarioRegistroDTO.setTipoUsuario(veterinario.getVet().getCustomer().getTipoUsuario());
         }
         return veterinarioRegistroDTO;
     }

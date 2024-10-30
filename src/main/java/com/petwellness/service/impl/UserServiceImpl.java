@@ -72,10 +72,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AuthResponseDTO login(LoginDTO loginDTO) {
-        //System.out.println(user.getCustomer().getNombre());
-        //System.out.println(loginDTO.getEmail());
-        //System.out.println(loginDTO.getPassword());
-
         User user = usuarioRepository.findByEmail(loginDTO.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
         boolean passwordMatches;
@@ -129,7 +125,7 @@ public class UserServiceImpl implements UserService {
             user.getCustomer().setShippingAddress(userProfileDTO.getShippingAddress());
             user.getCustomer().setTelefono(userProfileDTO.getTelefono());
             user.getCustomer().setUpdatedAt(LocalDateTime.now());
-            veterinario.setUsuario(user);
+            veterinario.setVet(user);
             veterinario.setInstitucionEducativa(userProfileDTO.getInstitucionEducativa());
             veterinario.setEspecialidad(userProfileDTO.getEspecialidad());
             user.setVeterinario(veterinario);
@@ -177,35 +173,26 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userRegistroDTO.getEmail());
         user.setRole(role);
 
-        if (roleEnum == ERole.CUSTOMER) {
-            Customer customer = new Customer();
-            customer.setNombre(userRegistroDTO.getNombre());
-            customer.setApellido(userRegistroDTO.getApellido());
-            customer.setTelefono(userRegistroDTO.getTelefono());
-            customer.setShippingAddress(userRegistroDTO.getShippingAddress());
-            customer.setCreatedAt(LocalDateTime.now());
-            customer.setUpdatedAt(LocalDateTime.now());
-            customer.setTipoUsuario(TipoUser.DUEÑO);
-            customer.setUser(user);
-            user.setCustomer(customer);
-        } else if (roleEnum == ERole.VETERINARIO) {
-            Customer customer = new Customer();
-            customer.setNombre(userRegistroDTO.getNombre());
-            customer.setApellido(userRegistroDTO.getApellido());
-            customer.setTelefono(userRegistroDTO.getTelefono());
-            customer.setShippingAddress(userRegistroDTO.getShippingAddress());
-            customer.setCreatedAt(LocalDateTime.now());
-            customer.setUpdatedAt(LocalDateTime.now());
-            customer.setTipoUsuario(TipoUser.VETERINARIO);
-            customer.setUser(user);
-            user.setCustomer(customer);
+        Customer customer = new Customer();
+        customer.setNombre(userRegistroDTO.getNombre());
+        customer.setApellido(userRegistroDTO.getApellido());
+        customer.setTelefono(userRegistroDTO.getTelefono());
+        customer.setShippingAddress(userRegistroDTO.getShippingAddress());
+        customer.setCreatedAt(LocalDateTime.now());
+        customer.setUpdatedAt(LocalDateTime.now());
+        customer.setTipoUsuario(roleEnum == ERole.CUSTOMER ? TipoUser.DUEÑO : TipoUser.VETERINARIO);
+        customer.setUser(user);
+        user.setCustomer(customer);
+
+        if (roleEnum == ERole.VETERINARIO) {
             Veterinario veterinario = new Veterinario();
-            veterinario.setUsuario_user_id(user.getUserId());
-            veterinario.setEspecialidad(userRegistroDTO.getEspecialidad());
             veterinario.setInstitucionEducativa(userRegistroDTO.getInstitucionEducativa());
+            veterinario.setEspecialidad(userRegistroDTO.getEspecialidad());
+            veterinario.setVet(user);
             user.setVeterinario(veterinario);
         }
-        User saveUser = usuarioRepository.save(user);
-        return userMapper.toUserProfileDto(saveUser);
+
+        User savedUser = usuarioRepository.save(user);
+        return userMapper.toUserProfileDto(savedUser);
     }
 }

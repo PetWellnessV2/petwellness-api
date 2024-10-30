@@ -61,8 +61,8 @@ public class UserMapper {
             authResponseDTO.setFirstName(user.getCustomer().getNombre());
             authResponseDTO.setLastName(user.getCustomer().getApellido());
         } else if (user.getVeterinario() != null) {
-            authResponseDTO.setFirstName("Veterinario");
-            authResponseDTO.setLastName("Veterinario");
+            authResponseDTO.setFirstName(user.getVeterinario().getInstitucionEducativa().toString());
+            authResponseDTO.setLastName(user.getVeterinario().getEspecialidad().toString());
         } else {
             authResponseDTO.setFirstName("Admin");
             authResponseDTO.setLastName("User");
