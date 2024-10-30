@@ -10,6 +10,7 @@ import com.petwellness.model.entity.Role;
 import com.petwellness.model.entity.User;
 import com.petwellness.model.entity.Veterinario;
 import com.petwellness.model.enums.ERole;
+import com.petwellness.model.enums.TipoUser;
 import com.petwellness.repository.CustomerRepository;
 import com.petwellness.repository.RoleRepository;
 import com.petwellness.repository.UsuarioRepository;
@@ -71,37 +72,32 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AuthResponseDTO login(LoginDTO loginDTO) {
-        // Buscar al usuario por email
+        //System.out.println(user.getCustomer().getNombre());
+        //System.out.println(loginDTO.getEmail());
+        //System.out.println(loginDTO.getPassword());
+
         User user = usuarioRepository.findByEmail(loginDTO.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
-
-        // Comprobar si la contraseña almacenada es codificada o no
         boolean passwordMatches;
         if (passwordEncoder.matches(loginDTO.getPassword(), user.getContrasena())) {
-            // La contraseña ya está codificada y coincide
             passwordMatches = true;
         } else {
-            // La contraseña no está codificada, comparar directamente
             passwordMatches = loginDTO.getPassword().equals(user.getContrasena());
             if (passwordMatches) {
-                // Codificar y guardar la contraseña antigua para futuras autenticaciones
                 user.setContrasena(passwordEncoder.encode(user.getContrasena()));
                 usuarioRepository.save(user);
             }
         }
-
-        // Si la contraseña no es válida, lanzamos una excepción
         if (!passwordMatches) {
             throw new IllegalArgumentException("Contraseña incorrecta");
         }
-
-        // Autenticar al usuario usando el AuthenticationManager
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword())
         );
 
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        boolean isAdmin = user.getRole().getName().equals(ERole.ADMIN);
+        //UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        //boolean isAdmin = user.getRole().getName().equals(ERole.ADMIN);
+
         String token = tokenProvider.createAccessToken(authentication);
         AuthResponseDTO responseDTO = userMapper.toAuthResponseDTO(user, token);
 
@@ -189,6 +185,7 @@ public class UserServiceImpl implements UserService {
             customer.setShippingAddress(userRegistroDTO.getShippingAddress());
             customer.setCreatedAt(LocalDateTime.now());
             customer.setUpdatedAt(LocalDateTime.now());
+            customer.setTipoUsuario(TipoUser.DUEÑO);
             customer.setUser(user);
             user.setCustomer(customer);
         } else if (roleEnum == ERole.VETERINARIO) {
@@ -199,10 +196,11 @@ public class UserServiceImpl implements UserService {
             customer.setShippingAddress(userRegistroDTO.getShippingAddress());
             customer.setCreatedAt(LocalDateTime.now());
             customer.setUpdatedAt(LocalDateTime.now());
+            customer.setTipoUsuario(TipoUser.VETERINARIO);
             customer.setUser(user);
             user.setCustomer(customer);
             Veterinario veterinario = new Veterinario();
-            veterinario.setUsuario(user);
+            veterinario.setUsuario_user_id(user.getUserId());
             veterinario.setEspecialidad(userRegistroDTO.getEspecialidad());
             veterinario.setInstitucionEducativa(userRegistroDTO.getInstitucionEducativa());
             user.setVeterinario(veterinario);

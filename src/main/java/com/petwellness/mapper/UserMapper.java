@@ -54,22 +54,21 @@ public class UserMapper {
         return modelMapper.map(loginDTO, User.class);
     }
 
-    //Convertir de User a AuthResponseDTO para la respuesta de autenticación
     public AuthResponseDTO toAuthResponseDTO(User user, String token){
         AuthResponseDTO authResponseDTO = new AuthResponseDTO();
         authResponseDTO.setToken(token);
-
-        // Obtener el nombre y apellido
-        // Obtener el nombre y apellido
-        String firstName = (user.getCustomer() != null) ? user.getCustomer().getNombre()
-                : (user.getVeterinario() != null) ? "Veterinario" : "Admin";
-        String lastName = (user.getCustomer() != null) ? user.getCustomer().getApellido()
-                : (user.getVeterinario() != null) ? "Veterinario" : "User";
+        if (user.getCustomer() != null) {
+            authResponseDTO.setFirstName(user.getCustomer().getNombre());
+            authResponseDTO.setLastName(user.getCustomer().getApellido());
+        } else if (user.getVeterinario() != null) {
+            authResponseDTO.setFirstName("Veterinario");
+            authResponseDTO.setLastName("Veterinario");
+        } else {
+            authResponseDTO.setFirstName("Admin");
+            authResponseDTO.setLastName("User");
+        }
 
         authResponseDTO.setId(user.getUserId());
-        authResponseDTO.setFirstName(firstName);
-        authResponseDTO.setLastName(lastName);
-
         authResponseDTO.setRole(user.getRole().getName().name());
 
         return authResponseDTO;
