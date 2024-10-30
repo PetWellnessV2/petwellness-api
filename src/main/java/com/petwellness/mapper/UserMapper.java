@@ -31,6 +31,10 @@ public class UserMapper {
 
     public UserProfileDTO toUserProfileDto(User user){
         UserProfileDTO userProfileDTO = modelMapper.map(user, UserProfileDTO.class);
+        if (user.getRole() != null) {
+            userProfileDTO.setRole(user.getRole().getName());
+
+        }
         if (user.getCustomer() != null) {
             userProfileDTO.setFirstName(user.getCustomer().getNombre());
             userProfileDTO.setLastName(user.getCustomer().getApellido());

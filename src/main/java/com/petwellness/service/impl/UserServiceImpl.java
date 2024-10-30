@@ -71,24 +71,43 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AuthResponseDTO login(LoginDTO loginDTO) {
-        //Autenticar al usuario utilizando AuthenticationManager
+        // Buscar al usuario por email
+        User user = usuarioRepository.findByEmail(loginDTO.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+
+        // Comprobar si la contraseña almacenada es codificada o no
+        boolean passwordMatches;
+        if (passwordEncoder.matches(loginDTO.getPassword(), user.getContrasena())) {
+            // La contraseña ya está codificada y coincide
+            passwordMatches = true;
+        } else {
+            // La contraseña no está codificada, comparar directamente
+            passwordMatches = loginDTO.getPassword().equals(user.getContrasena());
+            if (passwordMatches) {
+                // Codificar y guardar la contraseña antigua para futuras autenticaciones
+                user.setContrasena(passwordEncoder.encode(user.getContrasena()));
+                usuarioRepository.save(user);
+            }
+        }
+
+        // Si la contraseña no es válida, lanzamos una excepción
+        if (!passwordMatches) {
+            throw new IllegalArgumentException("Contraseña incorrecta");
+        }
+
+        // Autenticar al usuario usando el AuthenticationManager
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword())
         );
 
-        //Una vez autenticado, el objeto authentication contiene la información del usuario autenticado
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        User user = userPrincipal.getUser();
-
-        // Verificar si es un administrador
         boolean isAdmin = user.getRole().getName().equals(ERole.ADMIN);
-
-        String token=tokenProvider.createAccessToken(authentication);
-
+        String token = tokenProvider.createAccessToken(authentication);
         AuthResponseDTO responseDTO = userMapper.toAuthResponseDTO(user, token);
 
         return responseDTO;
     }
+
 
 
     @Transactional
@@ -161,6 +180,7 @@ public class UserServiceImpl implements UserService {
         user.setContrasena(encodedPassword);
         user.setEmail(userRegistroDTO.getEmail());
         user.setRole(role);
+
         if (roleEnum == ERole.CUSTOMER) {
             Customer customer = new Customer();
             customer.setNombre(userRegistroDTO.getNombre());
