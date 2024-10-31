@@ -13,17 +13,14 @@ public class Veterinario {
     @Column(name = "usuario_user_id")
     private Integer usuario_user_id;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "usuario_user_id", referencedColumnName = "user_id", foreignKey = @ForeignKey(name = "FK_veterinario_usuario"))
-    private User usuario;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "institucion_educativa", nullable = false)
     private InstitucionEducativa institucionEducativa;
 
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @MapsId
+    @JoinColumn(name = "usuario_user_id", referencedColumnName = "user_id", foreignKey = @ForeignKey(name = "FK_User"))
     private User vet;
 
     @Enumerated(EnumType.STRING)

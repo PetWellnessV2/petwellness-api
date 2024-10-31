@@ -44,6 +44,7 @@ public class Customer {
     private List<RegistroMascota> mascotas;
 
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @MapsId
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", foreignKey = @ForeignKey(name = "FK_User"))
     private User user;
 }
