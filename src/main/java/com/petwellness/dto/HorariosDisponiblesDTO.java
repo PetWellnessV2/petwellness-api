@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 public class HorariosDisponiblesDTO {
@@ -14,7 +15,7 @@ public class HorariosDisponiblesDTO {
     private Integer veterinarioId;
 
     @NotNull(message = "La hora es obligatoria")
-    private Integer hora;
+    private LocalTime hora;
 
     @NotNull(message = "La fecha es obligatoria")
     @Future(message = "La fecha debe ser en el futuro")

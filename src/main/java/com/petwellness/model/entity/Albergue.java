@@ -10,21 +10,18 @@ import lombok.Data;
 public class Albergue {
     @Id
     @Column(name="usuario_user_id")
-    private Integer idUsuario;
+    private Integer usuario_user_id;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "usuario_user_id", referencedColumnName = "user_id", foreignKey = @ForeignKey(name = "FK_albergue_usuario"))
-    private Customer usuario;
-
-    @Column(name = "nombre_albergue", length = 50, nullable = false)
-    private String nombreAlbergue;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_albergue", nullable = false)
+    @Column(name = "tipo", nullable = false)
     private TipoAlbergue tipoAlbergue;
 
     @Column(name = "ruc", length = 11, nullable = false)
     private String ruc;
 
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "usuario_user_id", referencedColumnName = "user_id", foreignKey = @ForeignKey(name = "FK_User"))
+    private User admin;
 }

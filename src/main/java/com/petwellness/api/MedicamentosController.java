@@ -1,6 +1,6 @@
 package com.petwellness.api;
 
-import com.petwellness.dto.MedicamentosDTO;
+import com.petwellness.dto.MedicamentosProfileDTO;
 import com.petwellness.dto.MedicamentosRegistroDTO;
 import com.petwellness.service.MedicamentosService;
 import jakarta.validation.Valid;
@@ -15,37 +15,38 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/medicamentos")
+@PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'VETERINARIO')")
 public class MedicamentosController {
 
     private final MedicamentosService medicamentosService;
 
     @GetMapping
     @PreAuthorize("hasAnyRole('VETERINARIO','CUSTOMER')")
-    public ResponseEntity<List<MedicamentosDTO>> getAllMedicamentos() {
-        List<MedicamentosDTO> medicamentos = medicamentosService.getAllMedicamentos();
+    public ResponseEntity<List<MedicamentosProfileDTO>> getAllMedicamentos() {
+        List<MedicamentosProfileDTO> medicamentos = medicamentosService.getAllMedicamentos();
         return new ResponseEntity<>(medicamentos, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('VETERINARIO','CUSTOMER')")
-    public ResponseEntity<MedicamentosDTO> getMedicamentoById(@PathVariable Integer id) {
-        MedicamentosDTO medicamento = medicamentosService.getMedicamentoById(id);
+    public ResponseEntity<MedicamentosProfileDTO> getMedicamentoById(@PathVariable Integer id) {
+        MedicamentosProfileDTO medicamento = medicamentosService.getMedicamentoById(id);
         return new ResponseEntity<>(medicamento, HttpStatus.OK);
     }
 
     @PostMapping
     @PreAuthorize("hasRole('VETERINARIO')")
-    public ResponseEntity<MedicamentosRegistroDTO> createMedicamento(@Valid @RequestBody MedicamentosRegistroDTO medicamentosRegistroDTO) {
-        MedicamentosRegistroDTO newMedicamento = medicamentosService.createMedicamento(medicamentosRegistroDTO);
+    public ResponseEntity<MedicamentosProfileDTO> createMedicamento(@Valid @RequestBody MedicamentosRegistroDTO medicamentosRegistroDTO) {
+        MedicamentosProfileDTO newMedicamento = medicamentosService.createMedicamento(medicamentosRegistroDTO);
         return new ResponseEntity<>(newMedicamento, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('VETERINARIO')")
-    public ResponseEntity<MedicamentosRegistroDTO> updateMedicamento(
+    public ResponseEntity<MedicamentosProfileDTO> updateMedicamento(
             @PathVariable Integer id,
             @Valid @RequestBody MedicamentosRegistroDTO medicamentosRegistroDTO) {
-        MedicamentosRegistroDTO updateMedicamento = medicamentosService.updateMedicamento(id, medicamentosRegistroDTO);
+        MedicamentosProfileDTO updateMedicamento = medicamentosService.updateMedicamento(id, medicamentosRegistroDTO);
         return new ResponseEntity<>(updateMedicamento, HttpStatus.OK);
     }
 

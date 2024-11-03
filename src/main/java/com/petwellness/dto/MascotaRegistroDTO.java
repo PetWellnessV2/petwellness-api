@@ -10,10 +10,10 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class RegistroMascotaDTO {
+public class MascotaRegistroDTO {
 
     private Integer idMascota;
-    private Integer usuarioId; // Asociado al usuario
+    private Integer usuarioId;
 
     @NotNull(message = "La especie es obligatoria")
     private Especie especie;

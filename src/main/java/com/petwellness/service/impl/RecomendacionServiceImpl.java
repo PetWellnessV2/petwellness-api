@@ -1,11 +1,12 @@
 package com.petwellness.service.impl;
 
+import com.petwellness.dto.MascotaProfileDTO;
 import com.petwellness.dto.ProductoDTO;
-import com.petwellness.dto.RegistroMascotaDTO;
+import com.petwellness.model.entity.Mascota;
 import com.petwellness.model.entity.Producto;
 import com.petwellness.model.enums.Especie;
 import com.petwellness.repository.CategoriaProductoRepository;
-import com.petwellness.repository.MascotaDatosRepository;
+import com.petwellness.repository.MascotaRepository;
 import com.petwellness.repository.ProductoRepository;
 import com.petwellness.service.RecomendacionService;
 import com.petwellness.exception.ResourceNotFoundException;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RecomendacionServiceImpl implements RecomendacionService {
 
-    private final MascotaDatosRepository mascotaRepository;
+    private final MascotaRepository mascotaRepository;
     private final ProductoRepository productoRepository;
     private final CategoriaProductoRepository categoriaProductoRepository;
     private final ModelMapper modelMapper;
@@ -30,10 +31,11 @@ public class RecomendacionServiceImpl implements RecomendacionService {
     @Override
     public List<ProductoDTO> getRecomendaciones(Integer mascotaId) {
         // 1. Obtener la mascota por su ID
-        RegistroMascotaDTO mascotaDTO = getMascotaById(mascotaId);
+        Mascota mascota = mascotaRepository.findById(mascotaId)
+                .orElseThrow(ResourceNotFoundException::new);
 
         // 2. Obtener la especie de la mascota
-        Especie especie = mascotaDTO.getEspecie();
+        Especie especie = mascota.getEspecie();
 
         // 3. Obtener los tipos de producto recomendados para la especie
         List<CategoriaProducto> tiposProducto = getTipoProductosPorEspecie(especie);
@@ -54,9 +56,9 @@ public class RecomendacionServiceImpl implements RecomendacionService {
         return productosDTO;
     }
 
-    private RegistroMascotaDTO getMascotaById(Integer mascotaId) {
+    private MascotaProfileDTO getMascotaById(Integer mascotaId) {
         return mascotaRepository.findById(mascotaId)
-                .map(mascota -> modelMapper.map(mascota, RegistroMascotaDTO.class))
+                .map(mascota -> modelMapper.map(mascota, MascotaProfileDTO.class))
                 .orElseThrow(() -> new ResourceNotFoundException("La mascota con ID " + mascotaId + " no existe."));
     }
 

@@ -18,12 +18,12 @@ public class Veterinario {
     @Column(name = "institucion_educativa", nullable = false)
     private InstitucionEducativa institucionEducativa;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "especialidad", nullable = false)
+    private Especialidad especialidad;
+
     @OneToOne
     @MapsId
     @JoinColumn(name = "usuario_user_id", referencedColumnName = "user_id", foreignKey = @ForeignKey(name = "FK_User"))
     private User vet;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "especialidad", nullable = false)
-    private Especialidad especialidad;
 }

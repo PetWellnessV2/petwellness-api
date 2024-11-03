@@ -13,8 +13,8 @@ public class ExamenFisico {
     private Integer idExamen;
 
     @ManyToOne
-    @JoinColumn(name = "registro_mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_examen_fisico_registro_mascota"), nullable = false)
-    private RegistroMascota registroMascota;
+    @JoinColumn(name = "mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_mascota"), nullable = false)
+    private Mascota mascota;
 
     @Column(name = "presion_arterial", nullable = false)
     private Integer presionArterial;

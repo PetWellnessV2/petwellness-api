@@ -25,6 +25,9 @@ public class User {
     @OneToOne(mappedBy = "vet",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Veterinario veterinario;
 
+    @OneToOne(mappedBy = "admin",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Albergue admin;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;

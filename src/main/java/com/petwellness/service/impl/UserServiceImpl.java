@@ -1,22 +1,12 @@
 package com.petwellness.service.impl;
 
-import com.petwellness.dto.AuthResponseDTO;
-import com.petwellness.dto.LoginDTO;
-import com.petwellness.dto.UserProfileDTO;
-import com.petwellness.dto.UserRegistroDTO;
+import com.petwellness.dto.*;
 import com.petwellness.mapper.UserMapper;
-import com.petwellness.model.entity.Customer;
-import com.petwellness.model.entity.Role;
-import com.petwellness.model.entity.User;
-import com.petwellness.model.entity.Veterinario;
+import com.petwellness.model.entity.*;
 import com.petwellness.model.enums.ERole;
 import com.petwellness.model.enums.TipoUser;
-import com.petwellness.repository.CustomerRepository;
-import com.petwellness.repository.RoleRepository;
-import com.petwellness.repository.UsuarioRepository;
-import com.petwellness.repository.VeterinarioRepository;
+import com.petwellness.repository.*;
 import com.petwellness.security.TokenProvider;
-import com.petwellness.security.UserPrincipal;
 import com.petwellness.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,15 +23,15 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UsuarioRepository usuarioRepository;
+    private final UserRepository userRepository;
     private final CustomerRepository customerRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final VeterinarioRepository veterinarioRepository;
-
     private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
+    private final AlbergueRepository albergueRepository;
 
     @Transactional
     @Override
@@ -56,15 +46,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
+    @Override
+    public UserProfileDTO registerAdmin(UserRegistroDTO userRegistroDTO) {
+        return registerUserWhitRole(userRegistroDTO, ERole.ADMIN);
+    }
+
+    @Transactional
     public void encryptExistingPasswords() {
-        List<User> users = usuarioRepository.findAll();
+        List<User> users = userRepository.findAll();
         for (User user : users) {
             System.out.println("Verificando usuario: " + user.getEmail());
             if (!passwordEncoder.matches(user.getContrasena(), user.getContrasena())) {
                 System.out.println("Encriptando contraseña para usuario: " + user.getEmail());
                 String encodedPassword = passwordEncoder.encode(user.getContrasena());
                 user.setContrasena(encodedPassword);
-                usuarioRepository.save(user);
+                userRepository.save(user);
             }
         }
     }
@@ -72,7 +68,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AuthResponseDTO login(LoginDTO loginDTO) {
-        User user = usuarioRepository.findByEmail(loginDTO.getEmail())
+        User user = userRepository.findByEmail(loginDTO.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
         boolean passwordMatches;
         if (passwordEncoder.matches(loginDTO.getPassword(), user.getContrasena())) {
@@ -81,7 +77,7 @@ public class UserServiceImpl implements UserService {
             passwordMatches = loginDTO.getPassword().equals(user.getContrasena());
             if (passwordMatches) {
                 user.setContrasena(passwordEncoder.encode(user.getContrasena()));
-                usuarioRepository.save(user);
+                userRepository.save(user);
             }
         }
         if (!passwordMatches) {
@@ -105,14 +101,13 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserProfileDTO updateUserProfile(Integer id, UserProfileDTO userProfileDTO) {
-        User user = usuarioRepository.findById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No existe un usuario con el ID: " + id));
         user.setEmail(userProfileDTO.getEmail());
 
         if (user.getRole().getName() == ERole.CUSTOMER) {
             user.getCustomer().setNombre(userProfileDTO.getFirstName());
             user.getCustomer().setApellido(userProfileDTO.getLastName());
-            user.getCustomer().setShippingAddress(userProfileDTO.getShippingAddress());
             user.getCustomer().setTelefono(userProfileDTO.getTelefono());
             user.getCustomer().setUpdatedAt(LocalDateTime.now());
         }
@@ -122,7 +117,6 @@ public class UserServiceImpl implements UserService {
                     .orElseThrow(() -> new IllegalArgumentException("No existe un veterinario asociado al usuario con ID: " + id));
             user.getCustomer().setNombre(userProfileDTO.getFirstName());
             user.getCustomer().setApellido(userProfileDTO.getLastName());
-            user.getCustomer().setShippingAddress(userProfileDTO.getShippingAddress());
             user.getCustomer().setTelefono(userProfileDTO.getTelefono());
             user.getCustomer().setUpdatedAt(LocalDateTime.now());
             veterinario.setVet(user);
@@ -131,25 +125,52 @@ public class UserServiceImpl implements UserService {
             user.setVeterinario(veterinario);
         }
 
-        User updatedUser = usuarioRepository.save(user);
+        if (user.getRole().getName() == ERole.ADMIN) {
+            Albergue albergue = albergueRepository.findById(user.getUserId())
+                    .orElseThrow(() -> new IllegalArgumentException("No existe un admin asociado al usuario con ID: " + id));
+            user.getCustomer().setNombre(userProfileDTO.getFirstName());
+            user.getCustomer().setApellido(userProfileDTO.getLastName());
+            user.getCustomer().setTelefono(userProfileDTO.getTelefono());
+            user.getCustomer().setUpdatedAt(LocalDateTime.now());
+            albergue.setAdmin(user);
+            albergue.setTipoAlbergue(userProfileDTO.getTipoAlbergue());
+            albergue.setRuc(userProfileDTO.getRUC());
+            user.setAdmin(albergue);
+        }
+
+        User updatedUser = userRepository.save(user);
         return userMapper.toUserProfileDto(updatedUser);
     }
 
     @Transactional(readOnly = true)
     @Override
     public UserProfileDTO getUserProfileById(Integer id) {
-        User user = usuarioRepository.findById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No existe un usuario con el ID: " + id));
         if (user.getRole() != null && user.getRole().getName() == ERole.VETERINARIO) {
             Veterinario veterinario = veterinarioRepository.findById(user.getUserId())
                     .orElseThrow(() -> new IllegalArgumentException("No existe un veterinario asociado al usuario con ID: " + id));
             user.setVeterinario(veterinario);
         }
+        if (user.getRole() != null && user.getRole().getName() == ERole.ADMIN) {
+            Albergue albergue = albergueRepository.findById(user.getUserId())
+                    .orElseThrow(() -> new IllegalArgumentException("No existe un admin asociado al usuario con ID: " + id));
+            user.setAdmin(albergue);
+        }
         return userMapper.toUserProfileDto(user);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public List<UserProfileDTO> getAll() {
+        List<User> mascotas = userRepository.findAll();
+        return mascotas.stream()
+                .map(userMapper::toUserProfileDto)
+                .toList();
+    }
+
     private UserProfileDTO registerUserWhitRole(UserRegistroDTO userRegistroDTO, ERole roleEnum) {
-        boolean existingByEmail = usuarioRepository.existsByEmail(userRegistroDTO.getEmail());
+        boolean existingByEmail = userRepository.existsByEmail(userRegistroDTO.getEmail());
         boolean existingAsCustomer = customerRepository.existsByNombreAndApellido(userRegistroDTO.getNombre(), userRegistroDTO.getApellido());
         boolean existingAsVet = customerRepository.existsByNombreAndApellido(userRegistroDTO.getNombre(), userRegistroDTO.getApellido());
         if (userRegistroDTO.getContrasena() == null || userRegistroDTO.getContrasena().isBlank()) {
@@ -177,10 +198,16 @@ public class UserServiceImpl implements UserService {
         customer.setNombre(userRegistroDTO.getNombre());
         customer.setApellido(userRegistroDTO.getApellido());
         customer.setTelefono(userRegistroDTO.getTelefono());
-        customer.setShippingAddress(userRegistroDTO.getShippingAddress());
         customer.setCreatedAt(LocalDateTime.now());
         customer.setUpdatedAt(LocalDateTime.now());
-        customer.setTipoUsuario(roleEnum == ERole.CUSTOMER ? TipoUser.DUEÑO : TipoUser.VETERINARIO);
+        if (roleEnum == ERole.CUSTOMER){
+            customer.setTipoUsuario(TipoUser.CUSTOMER);
+        } else if (roleEnum == ERole.VETERINARIO) {
+            customer.setTipoUsuario(TipoUser.VETERINARIO);
+        } else if (roleEnum == ERole.ADMIN) {
+            customer.setTipoUsuario(TipoUser.ADMIN);
+        }
+
         customer.setUser(user);
         user.setCustomer(customer);
 
@@ -191,8 +218,15 @@ public class UserServiceImpl implements UserService {
             veterinario.setVet(user);
             user.setVeterinario(veterinario);
         }
+        if (roleEnum == ERole.ADMIN) {
+            Albergue albergue = new Albergue();
+            albergue.setTipoAlbergue(userRegistroDTO.getTipoAlbergue());
+            albergue.setRuc(userRegistroDTO.getRUC());
+            albergue.setAdmin(user);
+            user.setAdmin(albergue);
+        }
 
-        User savedUser = usuarioRepository.save(user);
+        User savedUser = userRepository.save(user);
         return userMapper.toUserProfileDto(savedUser);
     }
 }

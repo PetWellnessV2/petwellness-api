@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RequestMapping("/media")
 @RestController
-@PreAuthorize("hasAnyRole('ADMIN','VETERINARIO','CUSTOMER')")
+@PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'VETERINARIO')")
 public class MediaController {
 
     private final StorageService storageService;

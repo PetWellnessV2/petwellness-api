@@ -14,28 +14,27 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/horarios-disponibles")
-@PreAuthorize("hasRole('VETERINARIO')")
 public class HorariosDisponiblesController {
     private final HorariosDisponiblesService horariosDisponiblesService;
-
+    @PreAuthorize("hasAnyRole('VETERINARIO')")
     @PostMapping
     public ResponseEntity<HorariosDisponiblesDTO> agregarHorario(@Valid @RequestBody HorariosDisponiblesDTO horarioDTO) {
         HorariosDisponiblesDTO nuevoHorario = horariosDisponiblesService.agregarHorario(horarioDTO);
         return new ResponseEntity<>(nuevoHorario, HttpStatus.CREATED);
     }
-
+    @PreAuthorize("hasAnyRole('VETERINARIO')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarHorario(@PathVariable Integer id) {
         horariosDisponiblesService.eliminarHorario(id);
         return ResponseEntity.noContent().build();
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'VETERINARIO')")
     @GetMapping
     public ResponseEntity<List<HorariosDisponiblesDTO>> obtenerHorarios() {
         List<HorariosDisponiblesDTO> horarios = horariosDisponiblesService.obtenerHorarios();
         return new ResponseEntity<>(horarios, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'VETERINARIO')")
     @GetMapping("/veterinario/{userId}")
     public ResponseEntity<List<HorariosDisponiblesDTO>> obtenerHorariosPorVeterinario(@PathVariable Integer userId) {
         List<HorariosDisponiblesDTO> horarios = horariosDisponiblesService.obtenerHorariosPorVeterinarioId(userId);

@@ -58,7 +58,7 @@ public class ProductoServiceImpl implements ProductoService {
         Producto producto = productoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-        producto.setNombreProducto(productoDTO.getNombreProducto());
+        producto.setNombre(productoDTO.getNombre());
         producto.setImagen(productoDTO.getImagen());
         producto.setDescripcion(productoDTO.getDescripcion());
         producto.setCosto(productoDTO.getCosto());

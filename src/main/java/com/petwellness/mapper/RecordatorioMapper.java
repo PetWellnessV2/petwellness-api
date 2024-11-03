@@ -2,22 +2,17 @@ package com.petwellness.mapper;
 
 import com.petwellness.dto.RecordatorioDTO;
 import com.petwellness.model.entity.Recordatorio;
-import com.petwellness.model.entity.Customer;
-import com.petwellness.model.entity.RegistroMascota;
-import com.petwellness.repository.UsuarioRepository;
-import com.petwellness.repository.MascotaDatosRepository;
+import com.petwellness.model.entity.Mascota;
+import com.petwellness.repository.UserRepository;
+import com.petwellness.repository.MascotaRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+@RequiredArgsConstructor
 @Component
 public class RecordatorioMapper {
 
-    private final UsuarioRepository usuarioRepository;
-    private final MascotaDatosRepository mascotaDatosRepository;
-
-    public RecordatorioMapper(UsuarioRepository usuarioRepository, MascotaDatosRepository mascotaDatosRepository) {
-        this.usuarioRepository = usuarioRepository;
-        this.mascotaDatosRepository = mascotaDatosRepository;
-    }
+    private final MascotaRepository mascotaDatosRepository;
 
     public RecordatorioDTO toDTO(Recordatorio recordatorio) {
         if (recordatorio == null) {
@@ -57,7 +52,7 @@ public class RecordatorioMapper {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         recordatorio.setUsuario(usuario);
         */
-        RegistroMascota mascota = mascotaDatosRepository.findById(dto.getMascotaId())
+        Mascota mascota = mascotaDatosRepository.findById(dto.getMascotaId())
                 .orElseThrow(() -> new RuntimeException("Mascota no encontrada"));
         recordatorio.setMascota(mascota);
     }

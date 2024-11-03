@@ -9,7 +9,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ConsultaDTO {
+public class ConsultaRegistroDTO {
 
     private Integer idConsulta;
 

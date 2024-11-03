@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,12 @@ public class AuthController {
     @PostMapping("/register/vet")
     public ResponseEntity<UserProfileDTO> registerVet(@Valid @RequestBody UserRegistroDTO userRegistroDTO) {
         UserProfileDTO userProfileDTO = userService.registerVet(userRegistroDTO);
+        return new ResponseEntity<>(userProfileDTO, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/register/admin")
+    public ResponseEntity<UserProfileDTO> registerAdmin(@Valid @RequestBody UserRegistroDTO userRegistroDTO) {
+        UserProfileDTO userProfileDTO = userService.registerAdmin(userRegistroDTO);
         return new ResponseEntity<>(userProfileDTO, HttpStatus.CREATED);
     }
 

@@ -2,7 +2,7 @@ package com.petwellness.security;
 
 
 import com.petwellness.model.entity.User;
-import com.petwellness.repository.UsuarioRepository;
+import com.petwellness.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,7 +16,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 @Service
 public class CustomerUserDetailsService implements UserDetailsService {
-    private final UsuarioRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

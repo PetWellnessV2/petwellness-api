@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/colecciones")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
 public class ColeccionController {
 
     private final ColeccionService coleccionService;
@@ -46,7 +46,7 @@ public class ColeccionController {
 
     @PostMapping("/{coleccionId}/productos/{productoId}")
     public ResponseEntity<ColeccionDTO> agregarProductoAColeccion(
-            @PathVariable Integer coleccionId, 
+            @PathVariable Integer coleccionId,
             @PathVariable Integer productoId) {
         return ResponseEntity.ok(coleccionService.agregarProductoAColeccion(coleccionId, productoId));
     }

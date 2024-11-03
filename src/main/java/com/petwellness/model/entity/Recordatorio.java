@@ -29,7 +29,7 @@ public class Recordatorio {
     @JoinColumn(name = "mascota_id", referencedColumnName = "id_mascota",
             foreignKey = @ForeignKey(name = "fk_recordatorio_mascota"))
     @EqualsAndHashCode.Include
-    private RegistroMascota mascota;
+    private Mascota mascota;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_recordatorio", nullable = false)

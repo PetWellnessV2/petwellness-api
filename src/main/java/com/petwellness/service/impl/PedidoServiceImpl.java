@@ -108,13 +108,13 @@ public class PedidoServiceImpl implements PedidoService {
     public PedidoDTO actualizarPedido(Integer pedidoId, PedidoDTO pedidoDTO) {
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
-        
+
         pedido.setEstado(pedidoDTO.getEstado());
         pedido.getDetalles().clear();
         pedido.getDetalles().addAll(pedidoDTO.getDetalles().stream()
                 .map(detalleDTO -> pedidoMapper.toEntity(detalleDTO, pedido))
                 .collect(Collectors.toList()));
-        
+
         Pedido updatedPedido = pedidoRepository.save(pedido);
         return pedidoMapper.toDTO(updatedPedido);
     }
@@ -124,13 +124,13 @@ public class PedidoServiceImpl implements PedidoService {
     public void eliminarProductoDePedido(Integer pedidoId, Integer productoId) {
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
-        
+
         boolean removed = pedido.getDetalles().removeIf(detalle -> detalle.getIdProducto().equals(productoId));
-        
+
         if (!removed) {
             throw new RuntimeException("Producto no encontrado en el pedido");
         }
-        
+
         pedidoRepository.save(pedido);
     }
 

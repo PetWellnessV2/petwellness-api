@@ -55,7 +55,7 @@ public class AdminCategoriaProductoServiceImpl implements AdminCategoriaProducto
     public CategoriaProductoDTO update(Integer id, CategoriaProductoDTO categoriaProductoDTO) {
         CategoriaProducto categoriaProducto = categoriaProductoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria de producto no encontrada"));
-        
+
         categoriaProductoRepository.findByName(categoriaProductoDTO.getName())
                 .filter(existingCategoriaProducto -> !existingCategoriaProducto.getId().equals(id))
                 .ifPresent(existingCategoriaProducto -> {

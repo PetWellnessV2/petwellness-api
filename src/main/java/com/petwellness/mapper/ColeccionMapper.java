@@ -4,10 +4,12 @@ import com.petwellness.dto.ColeccionDTO;
 import com.petwellness.model.entity.Coleccion;
 import com.petwellness.model.entity.ProductoColeccion;
 import com.petwellness.model.entity.Producto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Component
 public class ColeccionMapper {
 

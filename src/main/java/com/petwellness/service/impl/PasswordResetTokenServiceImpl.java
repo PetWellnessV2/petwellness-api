@@ -6,7 +6,7 @@ import com.petwellness.integration.notification.email.service.EmailService;
 import com.petwellness.model.entity.PasswordResetToken;
 import com.petwellness.model.entity.User;
 import com.petwellness.repository.PasswordResetTokenRepository;
-import com.petwellness.repository.UsuarioRepository;
+import com.petwellness.repository.UserRepository;
 import com.petwellness.service.PasswordResetTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +22,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PasswordResetTokenServiceImpl implements PasswordResetTokenService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
-    private final UsuarioRepository userRepository; //vre si se cambia
+    private final UserRepository userRepository; //vre si se cambia
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
 

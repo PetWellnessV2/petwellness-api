@@ -1,22 +1,19 @@
 package com.petwellness.service.impl;
 
-import com.petwellness.dto.ArchivoDTO;
+import com.petwellness.dto.ArchivoProfileDTO;
 import com.petwellness.dto.ArchivoRegistroDTO;
 import com.petwellness.exception.BadRequestException;
 import com.petwellness.exception.ResourceNotFoundException;
-import com.petwellness.mapper.ArchivoRegistroMapper;
-import com.petwellness.mapper.RegistroMascotaMapper;
+import com.petwellness.mapper.ArchivoMapper;
 import com.petwellness.model.entity.Archivos;
-import com.petwellness.model.entity.RegistroMascota;
+import com.petwellness.model.entity.Mascota;
 import com.petwellness.repository.ArchivoRepository;
-import com.petwellness.repository.MascotaDatosRepository;
+import com.petwellness.repository.MascotaRepository;
 import com.petwellness.service.ArchivoService;
-import com.petwellness.service.MascotaDatosService;
 import com.petwellness.service.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,51 +23,51 @@ import java.util.List;
 public class ArchivoServiceImpl implements ArchivoService {
 
     private final ArchivoRepository archivoRepository;
-    private final MascotaDatosRepository mascotaDatosRepository;
-    private final ArchivoRegistroMapper archivoRegistroMapper;
+    private final MascotaRepository mascotaRepository;
+    private final ArchivoMapper archivoMapper;
     private final StorageService storageService;
 
     @Transactional
     @Override
-    public ArchivoRegistroDTO createArchivo(ArchivoRegistroDTO archivoRegistroDTO, String path) {
-        archivoRepository.findByNombreArchivo(archivoRegistroDTO.getNombreArchivo())
+    public ArchivoProfileDTO createArchivo(ArchivoRegistroDTO archivoRegistroDTO, String path) {
+        archivoRepository.findByNombre(archivoRegistroDTO.getNombre())
                 .ifPresent(existingArchivo ->{
                     throw new BadRequestException("Ya existe un archivo con el mismo título");
                 });
-        Integer idMascota = archivoRegistroDTO.getIdRegistroMascota();
-        RegistroMascota registroMascota = mascotaDatosRepository.findById(idMascota)
+        Integer idMascota = archivoRegistroDTO.getIdMascota();
+        Mascota mascota = mascotaRepository.findById(idMascota)
                 .orElseThrow(() -> new ResourceNotFoundException("La mascota con ID "+idMascota+" no existe"));
 
-        Archivos archivo = archivoRegistroMapper.toEntity(archivoRegistroDTO);
+        Archivos archivo = archivoMapper.toEntity(archivoRegistroDTO);
         archivo.setFecha(LocalDate.now());
         archivo.setPath(path);
-        archivo.setRegistroMascota(registroMascota);
+        archivo.setMascota(mascota);
         archivo = archivoRepository.save(archivo);
-        return archivoRegistroMapper.toDTO(archivo);
+        return archivoMapper.toArchivoProfileDTO(archivo);
     }
 
     @Transactional
     @Override
-    public ArchivoRegistroDTO updateArchivo(Integer id, ArchivoRegistroDTO archivoRegistroDTO) {
+    public ArchivoProfileDTO updateArchivo(Integer id, ArchivoRegistroDTO archivoRegistroDTO) {
         Archivos archivosFromDB = archivoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("El archivo con ID "+id+" no existe"));
-        archivoRepository.findByNombreArchivo(archivoRegistroDTO.getNombreArchivo())
+        archivoRepository.findByNombre(archivoRegistroDTO.getNombre())
                 .filter(existingArchivo -> !existingArchivo.getIdArchivos().equals(id))
                 .ifPresent(existingArchivo ->{
                     throw new BadRequestException("Ya existe un archivo con el mismo título");
                 });
 
-        Integer idMascota = archivoRegistroDTO.getIdRegistroMascota();
-        RegistroMascota registroMascota = mascotaDatosRepository.findById(idMascota)
+        Integer idMascota = archivoRegistroDTO.getIdMascota();
+        Mascota mascota = mascotaRepository.findById(idMascota)
                 .orElseThrow(() -> new ResourceNotFoundException("La mascota con ID "+idMascota+" no existe"));
 
-        archivosFromDB.setNombreArchivo(archivoRegistroDTO.getNombreArchivo());
-        archivosFromDB.setDescripcionArchivo(archivoRegistroDTO.getDescripcion());
+        archivosFromDB.setNombre(archivoRegistroDTO.getNombre());
+        archivosFromDB.setDescripcion(archivoRegistroDTO.getDescripcion());
         archivosFromDB.setFecha(LocalDate.now());
         archivosFromDB.setPath(archivoRegistroDTO.getPath());
-        archivosFromDB.setRegistroMascota(registroMascota);
+        archivosFromDB.setMascota(mascota);
         archivosFromDB = archivoRepository.save(archivosFromDB);
-        return archivoRegistroMapper.toDTO(archivosFromDB);
+        return archivoMapper.toArchivoProfileDTO(archivosFromDB);
     }
 
     @Transactional
@@ -83,28 +80,28 @@ public class ArchivoServiceImpl implements ArchivoService {
 
     @Transactional(readOnly = true)
     @Override
-    public ArchivoDTO getArchivoById(Integer id) {
+    public ArchivoProfileDTO getArchivoById(Integer id) {
         Archivos archivo = archivoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("El archivo con ID "+id+" no existe"));
-        ArchivoDTO archivoDTO = new ArchivoDTO();
+        ArchivoProfileDTO archivoDTO = new ArchivoProfileDTO();
         archivoDTO.setId(archivo.getIdArchivos());
-        archivoDTO.setNombreArchivo(archivo.getNombreArchivo());
-        archivoDTO.setDescripcion(archivo.getDescripcionArchivo());
+        archivoDTO.setNombre(archivo.getNombre());
+        archivoDTO.setDescripcion(archivo.getDescripcion());
         archivoDTO.setPath(archivo.getPath());
-        archivoDTO.setNomMascota(archivo.getRegistroMascota().getNombre());
+        archivoDTO.setNomMascota(archivo.getMascota().getNombre());
         return archivoDTO;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<ArchivoDTO> getAllArchivos() {
+    public List<ArchivoProfileDTO> getAllArchivos() {
         List<Archivos> archivos = archivoRepository.findAll();
         return archivos.stream().map(archivo -> {
-            ArchivoDTO archivoDTO = new ArchivoDTO();
+            ArchivoProfileDTO archivoDTO = new ArchivoProfileDTO();
             archivoDTO.setId(archivo.getIdArchivos());
-            archivoDTO.setNombreArchivo(archivo.getNombreArchivo());
-            archivoDTO.setDescripcion(archivo.getDescripcionArchivo());
-            archivoDTO.setNomMascota(archivo.getRegistroMascota().getNombre());
+            archivoDTO.setNombre(archivo.getNombre());
+            archivoDTO.setDescripcion(archivo.getDescripcion());
+            archivoDTO.setNomMascota(archivo.getMascota().getNombre());
             archivoDTO.setPath(archivo.getPath());
             return archivoDTO;
         }).toList();

@@ -4,6 +4,7 @@ import com.petwellness.dto.AuthResponseDTO;
 import com.petwellness.dto.LoginDTO;
 import com.petwellness.dto.UserProfileDTO;
 import com.petwellness.dto.UserRegistroDTO;
+import com.petwellness.model.entity.Albergue;
 import com.petwellness.model.entity.User;
 import com.petwellness.model.entity.Veterinario;
 import com.petwellness.model.enums.TipoUser;
@@ -25,7 +26,12 @@ public class UserMapper {
             veterinario.setEspecialidad(registroDTO.getEspecialidad());
             user.setVeterinario(veterinario);
         }
-
+        if (registroDTO.getTipoAlbergue() != null) {
+            Albergue albergue = new Albergue();
+            albergue.setTipoAlbergue(registroDTO.getTipoAlbergue());
+            albergue.setRuc(registroDTO.getRUC());
+            user.setAdmin(albergue);
+        }
         return user;
     }
 
@@ -38,11 +44,14 @@ public class UserMapper {
         if (user.getCustomer() != null) {
             userProfileDTO.setFirstName(user.getCustomer().getNombre());
             userProfileDTO.setLastName(user.getCustomer().getApellido());
-            userProfileDTO.setShippingAddress(user.getCustomer().getShippingAddress());
             userProfileDTO.setTelefono(user.getCustomer().getTelefono());
             if (user.getVeterinario() != null) {
                 userProfileDTO.setInstitucionEducativa(user.getVeterinario().getInstitucionEducativa());
                 userProfileDTO.setEspecialidad(user.getVeterinario().getEspecialidad());
+            }
+            if (user.getAdmin() != null) {
+                userProfileDTO.setTipoAlbergue(user.getAdmin().getTipoAlbergue());
+                userProfileDTO.setRUC(user.getAdmin().getRuc());
             }
         }
 
@@ -61,11 +70,14 @@ public class UserMapper {
             authResponseDTO.setFirstName(user.getCustomer().getNombre());
             authResponseDTO.setLastName(user.getCustomer().getApellido());
         } else if (user.getVeterinario() != null) {
-            authResponseDTO.setFirstName(user.getVeterinario().getInstitucionEducativa().toString());
-            authResponseDTO.setLastName(user.getVeterinario().getEspecialidad().toString());
+            authResponseDTO.setFirstName(user.getCustomer().getNombre());
+            authResponseDTO.setLastName(user.getCustomer().getApellido());
+        } else if (user.getAdmin() != null) {
+            authResponseDTO.setFirstName(user.getCustomer().getNombre());
+            authResponseDTO.setLastName(user.getCustomer().getApellido());
         } else {
-            authResponseDTO.setFirstName("Admin");
-            authResponseDTO.setLastName("User");
+            authResponseDTO.setFirstName("FirstName");
+            authResponseDTO.setLastName("LastName");
         }
 
         authResponseDTO.setId(user.getUserId());

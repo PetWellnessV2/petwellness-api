@@ -1,10 +1,10 @@
 package com.petwellness.service.impl;
 
-import com.petwellness.model.entity.EventoSalud;
+//import com.petwellness.model.entity.EventoSalud;
 import com.petwellness.model.entity.Recordatorio;
 import com.petwellness.model.enums.RecordatorioStatus;
 import com.petwellness.model.enums.TipoRecordatorio;
-import com.petwellness.repository.EventoSaludRepository;
+//import com.petwellness.repository.EventoSaludRepository;
 import com.petwellness.repository.RecordatorioRepository;
 import com.petwellness.service.RecordatorioAutoGeneracionService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.List;
 @Service
 public class RecordatorioAutoGeneracionServiceImpl implements RecordatorioAutoGeneracionService {
 
-    private final EventoSaludRepository eventoSaludRepository;
+    //private final EventoSaludRepository eventoSaludRepository;
     private final RecordatorioRepository recordatorioRepository;
 
     // Ejecuta el metodo todos los días a la medianoche
@@ -30,18 +30,18 @@ public class RecordatorioAutoGeneracionServiceImpl implements RecordatorioAutoGe
         LocalDate hoy = LocalDate.now();
         LocalDate fechaLimite = hoy.plusDays(7); // Configurable según tus necesidades
 
-        List<EventoSalud> eventosProximos = eventoSaludRepository.findByFechaEventoBetween(hoy, fechaLimite);
-
+        //List<EventoSalud> eventosProximos = eventoSaludRepository.findByFechaEventoBetween(hoy, fechaLimite);
+        /*
         for (EventoSalud evento : eventosProximos) {
             boolean recordatorioExistente = recordatorioRepository.existsByUsuario_UserIdAndMascota_IdMascotaAndFechaHoraAndTipoRecordatorio(
-                    evento.getMascota().getUsuario().getUserId(),
+                    evento.getMascota().getCustomer().getUserId(),
                     evento.getMascota().getIdMascota(),
                     evento.getFechaEvento().atStartOfDay(),
                     TipoRecordatorio.AUTOMATICO);
 
             if (!recordatorioExistente) {
                 Recordatorio recordatorio = new Recordatorio();
-                recordatorio.setUsuario(evento.getMascota().getUsuario());
+                recordatorio.setUsuario(evento.getMascota().getCustomer());
                 recordatorio.setMascota(evento.getMascota());
                 recordatorio.setTitulo("Recordatorio de " + evento.getTipoEvento().name());
                 recordatorio.setDescripcion(evento.getDescripcion());
@@ -52,5 +52,6 @@ public class RecordatorioAutoGeneracionServiceImpl implements RecordatorioAutoGe
                 recordatorioRepository.save(recordatorio);
             }
         }
+        */
     }
 }

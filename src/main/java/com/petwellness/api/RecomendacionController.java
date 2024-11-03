@@ -4,6 +4,7 @@ import com.petwellness.dto.ProductoDTO;
 import com.petwellness.service.RecomendacionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/recomendaciones")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
 public class RecomendacionController {
 
     private final RecomendacionService recomendacionService;

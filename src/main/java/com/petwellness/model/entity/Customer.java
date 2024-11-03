@@ -30,18 +30,15 @@ public class Customer {
     @Column(name = "tipo_usuario")
     private TipoUser tipoUsuario;
 
-    @Column(name = "shipping_address")
-    private String shippingAddress;
-
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<RegistroMascota> mascotas;
+    private List<Mascota> mascotas;
 
     @OneToOne
     @MapsId

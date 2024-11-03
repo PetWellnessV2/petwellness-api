@@ -16,7 +16,7 @@ public class ReporteVentasMapper {
         reporteVentasDTO.setPrecioTotal(detallePedido.getPrecioTotal());
 
         // Aquí puedes usar información del ProductoDTO si es necesaria
-        reporteVentasDTO.setNombreProducto(productoDTO.getNombreProducto());
+        reporteVentasDTO.setNombreProducto(productoDTO.getNombre());
         reporteVentasDTO.setDescripcion(productoDTO.getDescripcion());
 
         return reporteVentasDTO;

@@ -94,7 +94,7 @@ public class AdminRecordatorioServiceImpl implements AdminRecordatorioService {
     public void deleteRecordatorioByIdAndUsuarioId(Integer recordatorioId, Integer usuarioId) {
         Recordatorio recordatorio = recordatorioRepository.findByRecordatorioIdAndUsuario_UserId(recordatorioId, usuarioId)
             .orElseThrow(() -> new ResourceNotFoundException("Recordatorio no encontrado para el id " + recordatorioId + " y usuario id " + usuarioId));
-        
+
         recordatorioRepository.delete(recordatorio);
     }
 
@@ -103,7 +103,7 @@ public class AdminRecordatorioServiceImpl implements AdminRecordatorioService {
     public void deleteRecordatorioById(Integer recordatorioId) {
         Recordatorio recordatorio = recordatorioRepository.findById(recordatorioId)
             .orElseThrow(() -> new ResourceNotFoundException("Recordatorio no encontrado para el id " + recordatorioId));
-        
+
         recordatorioRepository.delete(recordatorio);
     }
 }
