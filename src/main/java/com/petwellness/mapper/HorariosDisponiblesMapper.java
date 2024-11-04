@@ -17,7 +17,9 @@ public class HorariosDisponiblesMapper {
 
     public HorariosDisponiblesDTO toDTO(HorariosDisponibles horariosDisponibles) {
         HorariosDisponiblesDTO horariosDisponiblesDTO = modelMapper.map(horariosDisponibles, HorariosDisponiblesDTO.class);
-        horariosDisponiblesDTO.setVeterinarioId(horariosDisponibles.getVeterinario().getUsuario_user_id());
+        Veterinario veterinario = veterinarioRepository.findById(horariosDisponibles.getVeterinario().getUsuario_user_id())
+                .orElseThrow(() -> new IllegalArgumentException("Veterinario no encontrado"));
+        horariosDisponiblesDTO.setVeterinario_nombre(veterinario.getVet().getCustomer().getNombre());
         return horariosDisponiblesDTO;
     }
 
