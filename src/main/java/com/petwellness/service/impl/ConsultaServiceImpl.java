@@ -162,8 +162,8 @@ public class ConsultaServiceImpl implements ConsultaService {
         consultaRepository.save(consulta); // Guardar la consulta actualizada
 
         ConsultaProfileDTO consultaProfileDTO = consultaMapper.toConsultaProfileDTO(consulta);
-        consultaProfileDTO.setIdHorario(nuevoHorario.getIdHorario());
-        consultaProfileDTO.setIdMascota(consulta.getMascota().getIdMascota());
+        //consultaProfileDTO.setIdHorario(nuevoHorario.getIdHorario());
+        //consultaProfileDTO.setIdMascota(consulta.getMascota().getIdMascota());
 
         return consultaProfileDTO;
     }

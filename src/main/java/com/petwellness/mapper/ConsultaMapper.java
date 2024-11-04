@@ -22,12 +22,14 @@ public class ConsultaMapper {
     // Mapea de Entidad a DTO
     public ConsultaProfileDTO toConsultaProfileDTO(Consulta consulta) {
         ConsultaProfileDTO consultaDTO = modelMapper.map(consulta, ConsultaProfileDTO.class);
+
         // Asignar IDs de Horario y Mascota
         if (consulta.getHorariosDisponibles() != null) {
-            consultaDTO.setIdHorario(consulta.getHorariosDisponibles().getIdHorario());
+            consultaDTO.setHora(consulta.getHorariosDisponibles().getHora());
+            consultaDTO.setFecha(consulta.getHorariosDisponibles().getFecha());
         }
         if (consulta.getMascota() != null) {
-            consultaDTO.setIdMascota(consulta.getMascota().getIdMascota());
+            consultaDTO.setNombre_mascota(consulta.getMascota().getNombre());
         }
         return consultaDTO;
     }
