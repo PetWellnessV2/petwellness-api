@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/mail")
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'VETERINARIO')")
 public class MailController {
     private final PasswordResetTokenService passwordResetTokenService;
 
