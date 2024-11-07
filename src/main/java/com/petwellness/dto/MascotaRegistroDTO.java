@@ -37,20 +37,12 @@ public class MascotaRegistroDTO {
     @NotNull(message = "La fecha de nacimiento es obligatoria")
     private LocalDate fechaNacimiento;
 
-    @NotBlank(message = "La descripción es obligatoria")
-    @Size(max = 250, message = "La descripción no debe exceder los 250 caracteres")
     private String descripcion;
 
-    @NotBlank(message = "La dirección es obligatoria")
-    @Size(max = 250, message = "La dirección no debe exceder los 250 caracteres")
     private String direccion;
 
-    @NotBlank(message = "El ID del miembro es obligatorio")
-    @Size(max = 8, message = "El ID del miembro no debe exceder los 8 caracteres")
     private String miembroID;
 
-    @NotBlank(message = "El nombre del titular de la póliza es obligatorio")
-    @Size(max = 50, message = "El nombre del titular de la póliza no debe exceder los 50 caracteres")
     private String titularPoliza;
 
     private String infoAdicional;
