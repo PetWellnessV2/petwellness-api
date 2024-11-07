@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,6 +50,7 @@ public class NotasConsultaServiceImpl implements NotasConsultaService {
     @Override
     public NotasConsultaDTO createNotasConsulta(NotasConsultaDTO notasConsultaDTO) {
         NotasConsulta notasConsulta = notasConsultaMapper.toEntity(notasConsultaDTO);
+        notasConsulta.setFecha(LocalDate.now());
         NotasConsulta savedNotasConsulta = notasConsultaRepository.save(notasConsulta);
         return notasConsultaMapper.toDTO(savedNotasConsulta);
     }

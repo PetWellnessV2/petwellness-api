@@ -79,14 +79,14 @@ VALUES
     ON CONFLICT ON CONSTRAINT unique_pet_constraint DO NOTHING;
 
 
-ALTER TABLE archivos DROP CONSTRAINT IF EXISTS unique_archivos_constraint;
-ALTER TABLE archivos ADD CONSTRAINT unique_archivos_constraint UNIQUE (nombre, mascota_id_mascota);
--- Insertar datos de prueba en la tabla archivos
-INSERT INTO archivos (nombre, descripcion, fecha, mascota_id_mascota)
-VALUES
-    ('Vacunas Firulais', 'Registro de vacunas', '2023-08-15', 1),
-    ('Checkup Mishifu', 'Chequeo anual de salud', '2023-08-20', 2)
-    ON CONFLICT ON CONSTRAINT unique_archivos_constraint DO NOTHING;
+-- ALTER TABLE archivos DROP CONSTRAINT IF EXISTS unique_archivos_constraint;
+-- ALTER TABLE archivos ADD CONSTRAINT unique_archivos_constraint UNIQUE (nombre, mascota_id_mascota);
+-- -- Insertar datos de prueba en la tabla archivos
+-- INSERT INTO archivos (nombre, descripcion, fecha, mascota_id_mascota)
+-- VALUES
+--     ('Vacunas Firulais', 'Registro de vacunas', '2023-08-15', 1),
+--     ('Checkup Mishifu', 'Chequeo anual de salud', '2023-08-20', 2)
+--     ON CONFLICT ON CONSTRAINT unique_archivos_constraint DO NOTHING;
 --
 --
 -- -- Insertar datos de prueba en la tabla colecciones

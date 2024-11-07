@@ -9,7 +9,6 @@ import java.time.LocalDate;
 @Data
 public class NotasConsultaDTO {
     private Integer idNotas;
-    @NotNull(message = "La fecha es obligatoria")
     private LocalDate fecha;
     @NotBlank(message = "La descripción es obligatoria")
     private String descripcion;
