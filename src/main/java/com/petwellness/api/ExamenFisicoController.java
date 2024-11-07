@@ -5,6 +5,7 @@ import com.petwellness.service.ExamenFisicoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -13,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/examenes-fisicos")
+@PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'VETERINARIO')")
 public class ExamenFisicoController {
     private final ExamenFisicoService examenFisicoService;
 
@@ -44,5 +46,12 @@ public class ExamenFisicoController {
     public ResponseEntity<Void> eliminarExamenFisico(@PathVariable Integer id) {
         examenFisicoService.eliminarExamenFisico(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/mascotas/{mascotaId}/examenes-fisicos")
+    public ResponseEntity<List<ExamenFisicoDTO>> getExamenesFisicos(
+            @PathVariable Integer mascotaId) {
+        List<ExamenFisicoDTO> examenesFisicos = examenFisicoService.findExamenesFisicosByMascotaId(mascotaId);
+        return ResponseEntity.ok(examenesFisicos);
     }
 }

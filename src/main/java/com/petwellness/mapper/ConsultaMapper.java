@@ -1,58 +1,52 @@
 package com.petwellness.mapper;
 
-import com.petwellness.dto.ConsultaDTO;
+import com.petwellness.dto.ConsultaProfileDTO;
+import com.petwellness.dto.ConsultaRegistroDTO;
 import com.petwellness.model.entity.Consulta;
 import com.petwellness.model.entity.HorariosDisponibles;
-import com.petwellness.model.entity.RegistroMascota;
+import com.petwellness.model.entity.Mascota;
 import com.petwellness.repository.HorariosDisponiblesRepository;
-import com.petwellness.repository.MascotaDatosRepository;
+import com.petwellness.repository.MascotaRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+@RequiredArgsConstructor
 @Component
 public class ConsultaMapper {
 
     private final ModelMapper modelMapper;
     private final HorariosDisponiblesRepository horariosDisponiblesRepository;
-    private final MascotaDatosRepository mascotaDatosRepository;
-
-    public ConsultaMapper(ModelMapper modelMapper,
-                          HorariosDisponiblesRepository horariosDisponiblesRepository,
-                          MascotaDatosRepository mascotaDatosRepository) {
-        this.modelMapper = modelMapper;
-        this.horariosDisponiblesRepository = horariosDisponiblesRepository;
-        this.mascotaDatosRepository = mascotaDatosRepository;
-    }
+    private final MascotaRepository mascotaRepository;
 
     // Mapea de Entidad a DTO
-    public ConsultaDTO toDTO(Consulta consulta) {
-        ConsultaDTO consultaDTO = modelMapper.map(consulta, ConsultaDTO.class);
+    public ConsultaProfileDTO toConsultaProfileDTO(Consulta consulta) {
+        ConsultaProfileDTO consultaDTO = modelMapper.map(consulta, ConsultaProfileDTO.class);
 
         // Asignar IDs de Horario y Mascota
         if (consulta.getHorariosDisponibles() != null) {
-            consultaDTO.setIdHorario(consulta.getHorariosDisponibles().getIdHorario());
+            consultaDTO.setHora(consulta.getHorariosDisponibles().getHora());
+            consultaDTO.setFecha(consulta.getHorariosDisponibles().getFecha());
         }
-
-        if (consulta.getRegistroMascota() != null) {
-            consultaDTO.setIdMascota(consulta.getRegistroMascota().getIdMascota());
+        if (consulta.getMascota() != null) {
+            consultaDTO.setNombre_mascota(consulta.getMascota().getNombre());
         }
-
         return consultaDTO;
     }
 
-    public Consulta toEntity(ConsultaDTO consultaDTO) {
-        Consulta consulta = modelMapper.map(consultaDTO, Consulta.class);
+    public Consulta toEntity(ConsultaRegistroDTO consultaRegistroDTO) {
+        Consulta consulta = modelMapper.map(consultaRegistroDTO, Consulta.class);
 
-        if (consultaDTO.getIdHorario() != null) {
-            HorariosDisponibles horario = horariosDisponiblesRepository.findById(consultaDTO.getIdHorario())
-                    .orElseThrow(() -> new RuntimeException("Horario no encontrado con id: " + consultaDTO.getIdHorario()));
+        if (consultaRegistroDTO.getIdHorario() != null) {
+            HorariosDisponibles horario = horariosDisponiblesRepository.findById(consultaRegistroDTO.getIdHorario())
+                    .orElseThrow(() -> new RuntimeException("Horario no encontrado con id: " + consultaRegistroDTO.getIdHorario()));
             consulta.setHorariosDisponibles(horario);
         }
 
-        if (consultaDTO.getIdMascota() != null) {
-            RegistroMascota mascota = mascotaDatosRepository.findById(consultaDTO.getIdMascota())
-                    .orElseThrow(() -> new RuntimeException("Mascota no encontrada con id: " + consultaDTO.getIdMascota()));
-            consulta.setRegistroMascota(mascota);
+        if (consultaRegistroDTO.getIdMascota() != null) {
+            Mascota mascota = mascotaRepository.findById(consultaRegistroDTO.getIdMascota())
+                    .orElseThrow(() -> new RuntimeException("Mascota no encontrada con id: " + consultaRegistroDTO.getIdMascota()));
+            consulta.setMascota(mascota);
         }
 
         return consulta;

@@ -1,15 +1,14 @@
 package com.petwellness.service.impl;
 
-import com.petwellness.dto.MedicamentosDTO;
+import com.petwellness.dto.MedicamentosProfileDTO;
 import com.petwellness.dto.MedicamentosRegistroDTO;
 import com.petwellness.exception.BadRequestException;
 import com.petwellness.exception.ResourceNotFoundException;
 import com.petwellness.mapper.MedicamentosMapper;
-import com.petwellness.mapper.MedicamentosRegistroMapper;
 import com.petwellness.model.entity.Medicamentos;
-import com.petwellness.model.entity.RegistroMascota;
+import com.petwellness.model.entity.Mascota;
 import com.petwellness.repository.MedicamentosRepository;
-import com.petwellness.repository.MascotaDatosRepository;
+import com.petwellness.repository.MascotaRepository;
 import com.petwellness.service.MedicamentosService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,54 +22,53 @@ import java.util.List;
 public class MedicamentosServiceImpl implements MedicamentosService {
 
     private final MedicamentosRepository medicamentosRepository;
-    private final MascotaDatosRepository mascotaDatosRepository;
-    private final MedicamentosRegistroMapper medicamentosRegistroMapper;
+    private final MascotaRepository mascotaRepository;
+    private final MedicamentosMapper medicamentosMapper;
 
     @Transactional(readOnly = true)
     @Override
-    public List<MedicamentosDTO> getAllMedicamentos() {
+    public List<MedicamentosProfileDTO> getAllMedicamentos() {
         List<Medicamentos> medicamentos = medicamentosRepository.findAll();
         return medicamentos.stream().map(medicamento -> {
-            MedicamentosDTO medicamentoDTO = new MedicamentosDTO();
+            MedicamentosProfileDTO medicamentoDTO = new MedicamentosProfileDTO();
+            medicamentoDTO.setNombre(medicamento.getNombre());
             medicamentoDTO.setIdMedicamento(medicamento.getIdMedicamento());
             medicamentoDTO.setDescripcion(medicamento.getDescripcion());
-            medicamentoDTO.setNomMascota(medicamento.getRegistroMascota().getNombre());
+            medicamentoDTO.setNomMascota(medicamento.getMascota().getNombre());
             return medicamentoDTO;
         }).toList();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public MedicamentosDTO getMedicamentoById(Integer id) {
+    public MedicamentosProfileDTO getMedicamentoById(Integer id) {
         Medicamentos medicamento = medicamentosRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("El medicamento con ID "+id+" no existe"));
-        MedicamentosDTO medicamentoDTO = new MedicamentosDTO();
+        MedicamentosProfileDTO medicamentoDTO = new MedicamentosProfileDTO();
+        medicamentoDTO.setNombre(medicamento.getNombre());
         medicamentoDTO.setIdMedicamento(medicamento.getIdMedicamento());
         medicamentoDTO.setDescripcion(medicamento.getDescripcion());
-        medicamentoDTO.setNomMascota(medicamento.getRegistroMascota().getNombre());
+        medicamentoDTO.setNomMascota(medicamento.getMascota().getNombre());
         return medicamentoDTO;
     }
 
     @Transactional
     @Override
-    public MedicamentosRegistroDTO createMedicamento(MedicamentosRegistroDTO medicamentosRegistroDTO) {
-        medicamentosRepository.findByDescripcion(medicamentosRegistroDTO.getDescripcion())
-                .ifPresent(existingMedicamento ->{
-                    throw new BadRequestException("Ya existe un medicamento con la misma descripción");
-                });
-        Integer idMascota = medicamentosRegistroDTO.getIdRegistroMascota();
-        RegistroMascota registroMascota = mascotaDatosRepository.findById(idMascota)
-                .orElseThrow(() -> new ResourceNotFoundException("La mascota con ID "+idMascota+" no existe"));
-        Medicamentos medicamentos = medicamentosRegistroMapper.toEntity(medicamentosRegistroDTO);
+    public MedicamentosProfileDTO createMedicamento(MedicamentosRegistroDTO medicamentosRegistroDTO) {
+        Integer idMascota = medicamentosRegistroDTO.getIdMascota();
+        Mascota mascota = mascotaRepository.findById(idMascota)
+                .orElseThrow(() -> new ResourceNotFoundException("La mascota con ID " + idMascota + " no existe"));
+        Medicamentos medicamentos = medicamentosMapper.toEntity(medicamentosRegistroDTO);
         medicamentos.setFecha(LocalDate.now());
-        medicamentos.setRegistroMascota(registroMascota);
+        medicamentos.setMascota(mascota);
         medicamentos = medicamentosRepository.save(medicamentos);
-        return medicamentosRegistroMapper.toDTO(medicamentos);
+        return medicamentosMapper.toDTO(medicamentos);
     }
+
 
     @Transactional
     @Override
-    public MedicamentosRegistroDTO updateMedicamento(Integer id, MedicamentosRegistroDTO medicamentosRegistroDTO) {
+    public MedicamentosProfileDTO updateMedicamento(Integer id, MedicamentosRegistroDTO medicamentosRegistroDTO) {
         Medicamentos medicamentoFromDB = medicamentosRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("El medicamento con ID "+id+" no existe"));
         medicamentosRepository.findByDescripcion(medicamentosRegistroDTO.getDescripcion())
@@ -79,15 +77,15 @@ public class MedicamentosServiceImpl implements MedicamentosService {
                     throw new BadRequestException("Ya existe un medicamento con la misma descripción");
                 });
 
-        Integer idMascota = medicamentosRegistroDTO.getIdRegistroMascota();
-        RegistroMascota registroMascota = mascotaDatosRepository.findById(idMascota)
+        Integer idMascota = medicamentosRegistroDTO.getIdMascota();
+        Mascota mascota = mascotaRepository.findById(idMascota)
                 .orElseThrow(() -> new ResourceNotFoundException("La mascota con ID "+idMascota+" no existe"));
 
         medicamentoFromDB.setDescripcion(medicamentosRegistroDTO.getDescripcion());
         medicamentoFromDB.setFecha(LocalDate.now());
-        medicamentoFromDB.setRegistroMascota(registroMascota);
+        medicamentoFromDB.setMascota(mascota);
         medicamentoFromDB = medicamentosRepository.save(medicamentoFromDB);
-        return medicamentosRegistroMapper.toDTO(medicamentoFromDB);
+        return medicamentosMapper.toDTO(medicamentoFromDB);
     }
 
     @Transactional

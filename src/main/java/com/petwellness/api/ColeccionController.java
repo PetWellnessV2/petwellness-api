@@ -5,6 +5,7 @@ import com.petwellness.service.ColeccionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/colecciones")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
 public class ColeccionController {
 
     private final ColeccionService coleccionService;
@@ -44,7 +46,7 @@ public class ColeccionController {
 
     @PostMapping("/{coleccionId}/productos/{productoId}")
     public ResponseEntity<ColeccionDTO> agregarProductoAColeccion(
-            @PathVariable Integer coleccionId, 
+            @PathVariable Integer coleccionId,
             @PathVariable Integer productoId) {
         return ResponseEntity.ok(coleccionService.agregarProductoAColeccion(coleccionId, productoId));
     }

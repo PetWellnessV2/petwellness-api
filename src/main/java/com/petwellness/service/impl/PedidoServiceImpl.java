@@ -6,6 +6,7 @@ import com.petwellness.model.entity.DetallePedido;
 import com.petwellness.model.entity.Pedido;
 import com.petwellness.model.entity.Producto;
 import com.petwellness.model.enums.EstadoPedido;
+import com.petwellness.model.enums.PaymentStatus;
 import com.petwellness.repository.PedidoRepository;
 import com.petwellness.repository.ProductoRepository;
 import com.petwellness.service.PedidoService;
@@ -77,6 +78,13 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
+    public PedidoDTO obtenerPedidoPorId(Integer pedidoId) {
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+            .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
+        return pedidoMapper.toDTO(pedido);
+    }
+
+    @Override
     @Transactional
     public PedidoDTO agregarProductoAPedido(Integer pedidoId, Integer productoId, Integer cantidad) {
         Pedido pedido = pedidoRepository.findById(pedidoId)
@@ -100,13 +108,13 @@ public class PedidoServiceImpl implements PedidoService {
     public PedidoDTO actualizarPedido(Integer pedidoId, PedidoDTO pedidoDTO) {
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
-        
+
         pedido.setEstado(pedidoDTO.getEstado());
         pedido.getDetalles().clear();
         pedido.getDetalles().addAll(pedidoDTO.getDetalles().stream()
                 .map(detalleDTO -> pedidoMapper.toEntity(detalleDTO, pedido))
                 .collect(Collectors.toList()));
-        
+
         Pedido updatedPedido = pedidoRepository.save(pedido);
         return pedidoMapper.toDTO(updatedPedido);
     }
@@ -116,13 +124,13 @@ public class PedidoServiceImpl implements PedidoService {
     public void eliminarProductoDePedido(Integer pedidoId, Integer productoId) {
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
-        
+
         boolean removed = pedido.getDetalles().removeIf(detalle -> detalle.getIdProducto().equals(productoId));
-        
+
         if (!removed) {
             throw new RuntimeException("Producto no encontrado en el pedido");
         }
-        
+
         pedidoRepository.save(pedido);
     }
 
@@ -141,4 +149,23 @@ public class PedidoServiceImpl implements PedidoService {
                 .map(pedidoMapper::toDTO)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public PedidoDTO confirmarPedido(Integer pedidoId) {
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
+
+        // Calcular el total del pedido sumando el precio total de cada detalle
+        /*
+        BigDecimal total = pedido.getDetalles().stream()
+                .map(DetallePedido::getPrecioTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+         */
+        pedido.setEstado(EstadoPedido.PAGADO);
+
+        Pedido pedidoActualizado = pedidoRepository.save(pedido);
+        return pedidoMapper.toDTO(pedidoActualizado);
+    }
+
 }

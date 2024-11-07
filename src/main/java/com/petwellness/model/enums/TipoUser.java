@@ -1,7 +1,7 @@
 package com.petwellness.model.enums;
 
 public enum TipoUser {
-    DUEÑO,
+    CUSTOMER,
     VETERINARIO,
-    CLIENTE
+    ADMIN
 }

@@ -17,10 +17,10 @@ public class NotasConsulta {
     @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
 
-    @Column(name = "descripcion_nota", length = 250, nullable = false)
-    private String descripcionNota;
+    @Column(name = "descripcion", length = 250, nullable = false)
+    private String descripcion;
 
     @ManyToOne
-    @JoinColumn(name = "registro_mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_notas_consulta_registro_mascota"), nullable = false)
-    private RegistroMascota registroMascota;
+    @JoinColumn(name = "mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_mascota"), nullable = false)
+    private Mascota mascota;
 }

@@ -14,6 +14,9 @@ public class Medicamentos {
     @Column(name = "id_medicamento")
     private Integer idMedicamento;
 
+    @Column(name = "nombre", length = 30, nullable = false)
+    private String nombre;
+
     @Column(name = "descripcion", length = 50, nullable = false)
     private String descripcion;
 
@@ -21,6 +24,6 @@ public class Medicamentos {
     private LocalDate fecha;
 
     @ManyToOne
-    @JoinColumn(name = "registro_mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_medicamentos_registro_mascota"), nullable = false)
-    private RegistroMascota registroMascota;
+    @JoinColumn(name = "mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_mascota"), nullable = false)
+    private Mascota mascota;
 }

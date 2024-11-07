@@ -3,37 +3,33 @@ package com.petwellness.mapper;
 import com.petwellness.dto.HorariosDisponiblesDTO;
 import com.petwellness.model.entity.HorariosDisponibles;
 import com.petwellness.model.entity.Veterinario;
+import com.petwellness.repository.VeterinarioRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+@RequiredArgsConstructor
 @Component
 public class HorariosDisponiblesMapper {
 
     private final ModelMapper modelMapper;
-
-    public HorariosDisponiblesMapper(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
-    }
+    private final VeterinarioRepository veterinarioRepository;
 
     public HorariosDisponiblesDTO toDTO(HorariosDisponibles horariosDisponibles) {
-        HorariosDisponiblesDTO dto = new HorariosDisponiblesDTO();
-        dto.setIdHorario(horariosDisponibles.getIdHorario());
-        dto.setHora(horariosDisponibles.getHora());
-        dto.setFecha(horariosDisponibles.getFecha());
-        dto.setVeterinarioId(horariosDisponibles.getVeterinario().getUsuario_user_id());
-        return dto;
+        HorariosDisponiblesDTO horariosDisponiblesDTO = modelMapper.map(horariosDisponibles, HorariosDisponiblesDTO.class);
+        Veterinario veterinario = veterinarioRepository.findById(horariosDisponibles.getVeterinario().getUsuario_user_id())
+                .orElseThrow(() -> new IllegalArgumentException("Veterinario no encontrado"));
+        horariosDisponiblesDTO.setVeterinario_nombre(veterinario.getVet().getCustomer().getNombre());
+        return horariosDisponiblesDTO;
     }
 
     public HorariosDisponibles toEntity(HorariosDisponiblesDTO horariosDisponiblesDTO) {
-        HorariosDisponibles horario = new HorariosDisponibles();
-        horario.setIdHorario(horariosDisponiblesDTO.getIdHorario());
-        horario.setHora(horariosDisponiblesDTO.getHora());
-        horario.setFecha(horariosDisponiblesDTO.getFecha());
+        HorariosDisponibles horariosDisponibles = modelMapper.map(horariosDisponiblesDTO, HorariosDisponibles.class);
 
-        Veterinario veterinario = new Veterinario();
-        veterinario.setUsuario_user_id(horariosDisponiblesDTO.getVeterinarioId());
-        horario.setVeterinario(veterinario);
+        Veterinario veterinario = veterinarioRepository.findById(horariosDisponiblesDTO.getVeterinarioId())
+                .orElseThrow(() -> new IllegalArgumentException("Veterinario no encontrado"));
+        horariosDisponibles.setVeterinario(veterinario);
 
-        return horario;
+        return horariosDisponibles;
     }
 }

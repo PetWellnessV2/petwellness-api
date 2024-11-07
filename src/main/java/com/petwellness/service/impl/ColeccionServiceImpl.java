@@ -64,7 +64,7 @@ public class ColeccionServiceImpl implements ColeccionService {
     public ColeccionDTO agregarProductoAColeccion(Integer coleccionId, Integer productoId) {
         Coleccion coleccion = coleccionRepository.findById(coleccionId)
                 .orElseThrow(() -> new RuntimeException("Colección no encontrada"));
-        
+
         Producto producto = productoRepository.findById(productoId)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 

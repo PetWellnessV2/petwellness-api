@@ -25,12 +25,12 @@ public class Consulta {
     private EstadoConsulta estadoConsulta;
 
     @ManyToOne
-    @JoinColumn(name = "horarios_disponibles_id_horario", referencedColumnName = "id_horario", foreignKey = @ForeignKey(name = "FK_consulta_horarios_disponibles"))
+    @JoinColumn(name = "horarios_disponibles_id_horario", referencedColumnName = "id_horario", foreignKey = @ForeignKey(name = "FK_horarios_disponibles"))
     private HorariosDisponibles horariosDisponibles;
 
     @ManyToOne
-    @JoinColumn(name = "registro_mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_consulta_registro_mascota"))
-    private RegistroMascota registroMascota;
+    @JoinColumn(name = "mascota_id_mascota", referencedColumnName = "id_mascota", foreignKey = @ForeignKey(name = "FK_mascota"))
+    private Mascota mascota;
 
     @Column(name = "razon_consulta", length = 250)
     private String razonConsulta;
@@ -38,7 +38,7 @@ public class Consulta {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
 }

@@ -1,15 +1,13 @@
 package com.petwellness.service.impl;
 
 import com.petwellness.dto.NotificationDTO;
-import com.petwellness.dto.NotificationRegistroDTO;
 import com.petwellness.exception.BadRequestException;
 import com.petwellness.exception.ResourceNotFoundException;
 import com.petwellness.mapper.NotificationMapper;
-import com.petwellness.mapper.NotificationRegistroMapper;
 import com.petwellness.model.entity.Notification;
-import com.petwellness.model.entity.Usuario;
+import com.petwellness.model.entity.User;
 import com.petwellness.repository.NotificationRepository;
-import com.petwellness.repository.UsuarioRepository;
+import com.petwellness.repository.UserRepository;
 import com.petwellness.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,15 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationRepository notificationRepository;
-    private final NotificationRegistroMapper notificationRegistroMapper;
-    private final UsuarioRepository usuarioRepository;
+    private final UserRepository userRepository;
     private final NotificationMapper notificationMapper;
 
     @Transactional(readOnly = true)
@@ -57,7 +53,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Transactional
     @Override
-    public NotificationRegistroDTO updateNotificacion(Integer id, NotificationRegistroDTO notificacionRegistroDTO) {
+    public NotificationDTO updateNotificacion(Integer id, NotificationDTO notificacionRegistroDTO) {
         Notification notificacionFromDB = notificationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("La notificación con ID "+id+" no existe"));
         notificationRepository.findByMensaje(notificacionRegistroDTO.getMensaje())
@@ -66,26 +62,26 @@ public class NotificationServiceImpl implements NotificationService {
                     throw new BadRequestException("Ya existe una notificación con la misma descripción");
                 });
         Integer idUsuario = notificacionRegistroDTO.getUsuarioId();
-        Usuario usuario = usuarioRepository.findById(idUsuario)
+        User usuario = userRepository.findById(idUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("El usuario con ID "+idUsuario+" no existe"));
         notificacionFromDB.setMensaje(notificacionRegistroDTO.getMensaje());
-        notificacionFromDB.setUsuario(usuario);
+        notificacionFromDB.setUsuario(usuario.getCustomer());
         notificacionFromDB.setLeida(notificacionRegistroDTO.isLeida());
         notificacionFromDB.setFechaCreacion(LocalDateTime.now());
         notificacionFromDB = notificationRepository.save(notificacionFromDB);
-        return notificationRegistroMapper.toDTO(notificacionFromDB);
+        return notificationMapper.toDTO(notificacionFromDB);
     }
 
     @Transactional
     @Override
-    public NotificationRegistroDTO markAsRead(Integer id) {
+    public NotificationDTO markAsRead(Integer id) {
         Notification notificacion = notificationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("La notificación con ID " + id + " no existe"));
 
         notificacion.setLeida(true);
         notificationRepository.save(notificacion);
 
-        return notificationRegistroMapper.toDTO(notificacion);
+        return notificationMapper.toDTO(notificacion);
     }
 
     @Transactional(readOnly = true)
@@ -105,21 +101,21 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Transactional
     @Override
-    public NotificationRegistroDTO createNotificacion(NotificationRegistroDTO notificacionRegistroDTO) {
+    public NotificationDTO createNotificacion(NotificationDTO notificacionRegistroDTO) {
         notificationRepository.findByMensaje(notificacionRegistroDTO.getMensaje())
                 .ifPresent(existingnotificacion -> {
                     throw new BadRequestException("Ya existe una notificación con la misma descripción");
                 });
         Integer idUsuario = notificacionRegistroDTO.getUsuarioId();
-        Usuario usuario = usuarioRepository.findById(idUsuario)
+        User usuario = userRepository.findById(idUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("El usuario con ID "+idUsuario+" no existe"));
-        Notification notificacion = notificationRegistroMapper.toEntity(notificacionRegistroDTO);
+        Notification notificacion = notificationMapper.toEntity(notificacionRegistroDTO);
         notificacion.setMensaje(notificacionRegistroDTO.getMensaje());
-        notificacion.setUsuario(usuario);
+        notificacion.setUsuario(usuario.getCustomer());
         notificacion.setLeida(false);
         notificacion.setFechaCreacion(LocalDateTime.now());
         notificacion = notificationRepository.save(notificacion);
-        return notificationRegistroMapper.toDTO(notificacion);
+        return notificationMapper.toDTO(notificacion);
     }
 
     @Transactional

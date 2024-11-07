@@ -16,7 +16,7 @@ public class Notification {
 
     @ManyToOne
     @JoinColumn(name = "usuario_user_id", referencedColumnName = "user_id", foreignKey = @ForeignKey(name = "FK_notificacion_usuario"), nullable = false)
-    private Usuario usuario;
+    private Customer usuario;
 
     @Column(name = "mensaje")
     private String mensaje;

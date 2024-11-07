@@ -18,7 +18,7 @@ public class NotificacionUtil {
     }
 
     public void notificarEliminacionRecordatorio(Recordatorio recordatorio) {
-        System.out.println("Notificación: El recordatorio '" + recordatorio.getTitulo() + 
+        System.out.println("Notificación: El recordatorio '" + recordatorio.getTitulo() +
                            "' ha sido eliminado. Estaba programado para: " + recordatorio.getFechaHora());
     }
 }

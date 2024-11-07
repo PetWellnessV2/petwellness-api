@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 @Entity
@@ -19,7 +20,7 @@ public class HorariosDisponibles {
     private Veterinario veterinario;
 
     @Column(name = "hora", nullable = false)
-    private Integer hora;
+    private LocalTime hora;
 
     @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
