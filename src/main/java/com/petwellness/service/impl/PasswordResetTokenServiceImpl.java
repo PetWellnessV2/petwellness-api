@@ -41,7 +41,7 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
         passwordResetTokenRepository.save(passwordResetToken);
 
         Map<String, Object> model = new HashMap<>();
-        String resetUrl = "http://localhost:4200/#/forgot/" + passwordResetToken.getToken();
+        String resetUrl = "https://petwellness123.netlify.app/authentication/codigo?token=" + passwordResetToken.getToken();
         model.put("user", user.getEmail());
         model.put("resetUrl", resetUrl);
 
