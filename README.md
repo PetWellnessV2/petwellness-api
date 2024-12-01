@@ -6,15 +6,6 @@
 Los administradores pueden gestionar eficientemente la plataforma a través de operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre productos, categorías, veterinarios y usuarios, garantizando que la información y los servicios ofrecidos en la plataforma estén siempre actualizados y en línea con las necesidades del mercado.
 
 El propósito de PetWellness es ofrecer una plataforma unificada que combine la facilidad de acceso a servicios veterinarios, productos especializados y una comunidad de apoyo, todo en un entorno seguro y fácil de usar. La plataforma permite a los dueños de mascotas no solo cuidar de sus compañeros peludos, sino también conectarse con otros cuidadores, compartiendo experiencias y consejos.
-### Colaboradores del Proyecto
-
-| **Nombre**                      | **Rol**               | **Perfil**                                                |
-|---------------------------------|-----------------------|-----------------------------------------------------------|
-| Marsi Valeria Figueroa Larragan | Co-Líder del Proyecto | [LinkedIn](https://www.linkedin.com/in/marsi-figueroa-6aa19b288/)          |
-| Axel Yamir Pariona Rojas        | Co-Líder del Proyecto | [LinkedIn](http://www.linkedin.com/in/axel-pariona-29b19925b)          |
-| Diego Eduardo Ballón Villar     | Co-Líder del Proyecto | [LinkedIn]()           |
-| Alexia Evlyn Conza Hualpa       | Co-Líder del Proyecto | [LinkedIn]()           |
-| Jhair Armando Quispe Marca      | Co-Líder del Proyecto | [LinkedIn]()          |
 
 ### Revisa el Progreso del Proyecto PetWellness
 
